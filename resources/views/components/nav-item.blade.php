@@ -11,12 +11,12 @@
     {{-- Inline SVG --}}
     {!! str_replace(
         '<svg ',
-        '<svg class="'.($active ? 'text-primary' : 'text-text-secondary').'" fill="currentColor" ',
+        '<svg class="'.($active ? 'text-primary' : 'text-[#A1AAB2]').'" fill="currentColor" ',
         file_get_contents(public_path($icon))
     ) !!}
 
     {{-- Text --}}
-    <span class="{{ $active ? 'text-primary font-semibold' : 'text-text-secondary' }}">
+    <span class="{{ $active ? 'text-primary font-semibold' : 'text-[#A1AAB2]' }}">
         {{ $text }}
     </span>
 </a>

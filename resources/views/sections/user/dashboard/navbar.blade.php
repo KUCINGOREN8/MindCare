@@ -7,7 +7,7 @@
 
         {{-- Logo --}}
         <div class="logo">
-            <img src="{{ asset('image/logo/logo.svg') }}" alt="Logo">
+            {!! file_get_contents(public_path('image/logo/logo.svg')) !!}
         </div>
 
         {{-- Nav Items --}}
