@@ -27,10 +27,14 @@ git clone https://github.com/KUCINGOREN8/MindCare.git
 cd MindCare
 ```
 
-### 2️⃣ Install PHP Dependencies
+### 2️⃣ Install Dependencies
 
 ```bash
+# Install PHP dependencies
 composer install
+
+# Install Node dependencies (including Tailwind CSS)
+npm install
 ```
 
 ### 3️⃣ Environment Configuration
@@ -60,8 +64,16 @@ php artisan migrate --seed
 
 ### 7️⃣ Start Development Server
 
+Open **two terminal windows**:
+
+**Terminal 1 - Laravel Server:**
 ```bash
 php artisan serve
+```
+
+**Terminal 2 - Vite Dev Server (for Tailwind CSS):**
+```bash
+npm run dev
 ```
 
 🎉 **Your application is now running at:** http://127.0.0.1:8000
