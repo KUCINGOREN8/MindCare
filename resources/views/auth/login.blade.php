@@ -61,7 +61,7 @@
                     </div>
 
                     <div class="text-right">
-                        <a href="#" class="text-sm font-medium underline" style="color: #009C8F;">Forgot Password?</a>
+                        <a href="{{ route('password.request') }}" class="text-sm font-medium underline" style="color: #009C8F;">Forgot Password?</a>
                     </div>
 
                     <div class="text-center pt-3">
