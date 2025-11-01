@@ -17,7 +17,7 @@
 
                 <form class="space-y-6" method="POST" action="{{ route('register') }}">
                     @csrf
-                    
+
                     <div>
                         <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
                             <img src="{{ asset('assets/signup/user.svg') }}" alt="icon" class="w-5 h-5 mr-4 opacity-50">
