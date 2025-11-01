@@ -10,9 +10,10 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
+    // SignIn
     public function showSignup()
     {
-        return view('signup');
+        return view('auth.signup');
     }
 
     public function register(Request $request)
@@ -61,18 +62,21 @@ class AuthController extends Controller
         return redirect('/dashboard')->with('success', 'Registration successful!');
     }
 
-    // nnti
-    // Show login form
+    // Login
     public function showLogin()
     {
-        return view('login'); 
+        return view('auth.login');
     }
 
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
+        'email' => 'required|email',
+        'password' => 'required',
+        ], [
+            'email.required' => 'Email is required.',
+            'email.email' => 'Please enter a valid email address.',
+            'password.required' => 'Password is required.',
         ]);
 
         if (Auth::attempt($credentials)) {
@@ -84,6 +88,13 @@ class AuthController extends Controller
             'email' => 'The provided credentials do not match our records.',
         ])->onlyInput('email');
     }
+
+    // blm implement
+
+
+    // forgot password
+
+
 
     // Handle logout
     public function logout(Request $request)
