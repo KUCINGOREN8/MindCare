@@ -5,9 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Signup</title>
+    <link rel="stylesheet" href="<?php echo e(asset('css/auth.css')); ?>">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="overflow-hidden">
+
 
     <div class="flex" style="height: 100vh;">
         <!-- Left Container-->
@@ -40,7 +43,7 @@ unset($__errorArgs, $__bag); ?>
                             <img src="<?php echo e(asset('assets/signup/email.svg')); ?>" alt="icon" class="w-5 h-5 mr-4 opacity-50">
                             <input type="email" name="email" placeholder="Email" class="w-full outline-none text-black placeholder-gray-400 bg-transparent" value="<?php echo e(old('email')); ?>">
                         </div>
-                         <?php $__errorArgs = ['email'];
+                        <?php $__errorArgs = ['email'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
@@ -52,38 +55,98 @@ endif;
 unset($__errorArgs, $__bag); ?>
                     </div>
 
-                    <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
-                        <img src="<?php echo e(asset('assets/signup/password.svg')); ?>" alt="icon" class="w-5 h-5 mr-4 opacity-50">
-                        <input type="password" name="password" placeholder="Password" class="w-full outline-none text-black placeholder-gray-400 bg-transparent">
+                    <div>
+                        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
+                            <img src="<?php echo e(asset('assets/signup/password.svg')); ?>" alt="icon" class="w-5 h-5 mr-4 opacity-50">
+                            <input type="password" name="password" placeholder="Password" class="w-full outline-none text-black placeholder-gray-400 bg-transparent" id="password">
+                            <button type="button" class="password-toggle" onclick="togglePassword('password')">
+                                <img src="<?php echo e(asset('assets/signup/eye-closed.svg')); ?>" alt="Show password" class="w-5 h-5 opacity-50" id="password-eye"
+                                    data-closed-icon="<?php echo e(asset('assets/signup/eye-closed.svg')); ?>"
+                                    data-open-icon="<?php echo e(asset('assets/signup/eye-open.svg')); ?>">
+                            </button>
+                        </div>
+                        <?php $__errorArgs = ['password'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                            <p class="text-red-500 text-sm mt-2 ml-1"><?php echo e($message); ?></p>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                     </div>
 
-                    <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
-                        <img src="<?php echo e(asset('assets/signup/password.svg')); ?>" alt="icon" class="w-5 h-5 mr-4 opacity-50">
-                        <input type="password" name="password_confirmation" placeholder="Confirm Password" class="w-full outline-none text-black placeholder-gray-400 bg-transparent">
+                    <div>
+                        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
+                            <img src="<?php echo e(asset('assets/signup/password.svg')); ?>" alt="icon" class="w-5 h-5 mr-4 opacity-50">
+                            <input type="password" name="password_confirmation" placeholder="Confirm Password" class="w-full outline-none text-black placeholder-gray-400 bg-transparent" id="confirm-password">
+                            <button type="button" class="password-toggle" onclick="togglePassword('confirm-password')">
+                                <img src="<?php echo e(asset('assets/signup/eye-closed.svg')); ?>" alt="Show password" class="w-5 h-5 opacity-50" id="confirm-password-eye"
+                                    data-closed-icon="<?php echo e(asset('assets/signup/eye-closed.svg')); ?>"
+                                    data-open-icon="<?php echo e(asset('assets/signup/eye-open.svg')); ?>">
+                            </button>
+                        </div>
                     </div>
 
-                   <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
-                        <img src="<?php echo e(asset('assets/signup/calender.svg')); ?>" alt="icon" class="w-5 h-5 mr-4 opacity-50">
-                        <input type="date" name="date_of_birth" class="w-full outline-none bg-transparent" style="color: #9CA3AF;" onchange="this.style.color = '#000000'" value="<?php echo e(old('date_of_birth')); ?>">
+                    <div>
+                        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
+                            <img src="<?php echo e(asset('assets/signup/calender.svg')); ?>" alt="icon" class="w-5 h-5 mr-4 opacity-50">
+                            <input type="date" name="date_of_birth" class="w-full outline-none bg-transparent" style="color: #9CA3AF;" onchange="this.style.color = '#000000'" value="<?php echo e(old('date_of_birth')); ?>">
+                        </div>
+                        <?php $__errorArgs = ['date_of_birth'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                            <p class="text-red-500 text-sm mt-2 ml-1"><?php echo e($message); ?></p>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                     </div>
 
-                    <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
-                        <img src="<?php echo e(asset('assets/signup/gender.svg')); ?>" alt="icon" class="w-5 h-5 mr-4 opacity-50">
-                        <select name="gender" class="w-full outline-none bg-transparent text-gray-400" onchange="this.style.color = this.value ? '#000000' : '#9CA3AF'">
-                            <option value="" disabled selected class="text-gray-400">Gender</option>
-                            <option value="male" <?php echo e(old('gender') == 'male' ? 'selected' : ''); ?> class="text-black">Male</option>
-                            <option value="female" <?php echo e(old('gender') == 'female' ? 'selected' : ''); ?> class="text-black">Female</option>
-                            <option value="other" <?php echo e(old('gender') == 'other' ? 'selected' : ''); ?> class="text-black">Other</option>
-                        </select>
+                    <div>
+                        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
+                            <img src="<?php echo e(asset('assets/signup/gender.svg')); ?>" alt="icon" class="w-5 h-5 mr-4 opacity-50">
+                            <select name="gender" class="w-full outline-none bg-transparent text-gray-400" onchange="this.style.color = this.value ? '#000000' : '#9CA3AF'">
+                                <option value="" disabled selected class="text-gray-400">Gender</option>
+                                <option value="male" <?php echo e(old('gender') == 'male' ? 'selected' : ''); ?> class="text-black">Male</option>
+                                <option value="female" <?php echo e(old('gender') == 'female' ? 'selected' : ''); ?> class="text-black">Female</option>
+                                <option value="other" <?php echo e(old('gender') == 'other' ? 'selected' : ''); ?> class="text-black">Other</option>
+                            </select>
+                        </div>
+                        <?php $__errorArgs = ['gender'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                            <p class="text-red-500 text-sm mt-2 ml-1"><?php echo e($message); ?></p>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                     </div>
 
-                    <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
-                        <img src="<?php echo e(asset('assets/signup/language.svg')); ?>" alt="icon" class="w-5 h-5 mr-4 opacity-50">
-                        <select name="language" class="w-full outline-none bg-transparent text-gray-400" onchange="this.style.color = this.value ? '#000000' : '#9CA3AF'">
-                            <option value="" disabled selected class="text-gray-400">Preferred Language</option>
-                            <option value="en" <?php echo e(old('language') == 'en' ? 'selected' : ''); ?> class="text-black" >English</option>
-                            <option value="id" <?php echo e(old('language') == 'id' ? 'selected' : ''); ?> class="text-black">Indonesian</option>
-                        </select>
+                    <div>
+                        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
+                            <img src="<?php echo e(asset('assets/signup/language.svg')); ?>" alt="icon" class="w-5 h-5 mr-4 opacity-50">
+                            <select name="language" class="w-full outline-none bg-transparent text-gray-400" onchange="this.style.color = this.value ? '#000000' : '#9CA3AF'">
+                                <option value="" disabled selected class="text-gray-400">Preferred Language</option>
+                                <option value="en" <?php echo e(old('language') == 'en' ? 'selected' : ''); ?> class="text-black" >English</option>
+                                <option value="id" <?php echo e(old('language') == 'id' ? 'selected' : ''); ?> class="text-black">Indonesian</option>
+                            </select>
+                        </div>
+                        <?php $__errorArgs = ['language'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                            <p class="text-red-500 text-sm mt-2 ml-1"><?php echo e($message); ?></p>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                     </div>
 
                     <div class="flex items-start pt-2">
@@ -91,16 +154,28 @@ unset($__errorArgs, $__bag); ?>
                         <label for="terms" class="text-sm text-gray-500">Agree to Terms & Privacy Policy</label>
                     </div>
 
-                    <div class="pt-4">
-                        <button type="submit" class="w-full text-white py-3 rounded-lg font-medium hover:opacity-90 transition text-base shadow-md" style="background-color: #009C8F;">
-                            Sign up
-                        </button>
+                    <div>
+                        <div class="pt-4">
+                            <button type="submit" class="w-full text-white py-3 rounded-lg font-medium hover:opacity-90 transition text-base shadow-md" style="background-color: #009C8F;">
+                                Sign up
+                            </button>
+                        </div>
+                        <?php $__errorArgs = ['terms'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                            <p class="text-red-500 text-sm mt-2 ml-1"><?php echo e($message); ?></p>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                     </div>
 
                     <div class="text-center pt-3">
                         <p class="text-gray-600 text-sm">
                             Already have an account?
-                            <a href="#" class="font-medium underline" style="color: #009C8F;">Sign in</a>
+                            <a href="<?php echo e(route('login')); ?>" class="font-medium underline" style="color: #009C8F;">Sign in</a>
                             here.
                         </p>
                     </div>
@@ -114,12 +189,9 @@ unset($__errorArgs, $__bag); ?>
         </div>
     </div>
 
+    <script src="<?php echo e(asset('js/auth.js')); ?>"></script>
 </body>
 </html>
 
- <style>
-    input[type="date"]::-webkit-calendar-picker-indicator {
-        filter: opacity(0.3) grayscale(1);
-    }
-</style>
+
 <?php /**PATH C:\Users\Bryan\Documents\MindCare\MindCare\resources\views/signup.blade.php ENDPATH**/ ?>
