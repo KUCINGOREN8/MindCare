@@ -21,6 +21,16 @@ export default {
         caption: "#A1AAB2",
         captiondark: "#4D4D4E",
         "grey-border": "#ECECEC",
+
+        "notification-blue": "#3B82F6",
+        "notification-blue-bg" : "#EFF6FF",
+        "notification-green": "#22C55E",
+        "notification-green-bg" : "#F0FDF4",
+        "notification-purple": "#A855F7",
+        "notification-purple-bg" : "#FAF5FF",
+        "notification-yellow" : "#EAB308",
+        "notification-yellow-bg" : "#FEFCE8",
+        
       },
     },
   },
