@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Signup</title>
+    <link rel="stylesheet" href="{{ asset('css/auth.css') }}">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="overflow-hidden">
@@ -41,7 +42,12 @@
                     <div>
                         <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
                             <img src="{{ asset('assets/signup/password.svg') }}" alt="icon" class="w-5 h-5 mr-4 opacity-50">
-                            <input type="password" name="password" placeholder="Password" class="w-full outline-none text-black placeholder-gray-400 bg-transparent">
+                            <input type="password" name="password" placeholder="Password" class="w-full outline-none text-black placeholder-gray-400 bg-transparent" id="password">
+                            <button type="button" class="password-toggle" onclick="togglePassword('password')">
+                                <img src="{{ asset('assets/signup/eye-closed.svg') }}" alt="Show password" class="w-5 h-5 opacity-50" id="password-eye"
+                                    data-closed-icon="{{ asset('assets/signup/eye-closed.svg') }}"
+                                    data-open-icon="{{ asset('assets/signup/eye-open.svg') }}">
+                            </button>
                         </div>
                         @error('password')
                             <p class="text-red-500 text-sm mt-2 ml-1">{{ $message }}</p>
@@ -51,11 +57,13 @@
                     <div>
                         <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
                             <img src="{{ asset('assets/signup/password.svg') }}" alt="icon" class="w-5 h-5 mr-4 opacity-50">
-                            <input type="password" name="password_confirmation" placeholder="Confirm Password" class="w-full outline-none text-black placeholder-gray-400 bg-transparent">
+                            <input type="password" name="password_confirmation" placeholder="Confirm Password" class="w-full outline-none text-black placeholder-gray-400 bg-transparent" id="confirm-password">
+                            <button type="button" class="password-toggle" onclick="togglePassword('confirm-password')">
+                                <img src="{{ asset('assets/signup/eye-closed.svg') }}" alt="Show password" class="w-5 h-5 opacity-50" id="confirm-password-eye"
+                                    data-closed-icon="{{ asset('assets/signup/eye-closed.svg') }}"
+                                    data-open-icon="{{ asset('assets/signup/eye-open.svg') }}">
+                            </button>
                         </div>
-                        @error('password')
-                            <p class="text-red-500 text-sm mt-2 ml-1">{{ $message }}</p>
-                        @enderror
                     </div>
 
                     <div>
@@ -116,7 +124,7 @@
                     <div class="text-center pt-3">
                         <p class="text-gray-600 text-sm">
                             Already have an account?
-                            <a href="#" class="font-medium underline" style="color: #009C8F;">Sign in</a>
+                            <a href="{{ route('login') }}" class="font-medium underline" style="color: #009C8F;">Sign in</a>
                             here.
                         </p>
                     </div>
@@ -130,11 +138,8 @@
         </div>
     </div>
 
+    <script src="{{ asset('js/auth.js') }}"></script>
 </body>
 </html>
 
- <style>
-    input[type="date"]::-webkit-calendar-picker-indicator {
-        filter: opacity(0.3) grayscale(1);
-    }
-</style>
+
