@@ -13,8 +13,12 @@
         '<svg class="'.($active ? 'text-primary' : 'text-[#A1AAB2]').'" fill="currentColor" ',
         file_get_contents(public_path($icon))
     ) !!}
-
-    <span class="{{ $active ? 'text-primary font-semibold' : 'text-[#A1AAB2]' }}">
+        
+    <span class="
+        {{ $active ? 'text-primary font-semibold' : 'text-[#A1AAB2]' }}
+        sm:text-xs
+        md:hidden
+    ">
         {{ $text }}
     </span>
 </a>

@@ -1,9 +1,9 @@
 @props([
-    'navItems' => [],      // array of nav items: ['icon'=>..., 'text'=>..., 'route'=>..., 'active'=>bool]
+    'navItems' => [],
 ])
 
-<aside class="flex w-1/6 h-screen p-6 bg-background shadow-md justify-start">
-    <div class="w-full flex flex-col gap-6">
+<aside class="flex w-16 sm:w-1/6 h-screen p-6 sm:p-2 md:p-4 bg-background border border-grey-border justify-start transition-all duration-300">
+    <div class="w-full flex flex-col gap-4 sm:gap-6 items-start sm:items-start">
 
         {{-- Logo --}}
         <div class="logo">
