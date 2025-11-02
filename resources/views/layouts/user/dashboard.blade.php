@@ -23,11 +23,11 @@
                     <h3 class="font-bold">Upcoming Appointments</h1>
                     <a href="appointment-history.blade.php" class="underline text-caption">See all</a>
                 </div>
-                <x-session-card 
+                <x-session-card   
                     name="Dr. Emily Chen" 
                     specialization="Clinical Psychologist" 
                     time="12.00 PM" 
-                    joinRoute="#"
+                    joinRoute="#" 
                     rescheduleRoute="#"
                 />
 
