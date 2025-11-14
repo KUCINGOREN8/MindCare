@@ -1888,3 +1888,39 @@ into your web browser: <span class="break-all" style="box-sizing: border-box; fo
 #54 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(23): require_once('C:\\\\Users\\\\Bryan\\\\...')
 #55 {main}
 "} 
+[2025-11-14 13:32:08] local.ERROR: Cannot use Illuminate\Support\Facades\Route as Route because the name is already in use {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot use Illuminate\\Support\\Facades\\Route as Route because the name is already in use at C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\routes\\web.php:9)
+[stacktrace]
+#0 {main}
+"} 
+[2025-11-14 13:32:32] local.ERROR: Cannot use Illuminate\Support\Facades\Route as Route because the name is already in use {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot use Illuminate\\Support\\Facades\\Route as Route because the name is already in use at C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\routes\\web.php:9)
+[stacktrace]
+#0 {main}
+"} 
+[2025-11-14 13:32:33] local.ERROR: Cannot use Illuminate\Support\Facades\Route as Route because the name is already in use {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot use Illuminate\\Support\\Facades\\Route as Route because the name is already in use at C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\routes\\web.php:9)
+[stacktrace]
+#0 {main}
+"} 
+[2025-11-14 13:33:32] local.ERROR: Cannot use Illuminate\Support\Facades\Route as Route because the name is already in use {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot use Illuminate\\Support\\Facades\\Route as Route because the name is already in use at C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\routes\\web.php:9)
+[stacktrace]
+#0 {main}
+"} 
+[2025-11-14 13:33:33] local.ERROR: Cannot use Illuminate\Support\Facades\Route as Route because the name is already in use {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot use Illuminate\\Support\\Facades\\Route as Route because the name is already in use at C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\routes\\web.php:9)
+[stacktrace]
+#0 {main}
+"} 
+[2025-11-14 13:34:32] local.ERROR: Cannot use Illuminate\Support\Facades\Route as Route because the name is already in use {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot use Illuminate\\Support\\Facades\\Route as Route because the name is already in use at C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\routes\\web.php:9)
+[stacktrace]
+#0 {main}
+"} 
+[2025-11-14 13:34:33] local.ERROR: Cannot use Illuminate\Support\Facades\Route as Route because the name is already in use {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot use Illuminate\\Support\\Facades\\Route as Route because the name is already in use at C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\routes\\web.php:9)
+[stacktrace]
+#0 {main}
+"} 
+[2025-11-14 13:35:32] local.ERROR: Cannot use Illuminate\Support\Facades\Route as Route because the name is already in use {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot use Illuminate\\Support\\Facades\\Route as Route because the name is already in use at C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\routes\\web.php:9)
+[stacktrace]
+#0 {main}
+"} 
+[2025-11-14 13:35:33] local.ERROR: Cannot use Illuminate\Support\Facades\Route as Route because the name is already in use {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot use Illuminate\\Support\\Facades\\Route as Route because the name is already in use at C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\routes\\web.php:9)
+[stacktrace]
+#0 {main}
+"} 
