@@ -23,7 +23,7 @@ Be Okay is an online counseling platform that connects users with licensed psych
 ### 1️⃣ Clone the Repository
 
 ```bash
-git clone https://github.com/KUCINGOREN8/.git
+git clone https://github.com/KUCINGOREN8/BeOkay.git
 cd BeOkay
 ```
 
