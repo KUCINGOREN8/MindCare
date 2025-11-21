@@ -20,14 +20,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/lang/{locale}', function ($locale) {
-    if (!in_array($locale, ['en', 'id'])) {
-        abort(400);
-    }
+Route::get('/lang/{lang}', function ($lang) {
+    session(['locale' => $lang]);
+    return back();
+})->name('switch.lang');
 
-    Session::put('locale', $locale);
-    App::setLocale($locale);
-    return Redirect::back();
-})->name('lang.switch');
 
 require __DIR__ . '/auth.php';
