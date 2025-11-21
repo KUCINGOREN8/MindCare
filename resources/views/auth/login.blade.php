@@ -1,47 +1,81 @@
-<x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ asset('css/auth.css') }}">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="overflow-hidden">
 
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
-
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+    <div class="flex" style="height: 100vh;">
+        <!-- Left Container-->
+        <div class="hidden lg:block lg:w-[30%] relative">
+            <img src="{{ asset('assets/signup/right-image.jpg') }}" alt="Person writing" class="w-full h-full object-cover">
         </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+        <!-- Right Container -->
+        <div class="w-full lg:w-[70%] flex items-center justify-center bg-white overflow-y-auto" style="padding-top: 12rem; padding-bottom: 4rem; padding-left: 2rem; padding-right: 2rem;">
+            <div class="w-full max-w-lg">
+                <h2 class="text-5xl font-bold mb-8 text-center" style="color: #009C8F;">SIGN IN</h2>
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
+                <form class="space-y-6" method="POST" action="{{ route('login.post') }}">
+                    @csrf
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                    <div>
+                        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
+                            <img src="{{ asset('assets/signup/email.svg') }}" alt="icon" class="w-5 h-5 mr-4 opacity-50">
+                            <input type="email" name="email" placeholder="Email" class="w-full outline-none text-black placeholder-gray-400 bg-transparent" value="{{ old('email') }}">
+                        </div>
+                        @error('email')
+                            <p class="text-red-500 text-sm mt-2 ml-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                     <div>
+                        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
+                            <img src="{{ asset('assets/signup/password.svg') }}" alt="icon" class="w-5 h-5 mr-4 opacity-50">
+                            <input type="password" name="password" placeholder="Password" class="w-full outline-none text-black placeholder-gray-400 bg-transparent" id="password">
+                            <button type="button" class="password-toggle" onclick="togglePassword('password')">
+                                <img src="{{ asset('assets/signup/eye-closed.svg') }}" alt="Show password" class="w-5 h-5 opacity-50" id="password-eye"
+                                    data-closed-icon="{{ asset('assets/signup/eye-closed.svg') }}"
+                                    data-open-icon="{{ asset('assets/signup/eye-open.svg') }}">
+                            </button>
+                        </div>
+                        @error('password')
+                            <p class="text-red-500 text-sm mt-2 ml-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <div class="pt-4">
+                            <button type="submit" class="w-full text-white py-3 rounded-lg font-medium hover:opacity-90 transition text-base shadow-md" style="background-color: #009C8F;">
+                                Sign up
+                            </button>
+                        </div>
+                        @error('terms')
+                            <p class="text-red-500 text-sm mt-2 ml-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="text-right">
+                        <a href="{{ route('password.request') }}" class="text-sm font-medium underline" style="color: #009C8F;">Forgot Password?</a>
+                    </div>
+
+                    <div class="text-center pt-3">
+                        <p class="text-gray-600 text-sm">
+                            Don't have an account yet?
+                            <a href="{{ route('signup') }}" class="font-medium underline" style="color: #009C8F;">Sign up</a>
+                            here.
+                        </p>
+                    </div>
+                </form>
+            </div>
         </div>
+    </div>
 
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
-            </label>
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
-            @endif
-
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+    <script src="{{ asset('js/auth.js') }}"></script>
+</body>
+</html>
