@@ -5,7 +5,7 @@
     'route' => '#'
 ])
 
-<a href="{{ $route }}" class="flex items-center w-full h-12 gap-3 p-4 rounded-md cursor-pointer
+<a href="{{ Route($route) }}" class="flex items-center w-full h-12 gap-3 p-4 rounded-md cursor-pointer
     {{ $active ? 'bg-primary/10' : 'bg-transparent hover:bg-primary/5' }}">
 
     {!! str_replace(

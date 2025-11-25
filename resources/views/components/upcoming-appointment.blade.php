@@ -1,7 +1,7 @@
 <div class="bg-white p-6 flex flex-col gap-6 rounded-md border-grey-border border">
     <div class="flex flex-1 gap-4 justify-between items-start">
         <h3 class="font-bold">Upcoming Appointments</h3>
-        <a href="{{ route("customer.appointments") }}" class="underline hover:text-primary text-caption text-sm ">See all</a>
+        <a href="{{ route("appointments") }}" class="underline hover:text-primary text-caption text-sm ">See all</a>
     </div>
     <x-appointment-card 
         name="Dr. Emily Chen" 

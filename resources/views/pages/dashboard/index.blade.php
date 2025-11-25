@@ -1,15 +1,7 @@
-@extends('layouts.user.dashboard')
+@extends('layouts.app')
 
 @php
-$navItems = [
-    ['icon' => 'image/icons/home.svg', 'text' => 'Dashboard', 'route' => '/user/customer/dashboard', 'active' => true],
-    ['icon' => 'image/icons/find-user.svg', 'text' => 'Find Psychologist', 'route' => '/user/customer/find-psychologist'],
-    ['icon' => 'image/icons/book.svg', 'text' => 'Book Appointment', 'route' => '/user/customer/book_appointment'],
-    ['icon' => 'image/icons/calendar.svg', 'text' => 'Appointments', 'route' => '/user/customer/appointments'],
-    ['icon' => 'image/icons/messages.svg', 'text' => 'Messages', 'route' => '/user/customer/messages'],
-];
-
-// ini sesuain data di database
+// ini dummy data, nnti sesuain dgn data di database
 $notifications = [
     [
         'icon' => 'image/icons/calendar.svg',
@@ -42,6 +34,10 @@ $notifications = [
 ];
 @endphp
 
+@section('title')
+Dashboard
+@endsection
+
 @section('content')
     <div class="flex flex-1">
         <div class="flex flex-col flex-1 gap-6">
@@ -62,12 +58,12 @@ $notifications = [
                 </div>
             </div>
 
-            @include('sections.user.dashboard.upcoming-appointment')
+            @include('components.upcoming-appointment')
         </div>
     </div>
     
     {{-- Profile section --}}
-    <div class="flex flex-col p-6 gap-6 bg-white rounded-md border-grey-border border max-w-[200px]">
+    <div class="flex flex-col p-6 gap-6 bg-white rounded-md border-grey-border border max-w-[300px]">
         {{-- User card --}}
         <div class="flex flex-col gap-4 justify-start">
             {{-- User Information --}}
@@ -91,7 +87,7 @@ $notifications = [
             
         </div>
 
-        @include('sections.user.dashboard.notifications')
+        @include('components.notifications')
         
     </div>
 @endsection
