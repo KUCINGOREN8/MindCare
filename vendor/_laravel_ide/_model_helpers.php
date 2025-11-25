@@ -8,18 +8,24 @@ namespace App\Models {
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
      * @property string|null $remember_token
+     * @property boolean $agree_to_terms
+     * @property mixed $preferred_language
+     * @property mixed $gender
+     * @property \Illuminate\Support\Carbon $date_of_birth
      * @property string $password
-     * @property \Illuminate\Support\Carbon|null $email_verified_at
      * @property string $email
-     * @property string $name
+     * @property string $full_name
      * @property int $id
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
      * @property-read int|null $notifications_count
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereId($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereName($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereFullName($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereEmail($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereEmailVerifiedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User wherePassword($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereDateOfBirth($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereGender($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<User>|User wherePreferredLanguage($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereAgreeToTerms($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereRememberToken($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereUpdatedAt($value)

@@ -47,7 +47,7 @@ Find Psychologist
 
                     <div class="flex gap-4 flex-col lg:flex-row">
                         <x-rounded-button text="Book" active="true" route="#"></x-rounded-button>
-                        <x-rounded-button text="Details" secondary="true" route="{{ Route('psychologist.profile', 12) }}"></x-rounded-button>
+                        <x-rounded-button text="Details" secondary="true" route="{{ Route('psychologist.profile') }}"></x-rounded-button>
                     </div>
                 </div>
                 @endforeach

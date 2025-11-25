@@ -17,8 +17,28 @@ Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', function () {
-        return view('dashboard');
+        return view('pages.dashboard.index');
     })->name('dashboard');
+
+    Route::get('find-psychologist', function () {
+        return view('pages.psychologist.find');
+    }) -> name('find.psychologist');
+
+    Route::get('book_appointment', function () {
+        return view('pages.appointment.book');
+    }) -> name('book.appointment');
+
+    Route::get('appointments', function () {
+        return view('pages.appointment.history');
+    }) -> name('appointments');
+
+    Route::get('psychologist/{id}', function () {
+        return view('pages.psychologist.profile');
+    }) -> name('psychologist.profile');
+
+    Route::get('messages', function () {
+        return view('pages.message.index');
+    }) -> name('messages');
 
     // Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
@@ -32,34 +52,6 @@ Route::get('/', function () {
 });
 
 
-// Route::get('/{userid}/dashboard', function () {
+// Route::get('/user/psychologist/dashboard', function () {
 //     return view('pages.dashboard.index');
 // });
-
-Route::get('/user/customer/dashboard', function () {
-    return view('pages.dashboard.index');
-})-> name('dashboard');
-
-Route::get('/user/customer/find-psychologist', function () {
-    return view('pages.psychologist.find');
-}) -> name('find.psychologist');
-
-Route::get('/user/customer/book_appointment', function () {
-    return view('pages.appointment.book');
-}) -> name('book.appointment');
-
-Route::get('/user/customer/appointments', function () {
-    return view('pages.appointment.history');
-}) -> name('appointments');
-
-Route::get('/user/customer/psychologist/{id}', function () {
-    return view('pages.psychologist.profile');
-}) -> name('psychologist.profile');
-
-Route::get('/user/customer/messages', function () {
-    return view('pages.message.index');
-}) -> name('messages');
-
-Route::get('/user/psychologist/dashboard', function () {
-    return view('pages.dashboard.index');
-});
