@@ -3,15 +3,13 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Http\Request;
 
 class SetLocale
 {
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
-        $locale = Session::get('locale', 'en');
-        App::setLocale($locale);
+        app()->setLocale(session('locale', 'en'));
         return $next($request);
     }
 }

@@ -1,0 +1,27 @@
+<?php
+
+return [
+    'welcome' => 'Selamat Datang',
+    'description' => 'Terhubung dengan profesional kesehatan mental berlisensi dari kenyamanan rumah Anda. Ambil langkah pertama menuju kesejahteraan mental yang lebih baik mulai hari ini.',
+    'button1' => 'Mulai Sekarang',
+    'button2' => 'Pesan Sesi',
+    'reason' => 'Mengapa Memilih',
+    'answer' => 'Kami menyediakan dukungan kesehatan mental yang komprehensif dengan profesional yang berkualifikasi.',
+    'title1' => 'Profesional Berlisensi',
+    'desc1' => 'Terhubung dengan psikolog dan konselor tersertifikasi.',
+    'title2' => 'Layanan 24/7',
+    'desc2' => 'Dapatkan layanan kapanpun (24/7) jika anda membutuhkan.',
+    'title3' => 'Keamanan dan Privasi',
+    'desc3' => 'Privasi kalian adalah prioritas kami, maka dari itu kami menggunakan end-to-end encryption.',
+    'title4' => 'Bebas Akses',
+    'desc4' => 'Akses sistem bisa dilakukan dimana saja dengan platform Anda.',
+    'title5' => 'Keamanan Chat yang Real-Time',
+    'desc5' => 'Terhubung dengan psikolog Anda dengan aman, private chat dibuat untuk kenyamanan dan kepercayaan.',
+    'title6' => 'Support Multi-Bahasa',
+    'desc6' => 'Dapat mengubah bahasa Indonesia dengan Inggris sesuai dengan personalisasi Anda.',
+    'usersay' => 'Apa yang User Kami Katakan?',
+    'userdesc' => 'Kisah nyata dari orang yang menggunakan Be Okay',
+    'about' => 'Tentang',
+    'service' => 'Layanan',
+    'contact' => 'Kontak',
+];
