@@ -78,7 +78,7 @@
 #40 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1235): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
 #41 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\artisan(16): Illuminate\\Foundation\\Application->handleCommand(Object(Symfony\\Component\\Console\\Input\\ArgvInput))
 #42 {main}
-"} 
+"}
 [2025-11-01 10:36:25] local.ERROR: View [signup.blade.php] not found. {"exception":"[object] (InvalidArgumentException(code: 0): View [signup.blade.php] not found. at C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\vendor\\laravel\\framework\\src\\Illuminate\\View\\FileViewFinder.php:138)
 [stacktrace]
 #0 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\vendor\\laravel\\framework\\src\\Illuminate\\View\\FileViewFinder.php(78): Illuminate\\View\\FileViewFinder->findInPaths('signup.blade.ph...', Array)
@@ -135,7 +135,7 @@
 #51 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\public\\index.php(20): Illuminate\\Foundation\\Application->handleRequest(Object(Illuminate\\Http\\Request))
 #52 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(23): require_once('C:\\\\Users\\\\Bryan\\\\...')
 #53 {main}
-"} 
+"}
 [2025-11-01 10:37:10] local.ERROR: Vite manifest not found at: C:\Users\Bryan\Documents\MindCare\MindCare\public\build/manifest.json (View: C:\Users\Bryan\Documents\MindCare\MindCare\resources\views\signup.blade.php) {"exception":"[object] (Illuminate\\View\\ViewException(code: 0): Vite manifest not found at: C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\public\\build/manifest.json (View: C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\resources\\views\\signup.blade.php) at C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Vite.php:946)
 [stacktrace]
 #0 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\PhpEngine.php(59): Illuminate\\View\\Engines\\CompilerEngine->handleViewException(Object(Illuminate\\Foundation\\ViteManifestNotFoundException), 1)
@@ -257,7 +257,7 @@
 #57 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\public\\index.php(20): Illuminate\\Foundation\\Application->handleRequest(Object(Illuminate\\Http\\Request))
 #58 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(23): require_once('C:\\\\Users\\\\Bryan\\\\...')
 #59 {main}
-"} 
+"}
 [2025-11-01 10:42:54] local.ERROR: syntax error, unexpected token ")" (View: C:\Users\Bryan\Documents\MindCare\MindCare\resources\views\signup.blade.php) {"exception":"[object] (Illuminate\\View\\ViewException(code: 0): syntax error, unexpected token \")\" (View: C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\resources\\views\\signup.blade.php) at C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\storage\\framework\\views\\9d9eb3090e8e0f58a18ffcdf41e33b26.php:23)
 [stacktrace]
 #0 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\PhpEngine.php(59): Illuminate\\View\\Engines\\CompilerEngine->handleViewException(Object(ParseError), 1)
@@ -376,7 +376,7 @@
 #54 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\public\\index.php(20): Illuminate\\Foundation\\Application->handleRequest(Object(Illuminate\\Http\\Request))
 #55 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(23): require_once('C:\\\\Users\\\\Bryan\\\\...')
 #56 {main}
-"} 
+"}
 [2025-11-01 10:56:52] local.ERROR: Call to undefined function assets() (View: C:\Users\Bryan\Documents\MindCare\MindCare\resources\views\signup.blade.php) {"exception":"[object] (Illuminate\\View\\ViewException(code: 0): Call to undefined function assets() (View: C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\resources\\views\\signup.blade.php) at C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\storage\\framework\\views\\9d9eb3090e8e0f58a18ffcdf41e33b26.php:23)
 [stacktrace]
 #0 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\PhpEngine.php(59): Illuminate\\View\\Engines\\CompilerEngine->handleViewException(Object(Error), 1)
@@ -496,7 +496,7 @@
 #55 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\public\\index.php(20): Illuminate\\Foundation\\Application->handleRequest(Object(Illuminate\\Http\\Request))
 #56 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(23): require_once('C:\\\\Users\\\\Bryan\\\\...')
 #57 {main}
-"} 
+"}
 [2025-11-01 11:01:37] local.ERROR: Undefined constant "assets" (View: C:\Users\Bryan\Documents\MindCare\MindCare\resources\views\signup.blade.php) {"exception":"[object] (Illuminate\\View\\ViewException(code: 0): Undefined constant \"assets\" (View: C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\resources\\views\\signup.blade.php) at C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\storage\\framework\\views\\9d9eb3090e8e0f58a18ffcdf41e33b26.php:99)
 [stacktrace]
 #0 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\PhpEngine.php(59): Illuminate\\View\\Engines\\CompilerEngine->handleViewException(Object(Error), 1)
@@ -616,7 +616,7 @@
 #55 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\public\\index.php(20): Illuminate\\Foundation\\Application->handleRequest(Object(Illuminate\\Http\\Request))
 #56 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(23): require_once('C:\\\\Users\\\\Bryan\\\\...')
 #57 {main}
-"} 
+"}
 [2025-11-01 14:52:31] local.ERROR: Command "make:" is ambiguous.
 Did you mean one of these?
     make:cache-table         Create a migration for the cache database table
@@ -701,7 +701,7 @@ Did you mean one of these?
 #3 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1235): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
 #4 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\artisan(16): Illuminate\\Foundation\\Application->handleCommand(Object(Symfony\\Component\\Console\\Input\\ArgvInput))
 #5 {main}
-"} 
+"}
 [2025-11-01 15:20:55] local.ERROR: Command "make:migrations" is not defined.
 
 Did you mean one of these?
@@ -788,7 +788,7 @@ Did you mean one of these?
 #3 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1235): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
 #4 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\artisan(16): Illuminate\\Foundation\\Application->handleCommand(Object(Symfony\\Component\\Console\\Input\\ArgvInput))
 #5 {main}
-"} 
+"}
 [2025-11-01 16:42:56] local.ERROR: SQLSTATE[42S01]: Base table or view already exists: 1050 Table 'users' already exists (Connection: mysql, SQL: create table `users` (`id` bigint unsigned not null auto_increment primary key, `full_name` varchar(255) not null, `email` varchar(255) not null, `password` varchar(255) not null, `date_of_birth` date not null, `gender` enum('male', 'female', 'other') not null, `preferred_language` enum('en', 'id') not null default 'en', `agree_to_terms` tinyint(1) not null default '0', `remember_token` varchar(100) null, `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci') {"exception":"[object] (Illuminate\\Database\\QueryException(code: 42S01): SQLSTATE[42S01]: Base table or view already exists: 1050 Table 'users' already exists (Connection: mysql, SQL: create table `users` (`id` bigint unsigned not null auto_increment primary key, `full_name` varchar(255) not null, `email` varchar(255) not null, `password` varchar(255) not null, `date_of_birth` date not null, `gender` enum('male', 'female', 'other') not null, `preferred_language` enum('en', 'id') not null default 'en', `agree_to_terms` tinyint(1) not null default '0', `remember_token` varchar(100) null, `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci') at C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:824)
 [stacktrace]
 #0 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(778): Illuminate\\Database\\Connection->runQueryCallback('create table `u...', Array, Object(Closure))
@@ -866,7 +866,7 @@ Did you mean one of these?
 #34 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1235): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
 #35 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\artisan(16): Illuminate\\Foundation\\Application->handleCommand(Object(Symfony\\Component\\Console\\Input\\ArgvInput))
 #36 {main}
-"} 
+"}
 [2025-11-01 16:43:42] local.ERROR: SQLSTATE[42S01]: Base table or view already exists: 1050 Table 'users' already exists (Connection: mysql, SQL: create table `users` (`id` bigint unsigned not null auto_increment primary key, `full_name` varchar(255) not null, `email` varchar(255) not null, `password` varchar(255) not null, `date_of_birth` date not null, `gender` enum('male', 'female', 'other') not null, `preferred_language` enum('en', 'id') not null default 'en', `agree_to_terms` tinyint(1) not null default '0', `remember_token` varchar(100) null, `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci') {"exception":"[object] (Illuminate\\Database\\QueryException(code: 42S01): SQLSTATE[42S01]: Base table or view already exists: 1050 Table 'users' already exists (Connection: mysql, SQL: create table `users` (`id` bigint unsigned not null auto_increment primary key, `full_name` varchar(255) not null, `email` varchar(255) not null, `password` varchar(255) not null, `date_of_birth` date not null, `gender` enum('male', 'female', 'other') not null, `preferred_language` enum('en', 'id') not null default 'en', `agree_to_terms` tinyint(1) not null default '0', `remember_token` varchar(100) null, `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci') at C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:824)
 [stacktrace]
 #0 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(778): Illuminate\\Database\\Connection->runQueryCallback('create table `u...', Array, Object(Closure))
@@ -966,7 +966,7 @@ Did you mean one of these?
 #45 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1235): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
 #46 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\artisan(16): Illuminate\\Foundation\\Application->handleCommand(Object(Symfony\\Component\\Console\\Input\\ArgvInput))
 #47 {main}
-"} 
+"}
 [2025-11-01 16:46:11] local.ERROR: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'mindcare.sessions' doesn't exist (Connection: mysql, SQL: select * from `sessions` where `id` = 6QP33Ttz2fVPT1Uq5ZhcQnlQfEC0jSAxPVB4CWrn limit 1) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 42S02): SQLSTATE[42S02]: Base table or view not found: 1146 Table 'mindcare.sessions' doesn't exist (Connection: mysql, SQL: select * from `sessions` where `id` = 6QP33Ttz2fVPT1Uq5ZhcQnlQfEC0jSAxPVB4CWrn limit 1) at C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:824)
 [stacktrace]
 #0 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(778): Illuminate\\Database\\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
@@ -1082,7 +1082,7 @@ Did you mean one of these?
 #53 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\public\\index.php(20): Illuminate\\Foundation\\Application->handleRequest(Object(Illuminate\\Http\\Request))
 #54 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(23): require_once('C:\\\\Users\\\\Bryan\\\\...')
 #55 {main}
-"} 
+"}
 [2025-11-01 18:36:12] local.ERROR: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it (Connection: mysql, SQL: select * from `sessions` where `id` = wjahmJs3nGCVAvnJ88PjSyb9x4EOV9tFFHBr3tw8 limit 1) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 2002): SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it (Connection: mysql, SQL: select * from `sessions` where `id` = wjahmJs3nGCVAvnJ88PjSyb9x4EOV9tFFHBr3tw8 limit 1) at C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:824)
 [stacktrace]
 #0 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(978): Illuminate\\Database\\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
@@ -1210,7 +1210,7 @@ Did you mean one of these?
 #63 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\public\\index.php(20): Illuminate\\Foundation\\Application->handleRequest(Object(Illuminate\\Http\\Request))
 #64 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(23): require_once('C:\\\\Users\\\\Bryan\\\\...')
 #65 {main}
-"} 
+"}
 [2025-11-01 20:39:48] local.ERROR: View [login] not found. {"userId":2,"exception":"[object] (InvalidArgumentException(code: 0): View [login] not found. at C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\vendor\\laravel\\framework\\src\\Illuminate\\View\\FileViewFinder.php:138)
 [stacktrace]
 #0 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\vendor\\laravel\\framework\\src\\Illuminate\\View\\FileViewFinder.php(78): Illuminate\\View\\FileViewFinder->findInPaths('login', Array)
@@ -1267,7 +1267,7 @@ Did you mean one of these?
 #51 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\public\\index.php(20): Illuminate\\Foundation\\Application->handleRequest(Object(Illuminate\\Http\\Request))
 #52 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(23): require_once('C:\\\\Users\\\\Bryan\\\\...')
 #53 {main}
-"} 
+"}
 [2025-11-01 21:05:03] local.ERROR: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'mindcare.password_reset_tokens' doesn't exist (Connection: mysql, SQL: select * from `password_reset_tokens` where `email` = bryansunadi@gmail.com limit 1) {"userId":2,"exception":"[object] (Illuminate\\Database\\QueryException(code: 42S02): SQLSTATE[42S02]: Base table or view not found: 1146 Table 'mindcare.password_reset_tokens' doesn't exist (Connection: mysql, SQL: select * from `password_reset_tokens` where `email` = bryansunadi@gmail.com limit 1) at C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:824)
 [stacktrace]
 #0 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(778): Illuminate\\Database\\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
@@ -1403,7 +1403,7 @@ Did you mean one of these?
 #63 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\public\\index.php(20): Illuminate\\Foundation\\Application->handleRequest(Object(Illuminate\\Http\\Request))
 #64 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(23): require_once('C:\\\\Users\\\\Bryan\\\\...')
 #65 {main}
-"} 
+"}
 [2025-11-01 21:06:42] local.ERROR: Route [password.reset] not defined. {"userId":2,"exception":"[object] (Symfony\\Component\\Routing\\Exception\\RouteNotFoundException(code: 0): Route [password.reset] not defined. at C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\UrlGenerator.php:526)
 [stacktrace]
 #0 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\helpers.php(871): Illuminate\\Routing\\UrlGenerator->route('password.reset', Array, false)
@@ -1474,7 +1474,7 @@ Did you mean one of these?
 #65 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\public\\index.php(20): Illuminate\\Foundation\\Application->handleRequest(Object(Illuminate\\Http\\Request))
 #66 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(23): require_once('C:\\\\Users\\\\Bryan\\\\...')
 #67 {main}
-"} 
+"}
 [2025-11-01 21:08:35] local.DEBUG: From: Laravel <hello@example.com>
 To: bryansunadi@gmail.com
 Subject: Reset Password Notification
@@ -1620,7 +1620,7 @@ into your web browser: <span class="break-all" style="box-sizing: border-box; fo
 </body>
 </html>
 --jNR41Tlw--
-  
+
 [2025-11-01 21:18:47] local.DEBUG: From: Laravel <hello@example.com>
 To: bryansunadi@gmail.com
 Subject: Test Email
@@ -1630,7 +1630,7 @@ Message-ID: <7681400f33cffee8c0d790325bbd28d3@example.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-Test email from MindCare  
+Test email from MindCare
 [2025-11-01 21:25:12] local.DEBUG: From: Laravel <hello@example.com>
 To: bryansunadi@gmail.com
 Subject: Reset Password Notification
@@ -1776,7 +1776,7 @@ into your web browser: <span class="break-all" style="box-sizing: border-box; fo
 </body>
 </html>
 --sksCwfft--
-  
+
 [2025-11-01 21:49:50] local.ERROR: Call to undefined method App\Http\Controllers\AuthController::showResetForm() {"userId":2,"exception":"[object] (Error(code: 0): Call to undefined method App\\Http\\Controllers\\AuthController::showResetForm() at C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ControllerDispatcher.php:46)
 [stacktrace]
 #0 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(265): Illuminate\\Routing\\ControllerDispatcher->dispatch(Object(Illuminate\\Routing\\Route), Object(App\\Http\\Controllers\\AuthController), 'showResetForm')
@@ -1828,7 +1828,7 @@ into your web browser: <span class="break-all" style="box-sizing: border-box; fo
 #46 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\public\\index.php(20): Illuminate\\Foundation\\Application->handleRequest(Object(Illuminate\\Http\\Request))
 #47 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(23): require_once('C:\\\\Users\\\\Bryan\\\\...')
 #48 {main}
-"} 
+"}
 [2025-11-02 05:14:19] local.ERROR: View [dashboard] not found. {"userId":1,"exception":"[object] (InvalidArgumentException(code: 0): View [dashboard] not found. at C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\vendor\\laravel\\framework\\src\\Illuminate\\View\\FileViewFinder.php:138)
 [stacktrace]
 #0 C:\\Users\\Bryan\\Documents\\MindCare\\MindCare\\vendor\\laravel\\framework\\src\\Illuminate\\View\\FileViewFinder.php(78): Illuminate\\View\\FileViewFinder->findInPaths('dashboard', Array)

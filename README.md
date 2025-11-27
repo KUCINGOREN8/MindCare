@@ -1,4 +1,4 @@
-# 🧠 MindCare — Online Mental Health Counseling Platform
+# 🧠 Be Okay — Online Mental Health Counseling Platform
 
 <p align="center">
   <strong>Supporting SDG 3: Good Health and Well-being</strong>
@@ -14,17 +14,17 @@
 
 ---
 
-## 📖 About MindCare
+## 📖 About Be Okay
 
-MindCare is an online counseling platform that connects users with licensed psychologists for virtual therapy sessions. The platform promotes mental health awareness and provides accessible counseling services through a user-friendly web interface.
+Be Okay is an online counseling platform that connects users with licensed psychologists for virtual therapy sessions. The platform promotes mental health awareness and provides accessible counseling services through a user-friendly web interface.
 
 ## ⚙️ Installation Guide
 
 ### 1️⃣ Clone the Repository
 
 ```bash
-git clone https://github.com/KUCINGOREN8/MindCare.git
-cd MindCare
+git clone https://github.com/KUCINGOREN8/BeOkay.git
+cd BeOkay
 ```
 
 ### 2️⃣ Install Dependencies
@@ -51,7 +51,7 @@ Edit your `.env` file:
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
-DB_DATABASE=mindcare
+DB_DATABASE=
 DB_USERNAME=root
 DB_PASSWORD=
 ```
