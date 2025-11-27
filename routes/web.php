@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Controllers\AuthController;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/signup', [AuthController::class, 'showSignup'])->name('signup');
@@ -56,4 +55,4 @@ Route::get('/lang/{locale}', function ($locale) {
     return Redirect::back();
 })->name('lang.switch');
 
-require __DIR__ . '/auth.php';
+// require __DIR__ . '/auth.php';
