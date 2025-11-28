@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PsychologistController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -22,34 +23,39 @@ Route::middleware('guest')->group(function () {
 
 // After Login (auth protected)
 Route::middleware('auth')->group(function () {
-    // Dashboard pake Controller biar bisa ambil testimonials
+
+    // Dashboard Page
+    Route::get('/dashboard' , [DashboardController::class, 'showDashboard'])->name('dashboard.index');
+    Route::get('find-psychologist', [PsychologistController::class, 'showFindPsychologist']) -> name('find.psychologist');
+    Route::get('psychologist/{id}', [PsychologistController::class, 'showProfile']) -> name('psychologist.profile');
+    Route::get('book_appointment', function () {
+        return view('pages.appointment.book');
+    }) -> name('book.appointment');
+    Route::get('appointments', function () {
+        return view('pages.appointment.history');
+    }) -> name('appointments');
+    Route::get('messages', function () {
+        return view('pages.message.index');
+    }) -> name('messages');
 
     // Profile Routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+
     // Logout boleh pakai POST untuk security
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
 // Redirect root "/" → landing page
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-Route::get('/', function () {
-    return redirect()->route('dashboard');
-});
+Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
 // Language switcher (biar bisa ganti bahasa bebas)
 Route::get('/lang/{lang}', function ($lang) {
     session(['locale' => $lang]);
     return back();
 })->name('switch.lang');
-
-
-// Route::get('/user/psychologist/dashboard', function () {
-//     return view('pages.dashboard.index');
-// });
-
 
 // Route::get('/user/psychologist/dashboard', function () {
 //     return view('pages.dashboard.index');

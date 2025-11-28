@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.dashboard')
 
 @php
 // ini dummy data, nnti sesuain dgn data di database
@@ -61,22 +61,22 @@ Dashboard
             @include('components.upcoming-appointment')
         </div>
     </div>
-    
+
     {{-- Profile section --}}
     <div class="flex flex-col p-6 gap-6 bg-white rounded-md border-grey-border border max-w-[300px]">
         {{-- User card --}}
         <div class="flex flex-col gap-4 justify-start">
             {{-- User Information --}}
-            <div class="flex flex-col gap-4 lg:flex-row transition-all duration-300"> 
-                <img src="{{ asset("image/profile/img.png") }}" class="rounded-full w-16 h-16 lg:mx-0 mx-auto" alt="pfp"> 
-                <div class="flex flex-col justify-left text-left"> 
-                    <h4 class="user-name font-semibold ">Jane Cooper</h4> 
-                    <p class="text-caption">Premium Member</p> 
-                    <div class="flex gap-2 items-center "> 
-                        <div class="rounded-full w-2 h-2 bg-primary"></div> 
-                        <p class="text-primary text-sm">Active</p> 
-                    </div> 
-                </div> 
+            <div class="flex flex-col gap-4 lg:flex-row transition-all duration-300">
+                <img src="{{ asset("image/profile/img.png") }}" class="rounded-full w-16 h-16 lg:mx-0 mx-auto" alt="pfp">
+                <div class="flex flex-col justify-left text-left">
+                    <h4 class="user-name font-semibold ">Jane Cooper</h4>
+                    <p class="text-caption">Premium Member</p>
+                    <div class="flex gap-2 items-center ">
+                        <div class="rounded-full w-2 h-2 bg-primary"></div>
+                        <p class="text-primary text-sm">Active</p>
+                    </div>
+                </div>
             </div>
 
             {{-- Action --}}
@@ -84,10 +84,10 @@ Dashboard
                 <x-rounded-button text="Settings" active="true" route="#"></x-rounded-button>
                 <x-rounded-button text="Logout" secondary="true" route="#"></x-rounded-button>
             </div>
-            
+
         </div>
 
         @include('components.notifications')
-        
+
     </div>
 @endsection
