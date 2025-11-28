@@ -23,7 +23,6 @@ Route::middleware('guest')->group(function () {
 // After Login (auth protected)
 Route::middleware('auth')->group(function () {
     // Dashboard pake Controller biar bisa ambil testimonials
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Profile Routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -34,9 +33,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
-// Redirect root "/" → dashboard/login sesuai status login
+// Redirect root "/" → landing page
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('/', function () {
-    return Auth::check() ? redirect()->route('dashboard') : redirect()->route('login');
+    return redirect()->route('dashboard');
 });
 
 // Language switcher (biar bisa ganti bahasa bebas)
