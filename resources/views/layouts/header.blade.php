@@ -1,5 +1,5 @@
-<div>
-    <nav class="relative bg-white">
+<div class="sticky top-0 z-50">
+    <nav class="bg-white shadow-md">
         <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
             <div class="relative flex h-16 items-center justify-between">
                 <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -25,14 +25,12 @@
                     </div>
                     <div class="hidden w-full sm:block">
                         <div class="flex justify-center space-x-4 font-Inter">
-                            <a href="#" aria-current="page"
+                            <a href="#home" aria-current="page"
                                 class="rounded-full px-4 py-2 bg-[#00C3B3] text-base font-semibold text-white">Home</a>
-                            <a href="#"
-                                class="rounded-full px-4 py-2 text-base font-medium text-black hover:bg-black/5 hover:text-black">About</a>
-                            <a href="#"
-                                class="rounded-full px-4 py-2 text-base font-medium text-black hover:bg-black/5 hover:text-black">Services</a>
-                            <a href="#"
-                                class="rounded-full px-4 py-2 text-base font-medium text-black hover:bg-black/5 hover:text-black">Contact</a>
+                            <a href="#about"
+                                class="rounded-full px-4 py-2 text-base font-medium text-black hover:bg-black/5 hover:text-black">{{ __('messages.about') }}</a>
+                            <a href="#testimonials"
+                                class="rounded-full px-4 py-2 text-base font-medium text-black hover:bg-black/5 hover:text-black">{{ __('messages.testimonials') }}</a>
                         </div>
                     </div>
                 </div>
@@ -41,25 +39,26 @@
                         $isEnglish = session('locale', 'en') === 'en';
                     @endphp
 
-                    <form action="{{ route('lang.switch', $isEnglish ? 'id' : 'en') }}" method="GET">
-                        <button type="submit"
-                            class="relative inline-flex h-6 w-11 items-center rounded-full transition 
-           {{ $isEnglish ? 'bg-[#00C3B3]' : 'bg-gray-300' }}">
-                            <span
-                                class="absolute -left-6 text-xs font-semibold {{ $isEnglish ? 'text-[#00C3B3]' : 'text-gray-400' }}">EN</span>
-                            <span
-                                class="absolute -right-5 text-xs font-semibold {{ !$isEnglish ? 'text-[#00C3B3]' : 'text-gray-400' }}">ID</span>
-                            <span
-                                class="inline-block h-5 w-5 transform rounded-full bg-white transition 
-           {{ $isEnglish ? 'translate-x-5' : 'translate-x-0' }}"></span>
-                        </button>
-                    </form>
+                    <div class="flex items-center gap-2 px-3 py-1 bg-gray-50 rounded-full shadow-sm">
+                        <a href="{{ route('switch.lang', ['lang' => 'en']) }}"
+                            class="{{ $isEnglish ? 'font-semibold text-gray-800' : 'text-gray-400' }} hover:text-teal-500 transition">
+                            EN
+                        </a>
+
+                        <span class="text-gray-400">|</span>
+
+                        <a href="{{ route('switch.lang', ['lang' => 'id']) }}"
+                            class="{{ !$isEnglish ? 'font-semibold text-gray-800' : 'text-gray-400' }} hover:text-teal-500 transition">
+                            ID
+                        </a>
+                    </div>
                 </div>
+
                 <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                    <button
+                      <a href="{{ route('signup') }}"
                         class="bg-[#00C3B3] hover:bg-[#33D1C2] active:bg-[#66DED0] text-white font-semibold px-4 py-2 rounded-full transition">
                         Sign Up
-                    </button>
+                    </a>
 
                     <!-- Profile dropdown -->
                     {{-- <el-dropdown class="relative ml-3">
@@ -91,14 +90,12 @@
         <el-disclosure id="mobile-menu" hidden class="block sm:hidden">
             <div class="space-y-1 px-2 pt-2 pb-3">
                 <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-white/5 hover:text-white" -->
-                <a href="#" aria-current="page"
+                <a href="#home" aria-current="page"
                     class="block rounded-md bg-[#00C3B3] px-3 py-2 text-base font-medium text-white">Home</a>
-                <a href="#"
+                <a href="#about"
                     class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-black/5 hover:text-black">About</a>
-                <a href="#"
-                    class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-black/5 hover:text-black">Services</a>
-                <a href="#"
-                    class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-black/5 hover:text-black">Contact</a>
+                <a href="#testimonials"
+                    class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-black/5 hover:text-black">Testimonial</a>
             </div>
         </el-disclosure>
     </nav>

@@ -2,28 +2,27 @@
 @section('title', 'Homepage')
 
 @section('content')
-    <div class="flex items-center justify-center h-[600px] bg-cover bg-fit w-full"
+    <div class="flex items-center justify-start h-[600px] bg-cover bg-fit w-full pl-52"
         style="background-image: url('{{ asset('img/welcome.png') }}')">
         <div class="justify-center mr-12 pr-20">
-            <div class="flex-col w-1/2">
+            <div class="flex-col max-w-md">
                 <h1 class="text-5xl font-bold mb-2">Be Okay</h1>
                 <h1 class="text-5xl font-bold text-[#2E6F6D] mb-3">You're Not Alone</h1>
-                <p class="text-[#4D4D4E] text-md text-justify">Connect with licensed mental health professionals from the
-                    comfort of
-                    your home.
-                    Take the first step
-                    towards
-                    better mental well-being today.</p>
+                <p class="text-[#4D4D4E] text-md text-justify">{{ __('messages.description') }}</p>
             </div>
             <div class="flex pt-7 space-x-6">
                 <button
-                    class="bg-[#00C3B3] hover:bg-[#33D1C2] active:bg-[#66DED0] text-white font-semibold px-10 py-3 rounded-[1vw] transition">Start
-                    Now</button>
+                    class="bg-[#00C3B3] hover:bg-[#33D1C2] active:bg-[#66DED0] text-white font-semibold w-40 py-3 rounded-[1vw] transition">
+                    {{ __('messages.button1') }}
+                </button>
+
                 <button
-                    class="bg-white hover:bg-[#f9f9f9] active:bg-[#66DED0] text-[#2E6F6D] font-semibold px-10 py-3 rounded-[1vw] transition border border-[#2E6F6D]">Book
-                    a Session</button>
+                    class="bg-white hover:bg-[#f9f9f9] active:bg-[#66DED0] text-[#2E6F6D] font-semibold w-40 py-3 rounded-[1vw] transition border border-[#2E6F6D]">
+                    {{ __('messages.button2') }}
+                </button>
+
             </div>
-            <div class="flex space-x-7 pt-2">
+            <div class="flex space-x-9 pt-2">
                 <div class="flex items-center justify-center">
                     <img src="/img/healthcare.svg" alt="" class="w-auto h-5 mr-1">
                     <p class="text-[#4D4D4E]">100% Confidental</p>
@@ -37,8 +36,9 @@
     </div>
     <div class="flex flex-col items-center justify-center bg-white h-[700px]">
         <div class="text-center">
-            <h1 class="font-semibold text-3xl">Why Choose <span class="text-[#00C3B3]">Be Okay</span><span>?</span></h1>
-            <p class="text-[#4B5563]">We provide comprehensive mental health support with qualified professionals</p>
+            <h1 class="font-semibold text-3xl">{{ __('messages.reason') }} <span class="text-[#00C3B3]">Be
+                    Okay</span><span>?</span></h1>
+            <p class="text-[#4B5563]">{{ __('messages.answer') }}</p>
         </div>
         <div class="m-10 pt-5 flex space-x-4 h-[180px]">
             <div class="max-w-sm mx-auto p-6 bg-white rounded-2xl shadow-md text-center relative overflow-visible">
@@ -48,10 +48,9 @@
                 </div>
 
                 <!-- Card Content -->
-                <h3 class="mt-6 text-lg font-semibold text-gray-800">Licensed Professionals</h3>
+                <h3 class="mt-6 text-lg font-semibold text-gray-800">{{ __('messages.title1') }}</h3>
                 <p class="mt-2 text-gray-500 text-sm">
-                    Connect with certified psychologists
-                    and counselors.
+                    {{ __('messages.desc1') }}
                 </p>
             </div>
             <div class="max-w-sm mx-auto p-6 bg-white rounded-2xl shadow-md text-center relative overflow-visible">
@@ -61,9 +60,9 @@
                 </div>
 
                 <!-- Card Content -->
-                <h3 class="mt-6 text-lg font-semibold text-gray-800">24/7 Support</h3>
+                <h3 class="mt-6 text-lg font-semibold text-gray-800">{{ __('messages.title2') }}</h3>
                 <p class="mt-2 text-gray-500 text-sm">
-                    Get help whenever you need it with our round-the-clock support system.
+                    {{ __('messages.desc2') }}
                 </p>
             </div>
             <div class="max-w-sm mx-auto p-6 bg-white rounded-2xl shadow-md text-center relative overflow-visible">
@@ -73,9 +72,9 @@
                 </div>
 
                 <!-- Card Content -->
-                <h3 class="mt-6 text-lg font-semibold text-gray-800">Secure & Private</h3>
+                <h3 class="mt-6 text-lg font-semibold text-gray-800">{{ __('messages.title3') }}</h3>
                 <p class="mt-2 text-gray-500 text-sm">
-                    Your privacy is our priority with end-to- end encrypted sessions.
+                    {{ __('messages.desc3') }}
                 </p>
             </div>
         </div>
@@ -87,9 +86,9 @@
                 </div>
 
                 <!-- Card Content -->
-                <h3 class="mt-6 text-lg font-semibold text-gray-800">Access Anywhere</h3>
+                <h3 class="mt-6 text-lg font-semibold text-gray-800">{{ __('messages.title4') }}</h3>
                 <p class="mt-2 text-gray-500 text-sm">
-                    Our responsive web app lets you access Be Okay from any device.
+                    {{ __('messages.desc4') }}
                 </p>
             </div>
             <div class="max-w-sm mx-auto p-6 bg-white rounded-2xl shadow-md text-center relative overflow-visible">
@@ -99,10 +98,9 @@
                 </div>
 
                 <!-- Card Content -->
-                <h3 class="mt-6 text-lg font-semibold text-gray-800">Real-time Secure Chat</h3>
+                <h3 class="mt-6 text-lg font-semibold text-gray-800">{{ __('messages.title5') }}</h3>
                 <p class="mt-2 text-gray-500 text-sm">
-                    Connect instantly with your psychologist in a safe, private chat environment designed for comfort and
-                    trust.
+                    {{ __('messages.desc5') }}
                 </p>
             </div>
             <div class="max-w-sm mx-auto p-6 bg-white rounded-2xl shadow-md text-center relative overflow-visible">
@@ -112,17 +110,17 @@
                 </div>
 
                 <!-- Card Content -->
-                <h3 class="mt-6 text-lg font-semibold text-gray-800">Multi-language Support</h3>
+                <h3 class="mt-6 text-lg font-semibold text-gray-800">{{ __('messages.title6') }}</h3>
                 <p class="mt-2 text-gray-500 text-sm">
-                    Switch easily between English and Bahasa Indonesia for a more natural and personalized experience.
+                    {{ __('messages.desc6') }}
                 </p>
             </div>
         </div>
     </div>
     <div class="flex flex-col items-center justify-center bg-gray-200 h-[550px]">
         <div class="text-center">
-            <h1 class="font-semibold text-3xl">What Our Users Say</h1>
-            <p class="pt-3 text-[#4B5563]">Real stories from people who found their way to being okay</p>
+            <h1 class="font-semibold text-3xl">{{ __('messages.usersay') }}</h1>
+            <p class="pt-3 text-[#4B5563]">{{ __('messages.userdesc') }}</p>
         </div>
         <div class="justify-between flex space-x-4 pt-10">
             <div>
@@ -167,7 +165,8 @@
             <div>
                 <div class="max-w-sm bg-white shadow-md rounded-2xl p-6 border border-gray-100">
                     <div class="flex items-center gap-3">
-                        <img src="{{ asset('img/om2.png') }}" alt="User" class="w-10 h-10 rounded-full object-cover">
+                        <img src="{{ asset('img/om2.png') }}" alt="User"
+                            class="w-10 h-10 rounded-full object-cover">
                         <div>
                             <h3 class="text-gray-900 font-semibold">David R.</h3>
                             <p class="text-sm text-gray-500">Student</p>
