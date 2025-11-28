@@ -8,12 +8,18 @@ use App\Http\Requests\UpdatePsychologistRequest;
 
 class PsychologistController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    
+    public function showFindPsychologist()
     {
-        //
+        $psychologists = Psychologist::all();
+
+        return view('pages.psychologist.find', compact('psychologists'));
+    }
+
+    public function showProfile($id) {
+        $psychologist = Psychologist::findOrFail($id);
+
+        return view('pages.psychologist.profile', compact('psychologist'));
     }
 
     /**

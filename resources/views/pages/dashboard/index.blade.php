@@ -43,7 +43,7 @@ Dashboard
         <div class="flex flex-col flex-1 gap-6">
             <div class="flex flex-col bg-white p-6 gap-4 rounded-md border-grey-border border">
                 <div class="flex flex-col">
-                    <h1 class="text-primary font-bold text-lg">Good Day, Jane Cooper!</h1>
+                    <h1 class="text-primary font-bold text-lg">Good Day, {{ $user->full_name }}!</h1>
                     <h5 class="text-captiondark text-sm">How are you feeling today?</h5>
                 </div>
                 <div class="flex items-center gap-4">
@@ -70,7 +70,7 @@ Dashboard
             <div class="flex flex-col gap-4 lg:flex-row transition-all duration-300"> 
                 <img src="{{ asset("image/profile/img.png") }}" class="rounded-full w-16 h-16 lg:mx-0 mx-auto" alt="pfp"> 
                 <div class="flex flex-col justify-left text-left"> 
-                    <h4 class="user-name font-semibold ">Jane Cooper</h4> 
+                    <h4 class="user-name font-semibold "> {{ $user->full_name }} </h4> 
                     <p class="text-caption">Premium Member</p> 
                     <div class="flex gap-2 items-center "> 
                         <div class="rounded-full w-2 h-2 bg-primary"></div> 

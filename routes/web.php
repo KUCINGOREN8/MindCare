@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PsychologistController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,14 +18,12 @@ Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])-
 Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('pages.dashboard.index');
-    })->name('dashboard');
+    Route::get('/dashboard' , [DashboardController::class, 'showDashboard'])->name('dashboard');
 
-    Route::get('find-psychologist', function () {
-        return view('pages.psychologist.find');
-    }) -> name('find.psychologist');
+    Route::get('find-psychologist', [PsychologistController::class, 'showFindPsychologist']) -> name('find.psychologist');
 
+    Route::get('psychologist/{id}', [PsychologistController::class, 'showProfile']) -> name('psychologist.profile');
+    
     Route::get('book_appointment', function () {
         return view('pages.appointment.book');
     }) -> name('book.appointment');
@@ -32,9 +32,6 @@ Route::middleware(['auth'])->group(function () {
         return view('pages.appointment.history');
     }) -> name('appointments');
 
-    Route::get('psychologist/{id}', function () {
-        return view('pages.psychologist.profile');
-    }) -> name('psychologist.profile');
 
     Route::get('messages', function () {
         return view('pages.message.index');

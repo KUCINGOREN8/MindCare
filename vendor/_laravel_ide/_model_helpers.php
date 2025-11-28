@@ -5,7 +5,21 @@ namespace App\Models {
     /**
      * App\Models\PsychologistReview
      *
+     * @property \Illuminate\Support\Carbon|null $updated_at
+     * @property \Illuminate\Support\Carbon|null $created_at
+     * @property string|null $review
+     * @property integer $rating
+     * @property mixed $user_id
+     * @property mixed $psychologist_id
+     * @property int $id
      * @property-read \App\Models\Psychologist $psychologist
+     * @method static \Illuminate\Database\Eloquent\Builder<PsychologistReview>|PsychologistReview whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<PsychologistReview>|PsychologistReview wherePsychologistId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<PsychologistReview>|PsychologistReview whereUserId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<PsychologistReview>|PsychologistReview whereRating($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<PsychologistReview>|PsychologistReview whereReview($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<PsychologistReview>|PsychologistReview whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<PsychologistReview>|PsychologistReview whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<PsychologistReview>|PsychologistReview newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<PsychologistReview>|PsychologistReview newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<PsychologistReview>|PsychologistReview query()
