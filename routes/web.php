@@ -44,3 +44,13 @@ Route::get('/lang/{lang}', function ($lang) {
     session(['locale' => $lang]);
     return back();
 })->name('switch.lang');
+
+
+// Route::get('/user/psychologist/dashboard', function () {
+//     return view('pages.dashboard.index');
+// });
+
+
+// Route::get('/user/psychologist/dashboard', function () {
+//     return view('pages.dashboard.index');
+// });
