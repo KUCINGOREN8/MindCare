@@ -2,7 +2,8 @@
 @section('title', 'Homepage')
 
 @section('content')
-    <div class="flex items-center justify-start h-[600px] bg-cover bg-fit w-full pl-52"
+    {{-- Home --}}
+    <div id="home" class="flex items-center justify-start h-[600px] bg-cover bg-fit w-full pl-52"
         style="background-image: url('{{ asset('img/welcome.png') }}')">
         <div class="justify-center mr-12 pr-20">
             <div class="flex-col max-w-md">
@@ -34,7 +35,9 @@
             </div>
         </div>
     </div>
-    <div class="flex flex-col items-center justify-center bg-white h-[700px]">
+
+    {{-- About --}}
+    <div  id="about" class="flex flex-col items-center justify-center bg-white h-[700px]">
         <div class="text-center">
             <h1 class="font-semibold text-3xl">{{ __('messages.reason') }} <span class="text-[#00C3B3]">Be
                     Okay</span><span>?</span></h1>
@@ -117,7 +120,9 @@
             </div>
         </div>
     </div>
-    <div class="flex flex-col items-center justify-center bg-gray-200 h-[550px]">
+
+    {{-- Testimonials --}}
+    <div id="testimonials" class="flex flex-col items-center justify-center bg-gray-200 h-[550px]">
         <div class="text-center">
             <h1 class="font-semibold text-3xl">{{ __('messages.usersay') }}</h1>
             <p class="pt-3 text-[#4B5563]">{{ __('messages.userdesc') }}</p>

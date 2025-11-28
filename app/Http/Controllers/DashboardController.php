@@ -13,4 +13,9 @@ class DashboardController extends Controller
 
         return view('dashboard', compact('testimonials'));
     }
+
+     public function showDashboard()
+    {
+        return view('pages.dashboard.index');
+    }
 }

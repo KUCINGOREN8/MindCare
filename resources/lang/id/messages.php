@@ -22,6 +22,5 @@ return [
     'usersay' => 'Apa yang User Kami Katakan?',
     'userdesc' => 'Kisah nyata dari orang yang menggunakan Be Okay',
     'about' => 'Tentang',
-    'service' => 'Layanan',
-    'contact' => 'Kontak',
+    'testimonials' => 'Testimoni',
 ];
