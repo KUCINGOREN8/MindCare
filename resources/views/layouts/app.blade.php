@@ -1,18 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title')</title>
-    @vite('resources/css/app.css')
-    @vite('resources/js/app.js')
-    <link href="{{ asset('build/output.css') }}" rel="stylesheet">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>@yield('title', 'BeOkay')</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-background font-sans min-h-screen flex">
-    @include('components.navbar')
 
-    <main class="flex flex-1 p-6 gap-6 w-full min-w-0">
-        @yield('content')
+<body class="flex flex-col min-h-screen bg-white-50">
+    @include('layouts.header')
+
+    <main class="flex-grow font-Inter">
+        <div class="w-full mx-auto px-0 py-0">
+            @yield('content')
+        </div>
     </main>
+
+    @include('layouts.footer')
+
+    <script src="{{ asset('js/navbar.js') }}"></script>
 </body>
 </html>

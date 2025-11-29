@@ -62,7 +62,7 @@ class AuthController extends Controller
         ]);
 
         Auth::login($user);
-        return redirect('/dashboard')->with('success', 'Registration successful!');
+        return redirect()->route('dashboard.index')->with('success', 'Registration successful!');
     }
 
     // Login
@@ -84,7 +84,7 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended('/dashboard');
+            return redirect()->intended(route('dashboard.index'));
         }
 
         return back()->withErrors([

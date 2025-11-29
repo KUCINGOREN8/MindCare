@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.dashboard')
 
 @php
 // ini dummy data, nnti sesuain dgn data di database
@@ -61,7 +61,7 @@ Dashboard
             @include('components.upcoming-appointment')
         </div>
     </div>
-    
+
     {{-- Profile section --}}
     <div class="flex flex-col p-6 gap-6 bg-white rounded-md border-grey-border border max-w-[300px]">
         {{-- User card --}}
@@ -84,10 +84,10 @@ Dashboard
                 <x-rounded-button text="Settings" active="true" route="#"></x-rounded-button>
                 <x-rounded-button text="Logout" secondary="true" route="#"></x-rounded-button>
             </div>
-            
+
         </div>
 
         @include('components.notifications')
-        
+
     </div>
 @endsection

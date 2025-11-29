@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.dashboard')
 
 {{-- @php
 // Example fallback data when $psychologists is not provided
