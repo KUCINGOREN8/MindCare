@@ -12,6 +12,7 @@ class User extends Authenticatable
 
     protected $fillable = [
         'full_name',
+        'photo_url',
         'email',
         'password',
         'date_of_birth',
@@ -33,5 +34,10 @@ class User extends Authenticatable
             'date_of_birth' => 'date',
             'agree_to_terms' => 'boolean',
         ];
+    }
+
+    public function psychologistReviews()
+    {
+        return $this->hasMany(PsychologistReview::class);
     }
 }

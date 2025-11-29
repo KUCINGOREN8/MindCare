@@ -31,7 +31,7 @@
     {{-- TEXT CONTENT --}}
     <div class="flex flex-col flex-1 min-w-0">
         <h3 class="font-semibold">{{ $title }}</h3>
-        <p class="text-caption-dark text-sm break-words whitespace-normal leading-snug">
+        <p class="text-caption-dark text-sm wrap-break-word whitespace-normal leading-snug">
             {{ $message }}
         </p>
         <p class="text-caption text-xs mt-1">{{ $time }}</p>

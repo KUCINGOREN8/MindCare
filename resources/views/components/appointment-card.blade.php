@@ -15,7 +15,7 @@
 
     <div class="flex items-center gap-2">
         @php
-            $icon = file_get_contents(public_path('image/icons/calendar.svg'));
+            $icon = file_get_contents(public_path('assets/icons/calendar.svg'));
             echo str_replace('<svg ', '<svg class="text-caption" fill="currentColor" ', $icon);
         @endphp
         <p class="text-caption">{{ $time }}</p>
