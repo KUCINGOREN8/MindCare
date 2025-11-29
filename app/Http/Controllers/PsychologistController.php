@@ -17,7 +17,14 @@ class PsychologistController extends Controller
     }
 
     public function showProfile($id) {
-        $psychologist = Psychologist::findOrFail($id);
+        $psychologist = Psychologist::with([
+            'educations', 
+            'experiences' => function ($q) {
+                $q->orderBy('start_year', 'desc');
+            },
+            'schedules', 
+            'reviews'])
+            ->findOrFail($id);
 
         return view('pages.psychologist.profile', compact('psychologist'));
     }

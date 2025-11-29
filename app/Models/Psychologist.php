@@ -16,7 +16,7 @@ class Psychologist extends Model
         'short_bio',
         'photo_url',
         'gender',
-        'languages', // JSON
+        'languages', 
         'title',
         'specialization',
         'license_number',
@@ -38,10 +38,10 @@ class Psychologist extends Model
         'agree_to_terms' => 'boolean',
     ];
 
-    public function getPhotoUrlAttribute($value)
-    {
-        return $value ?? asset('images/default-avatar.png');
-    }
+    // public function getPhotoUrlAttribute($value)
+    // {
+    //     return $value ?? asset('images/default-avatar.png');
+    // }
 
     public function educations()
     {

@@ -4,28 +4,28 @@
 // ini dummy data, nnti sesuain dgn data di database
 $notifications = [
     [
-        'icon' => 'image/icons/calendar.svg',
+        'icon' => 'assets/icons/calendar.svg',
         'title' => 'Session Reminder',
         'message' => 'Your session with Dr. Emily Chen starts in 2 hours',
         'time' => '1 hour ago',
         'type' => 'reminder',
     ],
     [
-        'icon' => 'image/icons/calendar.svg',
+        'icon' => 'assets/icons/calendar.svg',
         'title' => 'Mood Entry Complete',
         'message' => 'Great job logging your mood for 7 days straight!',
         'time' => '3 hours ago',
         'type' => 'achievement',
     ],
     [
-        'icon' => 'image/icons/messages.svg',
+        'icon' => 'assets/icons/messages.svg',
         'title' => 'New Message',
         'message' => 'Dr. Rodriguez sent you a follow-up message',
         'time' => '5 hours ago',
         'type' => 'message',
     ],
     [
-        'icon' => 'image/icons/calendar.svg',
+        'icon' => 'assets/icons/calendar.svg',
         'title' => 'Daily Tip',
         'message' => 'Try a 5-minute meditation to start your day',
         'time' => '1 day ago',
@@ -49,11 +49,11 @@ Dashboard
                 <div class="flex items-center gap-4">
                     <p class="text-caption-dark">Rate your mood:</p>
                     <div class="flex gap-4">
-                        <button class="p-2 rounded-full bg-transparent hover:bg-primary/5 "><img src="{{ asset("image/emoji/sad.png") }}" alt="Sad"></button>
-                        <button class="p-2 rounded-full bg-transparent hover:bg-primary/5 "><img src="{{ asset("image/emoji/flat.png") }}" alt="Sad"></button>
-                        <button class="p-2 rounded-full bg-transparent hover:bg-primary/5 "><img src="{{ asset("image/emoji/good.png") }}" alt="Sad"></button>
-                        <button class="p-2 rounded-full bg-transparent hover:bg-primary/5 "><img src="{{ asset("image/emoji/happy.png") }}" alt="Sad"></button>
-                        <button class="p-2 rounded-full bg-transparent hover:bg-primary/5 "><img src="{{ asset("image/emoji/blissful.png") }}" alt="Sad"></button>
+                        <button class="p-2 rounded-full bg-transparent hover:bg-primary/5 "><img src="{{ asset("assets/dashboard/sad.png") }}" alt="Sad"></button>
+                        <button class="p-2 rounded-full bg-transparent hover:bg-primary/5 "><img src="{{ asset("assets/dashboard/flat.png") }}" alt="Sad"></button>
+                        <button class="p-2 rounded-full bg-transparent hover:bg-primary/5 "><img src="{{ asset("assets/dashboard/good.png") }}" alt="Sad"></button>
+                        <button class="p-2 rounded-full bg-transparent hover:bg-primary/5 "><img src="{{ asset("assets/dashboard/happy.png") }}" alt="Sad"></button>
+                        <button class="p-2 rounded-full bg-transparent hover:bg-primary/5 "><img src="{{ asset("assets/dashboard/blissful.png") }}" alt="Sad"></button>
                     </div>
                 </div>
             </div>
@@ -68,7 +68,7 @@ Dashboard
         <div class="flex flex-col gap-4 justify-start">
             {{-- User Information --}}
             <div class="flex flex-col gap-4 lg:flex-row transition-all duration-300"> 
-                <img src="{{ asset("image/profile/img.png") }}" class="rounded-full w-16 h-16 lg:mx-0 mx-auto" alt="pfp"> 
+                <img src="{{ $user->photo_url ? asset($user->photo_url) : ($user->gender=="female" ? asset('assets/icons/user_female.svg') : asset('assets/icons/user_male.svg')) }}" class="rounded-full w-16 h-16 lg:mx-0 mx-auto" alt="pfp"> 
                 <div class="flex flex-col justify-left text-left"> 
                     <h4 class="user-name font-semibold "> {{ $user->full_name }} </h4> 
                     <p class="text-caption">Premium Member</p> 

@@ -1,10 +1,10 @@
 @php
 $navItems = [
-    ['icon' => 'image/icons/home.svg', 'text' => 'Dashboard', 'route' => 'dashboard', 'active' => Route::is('dashboard')],
-    ['icon' => 'image/icons/find-user.svg', 'text' => 'Find Psychologist', 'route' => 'find.psychologist', 'active' => ( Route::is('find.psychologist') || Route::is('psychologist.profile') )],
-    ['icon' => 'image/icons/book.svg', 'text' => 'Book Appointment', 'route' => 'book.appointment', 'active' => Route::is('book.appointment')],
-    ['icon' => 'image/icons/calendar.svg', 'text' => 'Appointments', 'route' => 'appointments', 'active' => Route::is('appointments')],
-    ['icon' => 'image/icons/messages.svg', 'text' => 'Messages', 'route' => 'messages', 'active' => Route::is('messages')],
+    ['icon' => 'assets/icons/home.svg', 'text' => 'Dashboard', 'route' => 'dashboard', 'active' => Route::is('dashboard')],
+    ['icon' => 'assets/icons/find-user.svg', 'text' => 'Find Psychologist', 'route' => 'find.psychologist', 'active' => ( Route::is('find.psychologist') || Route::is('psychologist.profile') )],
+    ['icon' => 'assets/icons/book.svg', 'text' => 'Book Appointment', 'route' => 'book.appointment', 'active' => Route::is('book.appointment')],
+    ['icon' => 'assets/icons/calendar.svg', 'text' => 'Appointments', 'route' => 'appointments', 'active' => Route::is('appointments')],
+    ['icon' => 'assets/icons/messages.svg', 'text' => 'Messages', 'route' => 'messages', 'active' => Route::is('messages')],
 ];  
 @endphp
 
@@ -13,7 +13,7 @@ $navItems = [
 
         {{-- Logo --}}
         <div class="logo">
-            {!! file_get_contents(public_path('image/logo/logo.svg')) !!}
+            {!! file_get_contents(public_path('assets/logo/logo.svg')) !!}
         </div>
 
         {{-- Nav Items --}}

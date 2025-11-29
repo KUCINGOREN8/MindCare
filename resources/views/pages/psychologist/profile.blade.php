@@ -11,7 +11,7 @@
 
                 <div class="flex justify-between gap-3">
                     <div class="flex flex-1 flex-col items-center justify-center text-center ">
-                        <img src="{{ asset($psychologist->photo_url) }}" alt="" class='rounded-full mb-4' style='width:200px;'>
+                        <img src="{{ $psychologist->photo_url ? asset($psychologist->photo_url) : ($psychologist->gender=="female" ? asset('assets/icons/user_female.svg') : asset('assets/icons/user_male.svg')) }}" alt="" class='rounded-full mb-4' style='width:200px;'>
                         <h1 class="font-semibold text-lg"> {{ $psychologist->full_name }} </h1>
                         <h5 class="text-captiondark text-sm"> {{ $psychologist->title }} </h5>
                     </div>
@@ -50,30 +50,57 @@
             </div>
 
             <div class="flex flex-col bg-white p-6 rounded-md border-grey-border border justify-between gap-6">
-                <div class="flex flex-col gap-3">
-                    <h1 class="font-semibold text-lg">About {{ $psychologist->full_name}}</h1>
-                    <h5 class="text-captiondark text-sm">{{$psychologist->about_me}}</h5>
+                <div class="flex flex-col">
+                    <h1 class="font-semibold text-lg mb-[10px]">About {{ $psychologist->full_name}}</h1>
+                    <p class="text-captiondark text-sm">{{$psychologist->about_me}}</p>
+                </div>
+            </div>
+            
+            <div class="flex flex-col bg-white p-6 rounded-md border-grey-border border justify-between gap-6">
+                <div class="flex flex-col">
+                    <h1 class="font-semibold text-lg mb-[10px] ">Education</h1>
+                    @foreach ($psychologist->educations as $edu)
+                        <p class="text-captiondark text-sm">{{ $edu->degree . " - " . $edu->institution . " (" . $edu->year . ")" }}</p>
+                    @endforeach
+                </div>
+            </div>
+            
+            <div class="flex flex-col bg-white p-6 rounded-md border-grey-border border justify-between gap-6">
+                <div class="flex flex-col">
+                    <h1 class="font-semibold text-lg mb-[10px]">Experiences</h1>
+                    @foreach ($psychologist->experiences as $exp)
+                        <p class="text-captiondark text-sm">
+                            {{ $exp->position . " - " . $exp->organization . 
+                                ($exp->start_year ? " (" . $exp->start_year . "-" . 
+                                ($exp->end_year ? $exp->end_year : "present") . ")" : null)
+                            }}
+                        </p>
+                    @endforeach
                 </div>
             </div>
 
             <div class="flex flex-col bg-white p-6 rounded-md border-grey-border border justify-between gap-6">
-                <div class="flex flex-col gap-3">
-                    <h1 class="font-semibold text-lg">Education</h1>
-                    <h5 class="text-captiondark text-sm">{{$psychologist->about_me}}</h5>
-                </div>
-            </div>
+                <div class="flex flex-col">
+                    <h1 class="font-semibold text-lg mb-[10px]">Available Schedule</h1>
 
-            <div class="flex flex-col bg-white p-6 rounded-md border-grey-border border justify-between gap-6">
-                <div class="flex flex-col gap-3">
-                    <h1 class="font-semibold text-lg">Experiences</h1>
-                    <h5 class="text-captiondark text-sm">{{$psychologist->about_me}}</h5>
-                </div>
-            </div>
+                    @php
+                        $allDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+                        $schedules = $psychologist->schedules;
+                    @endphp
 
-            <div class="flex flex-col bg-white p-6 rounded-md border-grey-border border justify-between gap-6">
-                <div class="flex flex-col gap-3">
-                    <h1 class="font-semibold text-lg">Available Schedule</h1>
-                    <h5 class="text-captiondark text-sm">{{$psychologist->about_me}}</h5>
+                    @foreach ($allDays as $day)
+                        @php
+                            $schedule = $schedules->firstWhere('day_of_week', strtolower($day));
+                        @endphp
+                        <p class="text-captiondark text-sm">
+                            {{ $day }}:
+                            @if ($schedule && $schedule->start_time && $schedule->end_time)
+                                {{ substr($schedule->start_time, 0, 5) }} - {{ substr($schedule->end_time, 0, 5) }}
+                            @else
+                                -
+                            @endif
+                        </p>
+                    @endforeach
                 </div>
             </div>
 
@@ -86,7 +113,14 @@
                     <div class="flex">
                         <p class="text-caption"></p>
                     </div>
-                    <h5 class="text-captiondark text-sm">{{$psychologist->about_me}}</h5>
+                    @foreach ($psychologist->reviews as $review)
+                        <div class="flex flex-1 p-[10px] rounded-md bg-primary/10 gap-3 items-center">
+                            <img src="{{ $review->user->photo_url ? asset($review->user->photo_url) : ($review->user->gender=="female" ? asset('assets/icons/user_female.svg') : asset('assets/icons/user_male.svg')) }}" alt="" class="w-[35px] h-[35px] rounded-full">
+                            <p class="text-sm wrap-break-word whitespace-normal">
+                                {{ $review->review }}
+                            </p>
+                        </div>
+                    @endforeach
                 </div>
             </div>
         </div>

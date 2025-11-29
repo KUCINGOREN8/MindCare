@@ -18,7 +18,7 @@ class PsychologistSeeder extends Seeder
         $psychologists = [
             [
                 'full_name' => 'Jacob Jonas',
-                'photo_url' => '/image/profile/img.png',
+                'photo_url' => '',
                 'gender' => 'male',
                 'languages' => ['English', 'Indonesia'], 
                 'short_bio' => 'Helps clients navigate stress, work-related burnout, and lifestyle challenges using a supportive and solution-focused approach.',
