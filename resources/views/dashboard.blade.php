@@ -12,16 +12,22 @@
                 <p class="text-[#4D4D4E] text-md text-justify">{{ __('messages.description') }}</p>
             </div>
             <div class="flex pt-7 space-x-6">
-                <button
-                    class="bg-[#00C3B3] hover:bg-[#33D1C2] active:bg-[#66DED0] text-white font-semibold w-40 py-3 rounded-[1vw] transition">
-                    {{ __('messages.button1') }}
-                </button>
+                @auth
+                    <a href="{{ route('dashboard.index') }}"
+                        class="bg-[#00C3B3] hover:bg-[#33D1C2] active:bg-[#66DED0] text-white font-semibold w-40 py-3 rounded-[1vw] transition flex items-center justify-center">
+                        {{ __('messages.button1') }}
+                    </a>
+                @else
+                    <a href="{{ route('signup') }}"
+                        class="bg-[#00C3B3] hover:bg-[#33D1C2] active:bg-[#66DED0] text-white font-semibold w-40 py-3 rounded-[1vw] transition flex items-center justify-center">
+                        {{ __('messages.button1') }}
+                    </a>
+                @endauth
 
                 <button
                     class="bg-white hover:bg-[#f9f9f9] active:bg-[#66DED0] text-[#2E6F6D] font-semibold w-40 py-3 rounded-[1vw] transition border border-[#2E6F6D]">
                     {{ __('messages.button2') }}
                 </button>
-
             </div>
             <div class="flex space-x-9 pt-2">
                 <div class="flex items-center justify-center">
