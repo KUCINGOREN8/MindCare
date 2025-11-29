@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+
 class Psychologist extends Model
 {
     /** @use HasFactory<\Database\Factories\PsychologistFactory> */
@@ -13,11 +14,10 @@ class Psychologist extends Model
     protected $fillable = [
         'full_name',
         'short_bio',
-        'date_of_birth',
         'photo_url',
         'gender',
-        'language',
-        'languages', // JSON
+        'languages', 
+        'title',
         'specialization',
         'license_number',
         'years_experience',
@@ -38,13 +38,11 @@ class Psychologist extends Model
         'agree_to_terms' => 'boolean',
     ];
 
-    // Default photo accessor
-    public function getPhotoUrlAttribute($value)
-    {
-        return $value ?? asset('images/default-avatar.png');
-    }
+    // public function getPhotoUrlAttribute($value)
+    // {
+    //     return $value ?? asset('images/default-avatar.png');
+    // }
 
-    // Relationships
     public function educations()
     {
         return $this->hasMany(PsychologistEducation::class);

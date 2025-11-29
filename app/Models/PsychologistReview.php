@@ -24,4 +24,9 @@ class PsychologistReview extends Model
     public function psychologist() {
       return $this->hasOne(Psychologist::class);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

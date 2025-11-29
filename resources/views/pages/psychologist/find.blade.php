@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@php
+{{-- @php
 // Example fallback data when $psychologists is not provided
 $fallback = [
 ['name' => 'Dr. Jacob Jones', 'title' => 'Therapist'],
@@ -8,7 +8,7 @@ $fallback = [
 ['name' => 'Dr. Esther Howard', 'title' => 'Therapist'],
 ];
 $items = $psychologists ?? array_merge($fallback, $fallback, $fallback); // fill to show grid
-@endphp
+@endphp --}}
 
 @section('title')
 Find Psychologist
@@ -33,21 +33,21 @@ Find Psychologist
             </div>
 
             <div class="grid grid-cols-3 gap-6">
-                @foreach($items as $p)
-                <div class="bg-white rounded-md border border-grey-border p-6 items-center text-center">
+                @foreach($psychologists as $psychologist)
+                <div class="flex flex-col bg-white rounded-md border border-grey-border p-6 items-center text-center gap-3">
                     <div class="justify-items-center">
-                        <img src="{{ asset('image/profile/img.png') }}" alt="" style='width:100px;'>
+                        <img src="{{ $psychologist->photo_url ? asset($psychologist->photo_url) : ($psychologist->gender=="female" ? asset('assets/icons/user_female.svg') : asset('assets/icons/user_male.svg')) }}" alt="" style='width:100px;'>
                     </div>
 
                     <div class="mb-2">
-                        <div class="font-semibold">{{ $p['name'] }}</div>
-                        <div class="text-xs text-gray-400">{{ $p['title'] }}</div>
+                        <div class="font-semibold">{{ $psychologist->full_name }}</div>
+                        <div class="text-xs text-gray-400">{{ $psychologist->title }}</div>
                     </div>
 
 
                     <div class="flex gap-4 flex-col lg:flex-row">
                         <x-rounded-button text="Book" active="true" route="#"></x-rounded-button>
-                        <x-rounded-button text="Details" secondary="true" route="{{ Route('psychologist.profile') }}"></x-rounded-button>
+                        <x-rounded-button text="Details" secondary="true" route="{{ Route('psychologist.profile', $psychologist->id) }}"></x-rounded-button>
                     </div>
                 </div>
                 @endforeach

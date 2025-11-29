@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Testimonial;
 
 class DashboardController extends Controller
@@ -13,9 +14,11 @@ class DashboardController extends Controller
 
         return view('dashboard', compact('testimonials'));
     }
+    
+    public function showDashboard() {
+        $user = Auth::user();
 
-     public function showDashboard()
-    {
-        return view('pages.dashboard.index');
+        // $upcomingAppointments
+        return view('pages.dashboard.index', compact('user'));
     }
 }
