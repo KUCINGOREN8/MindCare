@@ -11,7 +11,7 @@ $notifications = [
         'type' => 'reminder',
     ],
     [
-        'icon' => 'assets/icons/calendar.svg',
+        'icon' => 'assets/icons/check.svg',
         'title' => 'Mood Entry Complete',
         'message' => 'Great job logging your mood for 7 days straight!',
         'time' => '3 hours ago',
@@ -25,7 +25,7 @@ $notifications = [
         'type' => 'message',
     ],
     [
-        'icon' => 'assets/icons/calendar.svg',
+        'icon' => 'assets/icons/tips.svg',
         'title' => 'Daily Tip',
         'message' => 'Try a 5-minute meditation to start your day',
         'time' => '1 day ago',
@@ -46,6 +46,7 @@ Dashboard
                     <h1 class="text-primary font-bold text-lg">Good Day, {{ $user->full_name }}!</h1>
                     <h5 class="text-captiondark text-sm">How are you feeling today?</h5>
                 </div>
+                @if($user->role == 'patient')
                 <div class="flex items-center gap-4">
                     <p class="text-caption-dark">Rate your mood:</p>
                     <div class="flex gap-4">
@@ -56,6 +57,7 @@ Dashboard
                         <button class="p-2 rounded-full bg-transparent hover:bg-primary/5 "><img src="{{ asset("assets/dashboard/blissful.png") }}" alt="Sad"></button>
                     </div>
                 </div>
+                @endif
             </div>
 
             @include('components.upcoming-appointment')

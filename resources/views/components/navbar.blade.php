@@ -17,6 +17,8 @@ $navItems = [
             {!! file_get_contents(public_path('assets/logo/logo.svg')) !!}
         </div>
 
+        @include('components.language-toggle')
+
         {{-- Nav Items --}}
         <div class="flex flex-col nav-items gap-6">
             @foreach($navItems as $item)

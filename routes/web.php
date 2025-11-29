@@ -37,6 +37,7 @@ Route::middleware(['auth', 'otp'])->group(function () {
     // Dashboard Page
     Route::get('/dashboard' , [DashboardController::class, 'showDashboard'])->name('dashboard.index');
     Route::get('find-psychologist', [PsychologistController::class, 'showFindPsychologist'])-> name('find.psychologist');
+    Route::get('/search', [PsychologistController::class, 'showSearch'])->name('psychologist.search');
     Route::get('psychologist/{id}', [PsychologistController::class, 'showProfile'])-> name('psychologist.profile');
     Route::get('psychologist/{id}/review', [PsychologistController::class, 'showReview'])-> name('psychologist.review');
     Route::get('book_appointment', function () {
