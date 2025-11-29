@@ -18,16 +18,19 @@ return new class extends Migration
             $table->enum('gender', ['male', 'female', 'other']);
             $table->enum('preferred_language', ['en', 'id'])->default('en');
             $table->boolean('agree_to_terms')->default(false);
+            $table->enum('role', ['patient', 'psychologist', 'admin'])->default('patient');
+
+            // OTP Fields
+            $table->string('otp_code')->nullable();
+            $table->timestamp('otp_expires_at')->nullable();
+            $table->boolean('otp_verified')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('user');
+        Schema::dropIfExists('users');
     }
 };

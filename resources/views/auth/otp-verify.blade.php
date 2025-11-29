@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>OTP Code</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full">
+            {{-- Header --}}
+            <div class="text-center mb-8">
+                <div class="mx-auto w-16 h-16 bg-gradient-to-br from-[#00C3B3] to-[#33D1C2] rounded-2xl flex items-center justify-center mb-4 shadow-lg">
+                    <img src="{{ asset('assets/signup/lock.png') }}" alt="Secure Verification" class="w-8 h-8 filter brightness-0 invert">
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">
+                    Verify Your Identity
+                </h2>
+                <p class="text-gray-600">
+                    Enter the 6-digit code we sent to your email
+                </p>
+            </div>
+
+            @if (session('success'))
+                <div class="mb-6 p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
+                    <p class="text-sm font-medium text-green-800">{{ session('success') }}</p>
+                </div>
+            @endif
+
+            <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+                <form method="POST" action="{{ route('otp.verify') }}" class="p-8" id="otpForm">
+                    @csrf
+                    <input type="hidden" name="otp_code" id="otp_code">
+
+                    <div class="mb-8">
+                        <label class="block text-sm font-semibold text-gray-700 mb-4 text-center">
+                            Enter Verification Code
+                        </label>
+
+                        <!-- OTP  -->
+                        <div class="flex justify-center gap-3 mb-4">
+                            <input type="text"
+                                maxlength="1"
+                                class="otp-input w-14 h-14 text-center text-2xl font-bold border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-[#00C3B3]/20 focus:border-[#00C3B3] transition-all duration-200 @error('otp_code') border-red-300 @enderror"
+                                inputmode="numeric"
+                                pattern="[0-9]"
+                                required
+                                autofocus>
+                            <input type="text"
+                                maxlength="1"
+                                class="otp-input w-14 h-14 text-center text-2xl font-bold border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-[#00C3B3]/20 focus:border-[#00C3B3] transition-all duration-200 @error('otp_code') border-red-300 @enderror"
+                                inputmode="numeric"
+                                pattern="[0-9]"
+                                required>
+                            <input type="text"
+                                maxlength="1"
+                                class="otp-input w-14 h-14 text-center text-2xl font-bold border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-[#00C3B3]/20 focus:border-[#00C3B3] transition-all duration-200 @error('otp_code') border-red-300 @enderror"
+                                inputmode="numeric"
+                                pattern="[0-9]"
+                                required>
+
+                            <div class="w-4 flex items-center justify-center">
+                                <span class="text-gray-400 font-bold">-</span>
+                            </div>
+
+                            <input type="text"
+                                maxlength="1"
+                                class="otp-input w-14 h-14 text-center text-2xl font-bold border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-[#00C3B3]/20 focus:border-[#00C3B3] transition-all duration-200 @error('otp_code') border-red-300 @enderror"
+                                inputmode="numeric"
+                                pattern="[0-9]"
+                                required>
+                            <input type="text"
+                                maxlength="1"
+                                class="otp-input w-14 h-14 text-center text-2xl font-bold border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-[#00C3B3]/20 focus:border-[#00C3B3] transition-all duration-200 @error('otp_code') border-red-300 @enderror"
+                                inputmode="numeric"
+                                pattern="[0-9]"
+                                required>
+                            <input type="text"
+                                maxlength="1"
+                                class="otp-input w-14 h-14 text-center text-2xl font-bold border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-[#00C3B3]/20 focus:border-[#00C3B3] transition-all duration-200 @error('otp_code') border-red-300 @enderror"
+                                inputmode="numeric"
+                                pattern="[0-9]"
+                                required>
+                        </div>
+
+                        @error('otp_code')
+                            <div class="text-center">
+                                <p class="text-sm font-medium text-red-600">{{ $message }}</p>
+                            </div>
+                        @enderror
+                    </div>
+
+                    <!-- Submit  -->
+                    <button type="submit"
+                            class="w-full bg-gradient-to-r from-[#00C3B3] to-[#33D1C2] hover:from-[#00ADA0] hover:to-[#00C3B3] text-white font-semibold py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-[#00C3B3]/50">
+                        Verify Code
+                    </button>
+
+                    <div class="mt-6 pt-6 border-t border-gray-100">
+                        <div class="text-center text-sm">
+                            <span class="text-gray-600">Didn't receive the code?</span>
+                            <a href="{{ route('otp.resend') }}"
+                            class="font-semibold text-[#00C3B3] hover:text-[#33D1C2] ml-1 transition-colors duration-200">
+                                Resend OTP
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="{{ asset('js/otp.js') }}"></script>
+</body>
+</html>
+
+
+
+
