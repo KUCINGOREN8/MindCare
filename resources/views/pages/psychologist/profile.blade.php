@@ -7,9 +7,9 @@
 @section('content')
     <div class="flex flex-1">
         <div class="flex flex-col flex-1 gap-6">
-            <div class="flex flex-col bg-white p-6 rounded-md border-grey-border border justify-between gap-6">
-
-                <div class="flex justify-between gap-3">
+            <div class="flex flex-col  bg-white p-6 rounded-md border-grey-border border justify-between gap-6">
+                
+                <div class="flex flex-col md:flex-row justify-between gap-3">
                     <div class="flex flex-1 flex-col items-center justify-center text-center ">
                         <img src="{{ $psychologist->photo_url ? asset($psychologist->photo_url) : ($psychologist->gender=="female" ? asset('assets/icons/user_female.svg') : asset('assets/icons/user_male.svg')) }}" alt="" class='rounded-full mb-4' style='width:200px;'>
                         <h1 class="font-semibold text-lg"> {{ $psychologist->full_name }} </h1>
@@ -107,8 +107,14 @@
             <div class="flex flex-col bg-white p-6 rounded-md border-grey-border border justify-between gap-6">
                 <div class="flex flex-col gap-3">
                     <div class="flex justify-between">
-                        <h1 class="font-semibold text-lg">Reviews</h1>
-                        <button class="text-caption underline" href="">See All</button>
+                        <div class="flex flex-col">
+                            <h1 class="font-semibold text-lg">Reviews</h1>
+                            <div class="flex gap-2">
+                                <img src="{{ asset('assets/icons/star.png') }}" alt="">
+                                <p class="text-sm">{{ number_format($psychologist->reviews->avg('rating'),1)}}/5.0</p>
+                            </div>
+                        </div>
+                        <a class="text-caption underline" href="{{ route('psychologist.review', $psychologist->id) }}">See All</a>
                     </div>
                     <div class="flex">
                         <p class="text-caption"></p>

@@ -26,8 +26,9 @@ Route::middleware('auth')->group(function () {
 
     // Dashboard Page
     Route::get('/dashboard' , [DashboardController::class, 'showDashboard'])->name('dashboard.index');
-    Route::get('find-psychologist', [PsychologistController::class, 'showFindPsychologist']) -> name('find.psychologist');
-    Route::get('psychologist/{id}', [PsychologistController::class, 'showProfile']) -> name('psychologist.profile');
+    Route::get('find-psychologist', [PsychologistController::class, 'showFindPsychologist'])-> name('find.psychologist');
+    Route::get('psychologist/{id}', [PsychologistController::class, 'showProfile'])-> name('psychologist.profile');
+    Route::get('psychologist/{id}/review', [PsychologistController::class, 'showReview'])-> name('psychologist.review');
     Route::get('book_appointment', function () {
         return view('pages.appointment.book');
     }) -> name('book.appointment');

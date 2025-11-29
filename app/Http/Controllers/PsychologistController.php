@@ -23,10 +23,18 @@ class PsychologistController extends Controller
                 $q->orderBy('start_year', 'desc');
             },
             'schedules', 
-            'reviews'])
+            'reviews' => function ($query) {
+                $query->latest()->take(2);
+            }])
             ->findOrFail($id);
-
+        
         return view('pages.psychologist.profile', compact('psychologist'));
+    }
+
+    public function showReview($id) {
+        $psychologist = Psychologist::with('reviews')->orderBy('created_at', 'desc')->findOrFail($id);
+
+        return view('pages.psychologist.review', compact('psychologist'));
     }
 
     /**

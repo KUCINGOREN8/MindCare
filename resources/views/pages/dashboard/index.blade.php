@@ -81,8 +81,13 @@ Dashboard
 
             {{-- Action --}}
             <div class="flex gap-4 flex-col lg:flex-row">
-                <x-rounded-button text="Settings" active="true" route="#"></x-rounded-button>
-                <x-rounded-button text="Logout" secondary="true" route="#"></x-rounded-button>
+                <x-rounded-button text="Settings" active="true" route="{{ route('profile.edit') }}"></x-rounded-button>
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="rounded-button secondary bg-white hover:bg-caption/2 text-caption-dark border border-grey-border rounded-md  px-2 md:px-4 py-2 md:py-2 text-center flex flex-1 items-center justify-center text-xs sm:text-sm lg:text-base">
+                        Logout
+                    </button>
+                </form>
             </div>
             
         </div>
