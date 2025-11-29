@@ -46,20 +46,19 @@
                                 class="otp-input w-14 h-14 text-center text-2xl font-bold border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-[#00C3B3]/20 focus:border-[#00C3B3] transition-all duration-200 @error('otp_code') border-red-300 @enderror"
                                 inputmode="numeric"
                                 pattern="[0-9]"
-                                required
                                 autofocus>
                             <input type="text"
                                 maxlength="1"
                                 class="otp-input w-14 h-14 text-center text-2xl font-bold border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-[#00C3B3]/20 focus:border-[#00C3B3] transition-all duration-200 @error('otp_code') border-red-300 @enderror"
                                 inputmode="numeric"
                                 pattern="[0-9]"
-                                required>
+                               >
                             <input type="text"
                                 maxlength="1"
                                 class="otp-input w-14 h-14 text-center text-2xl font-bold border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-[#00C3B3]/20 focus:border-[#00C3B3] transition-all duration-200 @error('otp_code') border-red-300 @enderror"
                                 inputmode="numeric"
                                 pattern="[0-9]"
-                                required>
+                               >
 
                             <div class="w-4 flex items-center justify-center">
                                 <span class="text-gray-400 font-bold">-</span>
@@ -70,19 +69,19 @@
                                 class="otp-input w-14 h-14 text-center text-2xl font-bold border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-[#00C3B3]/20 focus:border-[#00C3B3] transition-all duration-200 @error('otp_code') border-red-300 @enderror"
                                 inputmode="numeric"
                                 pattern="[0-9]"
-                                required>
+                               >
                             <input type="text"
                                 maxlength="1"
                                 class="otp-input w-14 h-14 text-center text-2xl font-bold border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-[#00C3B3]/20 focus:border-[#00C3B3] transition-all duration-200 @error('otp_code') border-red-300 @enderror"
                                 inputmode="numeric"
                                 pattern="[0-9]"
-                                required>
+                               >
                             <input type="text"
                                 maxlength="1"
                                 class="otp-input w-14 h-14 text-center text-2xl font-bold border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-[#00C3B3]/20 focus:border-[#00C3B3] transition-all duration-200 @error('otp_code') border-red-300 @enderror"
                                 inputmode="numeric"
                                 pattern="[0-9]"
-                                required>
+                               >
                         </div>
 
                         @error('otp_code')
@@ -97,17 +96,24 @@
                             class="w-full bg-gradient-to-r from-[#00C3B3] to-[#33D1C2] hover:from-[#00ADA0] hover:to-[#00C3B3] text-white font-semibold py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-[#00C3B3]/50">
                         Verify Code
                     </button>
+                </form>
 
-                    <div class="mt-6 pt-6 border-t border-gray-100">
-                        <div class="text-center text-sm">
-                            <span class="text-gray-600">Didn't receive the code?</span>
-                            <a href="{{ route('otp.resend') }}"
-                            class="font-semibold text-[#00C3B3] hover:text-[#33D1C2] ml-1 transition-colors duration-200">
+                {{-- Resend OTP --}}
+                <div class="px-8 pb-8">
+                    <div class="text-center text-sm pt-4 border-t border-gray-100">
+                        <span class="text-gray-600">Didn't receive the code?</span>
+
+                        <form method="POST" action="{{ route('otp.resend') }}" class="inline" id="resendForm">
+                            @csrf
+                            <button type="submit"
+                                class="font-semibold text-[#00C3B3] hover:text-[#33D1C2] ml-1 transition-colors duration-200">
                                 Resend OTP
-                            </a>
+                            </button>
+                        </form>
                         </div>
                     </div>
-                </form>
+                </div>
+
             </div>
         </div>
     </div>

@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
     const inputs = document.querySelectorAll(".otp-input");
-    const form = document.getElementById("otpForm");
     const hiddenInput = document.getElementById("otp_code");
 
     inputs.forEach((input, index) => {
@@ -45,14 +44,4 @@ document.addEventListener("DOMContentLoaded", function () {
             .join("");
         hiddenInput.value = otp;
     }
-
-    form.addEventListener("submit", function (e) {
-        const otp = Array.from(inputs)
-            .map((input) => input.value)
-            .join("");
-        if (otp.length !== 6) {
-            e.preventDefault();
-            alert("Please enter all 6 digits");
-        }
-    });
 });
