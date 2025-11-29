@@ -55,10 +55,20 @@
                 </div>
 
                 <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                      <a href="{{ route('signup') }}"
-                        class="bg-[#00C3B3] hover:bg-[#33D1C2] active:bg-[#66DED0] text-white font-semibold px-4 py-2 rounded-full transition">
-                        Sign Up
-                    </a>
+                    @auth
+                        <form method="POST" action="{{ route('logout') }}" class="inline">
+                            @csrf
+                            <button type="submit"
+                                class="bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-semibold px-4 py-2 rounded-full transition">
+                                Log Out
+                            </button>
+                        </form>
+                    @else
+                        <a href="{{ route('signup') }}"
+                            class="bg-[#00C3B3] hover:bg-[#33D1C2] active:bg-[#66DED0] text-white font-semibold px-4 py-2 rounded-full transition">
+                            Sign Up
+                        </a>
+                    @endauth
 
                     <!-- Profile dropdown -->
                     {{-- <el-dropdown class="relative ml-3">
@@ -96,6 +106,22 @@
                     class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-black/5 hover:text-black">About</a>
                 <a href="#testimonials"
                     class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-black/5 hover:text-black">Testimonial</a>
+                 @auth
+                    <div class="border-t border-gray-200 pt-2 mt-2">
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit"
+                                class="block w-full text-left rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-black/5 hover:text-black">
+                                Log Out
+                            </button>
+                        </form>
+                    </div>
+                @else
+                    <a href="{{ route('signup') }}"
+                        class="block rounded-md bg-[#00C3B3] px-3 py-2 text-base font-medium text-white">
+                        Sign Up
+                    </a>
+                @endauth
             </div>
         </el-disclosure>
     </nav>

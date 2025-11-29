@@ -3,9 +3,13 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\OTPController;
 use App\Http\Controllers\PsychologistController;
+use App\Http\Middleware\OTPMiddleware;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+
+app('router')->aliasMiddleware('otp', OTPMiddleware::class);
 
 // Public guest-only routes (user belum login)
 Route::middleware('guest')->group(function () {
@@ -22,8 +26,14 @@ Route::middleware('guest')->group(function () {
 });
 
 // After Login (auth protected)
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth'])->group(function () {
+    Route::get('/otp/send', [OTPController::class, 'sendOTP'])->name('otp.send');
+    Route::get('/otp/verify', [OTPController::class, 'showVerifyForm'])->name('otp.verify');
+    Route::post('/otp/verify', [OTPController::class, 'verifyOTP'])->name('otp.verify.post');
+    Route::post('/otp/resend', [OTPController::class, 'resendOTP'])->name('otp.resend');
+});
 
+Route::middleware(['auth', 'otp'])->group(function () {
     // Dashboard Page
     Route::get('/dashboard' , [DashboardController::class, 'showDashboard'])->name('dashboard.index');
     Route::get('find-psychologist', [PsychologistController::class, 'showFindPsychologist'])-> name('find.psychologist');
