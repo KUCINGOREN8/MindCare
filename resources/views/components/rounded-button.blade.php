@@ -10,7 +10,7 @@
         {{ $active 
             ? 'bg-primary text-white' 
             : ($secondary
-            ? 'bg-white hover:bg-caption/5 text-caption-dark border border-grey-border'
+            ? 'bg-white hover:bg-caption/2 text-caption-dark border border-grey-border'
             : 'bg-background text-caption-dark border border-grey-border hover:bg-grey-100')
             }}
         rounded-md 

@@ -16,10 +16,11 @@ return new class extends Migration
             $table->string('full_name');
             $table->string('photo_url')->nullable();
             $table->text('short_bio')->nullable();
-            $table->date('date_of_birth');
+            $table->text('about_me')->nullable();
             $table->enum('gender', ['male', 'female', 'other']);
             $table->json('languages')->nullable(); 
             
+            $table->string('title');
             $table->string('specialization');
             $table->string('license_number'); 
             $table->integer('years_experience')->default(0);
