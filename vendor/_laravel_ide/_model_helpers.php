@@ -1313,8 +1313,8 @@ namespace App\Models {
      *
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
-     * @property string|null $end_time
-     * @property string|null $start_time
+     * @property string $end_time
+     * @property string $start_time
      * @property mixed $day_of_week
      * @property mixed $psychologist_id
      * @property int $id
@@ -1629,6 +1629,18 @@ namespace App\Models {
     /**
      * App\Models\Testimonial
      *
+     * @property \Illuminate\Support\Carbon|null $updated_at
+     * @property \Illuminate\Support\Carbon|null $created_at
+     * @property string $message
+     * @property string|null $position
+     * @property string $name
+     * @property int $id
+     * @method static \Illuminate\Database\Eloquent\Builder<Testimonial>|Testimonial whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Testimonial>|Testimonial whereName($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Testimonial>|Testimonial wherePosition($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Testimonial>|Testimonial whereMessage($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Testimonial>|Testimonial whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Testimonial>|Testimonial whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Testimonial>|Testimonial newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<Testimonial>|Testimonial newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<Testimonial>|Testimonial query()
