@@ -47,16 +47,36 @@ Dashboard
                     <h5 class="text-captiondark text-sm">How are you feeling today?</h5>
                 </div>
                 @if($user->role == 'patient')
-                <div class="flex items-center gap-4">
-                    <p class="text-caption-dark">Rate your mood:</p>
-                    <div class="flex gap-4">
-                        <button class="p-2 rounded-full bg-transparent hover:bg-primary/5 "><img src="{{ asset("assets/dashboard/sad.png") }}" alt="Sad"></button>
-                        <button class="p-2 rounded-full bg-transparent hover:bg-primary/5 "><img src="{{ asset("assets/dashboard/flat.png") }}" alt="Sad"></button>
-                        <button class="p-2 rounded-full bg-transparent hover:bg-primary/5 "><img src="{{ asset("assets/dashboard/good.png") }}" alt="Sad"></button>
-                        <button class="p-2 rounded-full bg-transparent hover:bg-primary/5 "><img src="{{ asset("assets/dashboard/happy.png") }}" alt="Sad"></button>
-                        <button class="p-2 rounded-full bg-transparent hover:bg-primary/5 "><img src="{{ asset("assets/dashboard/blissful.png") }}" alt="Sad"></button>
-                    </div>
-                </div>
+                    <form action="{{ route('mood.store') }}" method="POST" x-data="{ selected: null }">
+                        @csrf
+                        <input type="hidden" name="mood" :value="selected">
+
+                        <div class="flex items-center gap-4">
+                            <p class="text-caption-dark">Rate your mood:</p>
+                            <div class="flex gap-4">
+                                @foreach ([
+                                    ['id' => 'sad', 'img' => 'sad.png', 'alt' => 'Sad'],
+                                    ['id' => 'flat', 'img' => 'flat.png', 'alt' => 'Flat'],
+                                    ['id' => 'good', 'img' => 'good.png', 'alt' => 'Good'],
+                                    ['id' => 'happy', 'img' => 'happy.png', 'alt' => 'Happy'],
+                                    ['id' => 'blissful', 'img' => 'blissful.png', 'alt' => 'Blissful'],
+                                ] as $mood)
+                                    <button
+                                        type="button"
+                                        @click="selected = '{{ $mood['id'] }}'; $nextTick(() => $el.closest('form').submit())"
+                                        :class="selected === '{{ $mood['id'] }}'
+                                            ? 'bg-secondary text-white scale-110'
+                                            : 'bg-transparent hover:bg-secondary/10'"
+                                        class="p-2 rounded-full transition transform duration-300 hover:scale-110"
+                                    >
+                                        <img src="{{ asset('assets/dashboard/' . $mood['img']) }}" 
+                                            alt="{{ $mood['alt'] }}" 
+                                            class="w-8 h-8">
+                                    </button>
+                                @endforeach
+                            </div>
+                        </div>
+                    </form>
                 @endif
             </div>
 
@@ -86,7 +106,7 @@ Dashboard
                 <x-rounded-button text="Settings" active="true" route="{{ route('profile.edit') }}"></x-rounded-button>
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf
-                    <button type="submit" class="rounded-button secondary bg-white hover:bg-caption/2 text-caption-dark border border-grey-border rounded-md  px-2 md:px-4 py-2 md:py-2 text-center flex flex-1 items-center justify-center text-xs sm:text-sm lg:text-base">
+                    <button type="submit" class="rounded-button secondary bg-white hover:bg-gray-100 text-caption-dark border border-grey-border rounded-md  px-2 md:px-4 py-2 md:py-2 text-center flex flex-1 items-center justify-center text-xs sm:text-sm lg:text-base">
                         Logout
                     </button>
                 </form>

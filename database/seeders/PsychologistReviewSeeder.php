@@ -34,19 +34,19 @@ class PsychologistReviewSeeder extends Seeder
             ],
             [
                 'psychologist_id' => '2',
-                'user_id' => '3',
+                'user_id' => '1',
                 'rating' => 4,
                 'review' => 'Very professional and supportive. Gave practical tools I could apply daily.',
             ],
             [
                 'psychologist_id' => '2',
-                'user_id' => '4',
+                'user_id' => '2',
                 'rating' => 5,
                 'review' => 'She helped me regain confidence and manage stress at work. Truly life-changing sessions.',
             ],
             [
                 'psychologist_id' => '2',
-                'user_id' => '5',
+                'user_id' => '2',
                 'rating' => 4,
                 'review' => 'Warm and understanding, though sometimes sessions felt a bit rushed. Still very helpful.',
             ],

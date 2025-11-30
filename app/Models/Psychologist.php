@@ -38,11 +38,6 @@ class Psychologist extends Model
         'agree_to_terms' => 'boolean',
     ];
 
-    // public function getPhotoUrlAttribute($value)
-    // {
-    //     return $value ?? asset('images/default-avatar.png');
-    // }
-
     public function educations()
     {
         return $this->hasMany(PsychologistEducation::class);

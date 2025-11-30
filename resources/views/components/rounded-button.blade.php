@@ -8,10 +8,10 @@
 <a href="{{ $route }}" 
    class="
         {{ $active 
-            ? 'bg-primary text-white' 
+            ? 'bg-primary text-white hover:bg-[#179990]' 
             : ($secondary
-            ? 'bg-white hover:bg-caption/2 text-caption-dark border border-grey-border'
-            : 'bg-background text-caption-dark border border-grey-border hover:bg-grey-100')
+            ? 'bg-white hover:bg-gray-100 text-caption-dark border border-grey-border'
+            : 'bg-background text-caption-dark border border-grey-border hover:bg-gray-100')
             }}
         rounded-md 
         px-2
