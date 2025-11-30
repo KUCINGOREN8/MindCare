@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Homepage')
+
 
 @section('content')
     <div class="flex items-center justify-start h-[600px] bg-cover bg-fit w-full pl-52"

@@ -5,6 +5,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\PostController;
 
 // Public guest-only routes (user belum login)
 Route::middleware('guest')->group(function () {
@@ -44,3 +46,23 @@ Route::get('/lang/{lang}', function ($lang) {
     session(['locale' => $lang]);
     return back();
 })->name('switch.lang');
+
+
+
+// appointments route group
+Route::prefix('appointments')
+    ->name('appointments.')
+    ->controller(AppointmentController::class)
+    ->group(function () {
+
+        // halaman appointments → /appointments
+        Route::get('/', 'index')->name('index');
+
+        // load more ajax
+        Route::get('/load-more', 'loadMore')->name('load-more');
+
+        // actions
+        Route::post('/{id}/confirm', 'confirm')->name('confirm');
+        Route::post('/{id}/cancel', 'cancel')->name('cancel');
+        Route::post('/{id}/reschedule', 'reschedule')->name('reschedule');
+    });
