@@ -31,7 +31,7 @@
                         </div>
                         <div>
                             <h5 class="text-captiondark text-sm font-semibold">Experience:</h5>
-                            <p class="text-captiondark text-sm">{{ $psychologist->years_experience ? $psychologist->years_experience . 'years' : 'N/A' }}</p>
+                            <p class="text-captiondark text-sm">{{ $psychologist->years_experience ? $psychologist->years_experience . ' years' : 'N/A' }}</p>
                         </div>
                         <div>
                             <h5 class="text-captiondark text-sm font-semibold">Specialization:</h5>
