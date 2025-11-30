@@ -1,15 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Login</title>
-    <link rel="stylesheet" href="{{ asset('css/auth.css') }}">
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="overflow-hidden">
+@extends('layouts.auth')
+@section('title', 'Login')
 
+@section('content')
     <div class="flex" style="height: 100vh;">
         <!-- Left Container-->
         <div class="hidden lg:block lg:w-[30%] relative">
@@ -75,7 +67,4 @@
             </div>
         </div>
     </div>
-
-    <script src="{{ asset('js/auth.js') }}"></script>
-</body>
-</html>
+@endsection
