@@ -19,5 +19,6 @@
     </main>
 
     <script src="{{ asset('js/auth.js') }}"></script>
+    @yield('scripts')
 </body>
 </html>

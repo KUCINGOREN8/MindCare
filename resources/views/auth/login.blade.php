@@ -44,7 +44,7 @@
                     <div>
                         <div class="pt-4">
                             <button type="submit" class="w-full text-white py-3 rounded-lg font-medium hover:opacity-90 transition text-base shadow-md" style="background-color: #009C8F;">
-                                Sign up
+                                Login
                             </button>
                         </div>
                         @error('terms')
