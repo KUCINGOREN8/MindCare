@@ -19,7 +19,7 @@ class AppointmentController extends Controller
             ->take(5)
             ->get();
 
-        return view('appointments', compact('ongoing', 'history'));
+        return view('pages.appointment.appointments', compact('ongoing', 'history'));
     }
 
     public function loadMore(Request $request)
@@ -62,7 +62,7 @@ class AppointmentController extends Controller
 
         $appointment->save();
 
-        return back();
+        return view('profile.appointments', compact('ongoing', 'history'));
     }
 }
 

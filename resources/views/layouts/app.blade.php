@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>@yield('title', 'MindCare')</title>
+    <title>@yield('title', 'BeOkay')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
@@ -19,6 +19,7 @@
     </main>
 
     @include('layouts.footer')
-</body>
 
+    <script src="{{ asset('js/navbar.js') }}"></script>
+</body>
 </html>

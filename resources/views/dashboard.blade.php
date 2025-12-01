@@ -2,7 +2,8 @@
 @section('title', 'Homepage')
 
 @section('content')
-    <div class="flex items-center justify-start h-[600px] bg-cover bg-fit w-full pl-52"
+    {{-- Home --}}
+    <div id="home" class="flex items-center justify-start h-[600px] bg-cover bg-fit w-full pl-52"
         style="background-image: url('{{ asset('img/welcome.png') }}')">
         <div class="justify-center mr-12 pr-20">
             <div class="flex-col max-w-md">
@@ -11,16 +12,22 @@
                 <p class="text-[#4D4D4E] text-md text-justify">{{ __('messages.description') }}</p>
             </div>
             <div class="flex pt-7 space-x-6">
-                <button
-                    class="bg-[#00C3B3] hover:bg-[#33D1C2] active:bg-[#66DED0] text-white font-semibold w-40 py-3 rounded-[1vw] transition">
-                    {{ __('messages.button1') }}
-                </button>
+                @auth
+                    <a href="{{ route('dashboard.index') }}"
+                        class="bg-[#00C3B3] hover:bg-[#33D1C2] active:bg-[#66DED0] text-white font-semibold w-40 py-3 rounded-[1vw] transition flex items-center justify-center">
+                        {{ __('messages.button1') }}
+                    </a>
+                @else
+                    <a href="{{ route('signup') }}"
+                        class="bg-[#00C3B3] hover:bg-[#33D1C2] active:bg-[#66DED0] text-white font-semibold w-40 py-3 rounded-[1vw] transition flex items-center justify-center">
+                        {{ __('messages.button1') }}
+                    </a>
+                @endauth
 
                 <button
                     class="bg-white hover:bg-[#f9f9f9] active:bg-[#66DED0] text-[#2E6F6D] font-semibold w-40 py-3 rounded-[1vw] transition border border-[#2E6F6D]">
                     {{ __('messages.button2') }}
                 </button>
-
             </div>
             <div class="flex space-x-9 pt-2">
                 <div class="flex items-center justify-center">
@@ -34,7 +41,9 @@
             </div>
         </div>
     </div>
-    <div class="flex flex-col items-center justify-center bg-white h-[700px]">
+
+    {{-- About --}}
+    <div  id="about" class="flex flex-col items-center justify-center bg-white h-[700px]">
         <div class="text-center">
             <h1 class="font-semibold text-3xl">{{ __('messages.reason') }} <span class="text-[#00C3B3]">Be
                     Okay</span><span>?</span></h1>
@@ -117,7 +126,9 @@
             </div>
         </div>
     </div>
-    <div class="flex flex-col items-center justify-center bg-gray-200 h-[550px]">
+
+    {{-- Testimonials --}}
+    <div id="testimonials" class="flex flex-col items-center justify-center bg-gray-200 h-[550px]">
         <div class="text-center">
             <h1 class="font-semibold text-3xl">{{ __('messages.usersay') }}</h1>
             <p class="pt-3 text-[#4B5563]">{{ __('messages.userdesc') }}</p>

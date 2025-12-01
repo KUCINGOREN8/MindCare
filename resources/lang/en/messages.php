@@ -29,6 +29,5 @@ return [
     'usersay' => 'What Our Users Say',
     'userdesc' => 'Real stories from people who found their way to being okay',
     'about' => 'About',
-    'service' => 'Service',
-    'contact' => 'Contact',
+    'testimonials' => 'Testimonial',
 ];

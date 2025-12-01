@@ -1,5 +1,5 @@
-<div>
-    <nav class="relative bg-white">
+<div class="sticky top-0 z-50">
+    <nav class="bg-white shadow-md">
         <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
             <div class="relative flex h-16 items-center justify-between">
                 <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -25,14 +25,12 @@
                     </div>
                     <div class="hidden w-full sm:block">
                         <div class="flex justify-center space-x-4 font-Inter">
-                            <a href="#" aria-current="page"
+                            <a href="#home" aria-current="page"
                                 class="rounded-full px-4 py-2 bg-[#00C3B3] text-base font-semibold text-white">Home</a>
-                            <a href="#"
+                            <a href="#about"
                                 class="rounded-full px-4 py-2 text-base font-medium text-black hover:bg-black/5 hover:text-black">{{ __('messages.about') }}</a>
-                            <a href="#"
-                                class="rounded-full px-4 py-2 text-base font-medium text-black hover:bg-black/5 hover:text-black">{{ __('messages.service') }}</a>
-                            <a href="#"
-                                class="rounded-full px-4 py-2 text-base font-medium text-black hover:bg-black/5 hover:text-black">{{ __('messages.contact') }}</a>
+                            <a href="#testimonials"
+                                class="rounded-full px-4 py-2 text-base font-medium text-black hover:bg-black/5 hover:text-black">{{ __('messages.testimonials') }}</a>
                         </div>
                     </div>
                 </div>
@@ -57,10 +55,20 @@
                 </div>
 
                 <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                    <button
-                        class="bg-[#00C3B3] hover:bg-[#33D1C2] active:bg-[#66DED0] text-white font-semibold px-4 py-2 rounded-full transition">
-                        Sign Up
-                    </button>
+                    @auth
+                        <form method="POST" action="{{ route('logout') }}" class="inline">
+                            @csrf
+                            <button type="submit"
+                                class="bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-semibold px-4 py-2 rounded-full transition">
+                                Log Out
+                            </button>
+                        </form>
+                    @else
+                        <a href="{{ route('signup') }}"
+                            class="bg-[#00C3B3] hover:bg-[#33D1C2] active:bg-[#66DED0] text-white font-semibold px-4 py-2 rounded-full transition">
+                            Sign Up
+                        </a>
+                    @endauth
 
                     <!-- Profile dropdown -->
                     {{-- <el-dropdown class="relative ml-3">
@@ -92,14 +100,28 @@
         <el-disclosure id="mobile-menu" hidden class="block sm:hidden">
             <div class="space-y-1 px-2 pt-2 pb-3">
                 <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-white/5 hover:text-white" -->
-                <a href="#" aria-current="page"
+                <a href="#home" aria-current="page"
                     class="block rounded-md bg-[#00C3B3] px-3 py-2 text-base font-medium text-white">Home</a>
-                <a href="#"
+                <a href="#about"
                     class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-black/5 hover:text-black">About</a>
-                <a href="#"
-                    class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-black/5 hover:text-black">Services</a>
-                <a href="#"
-                    class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-black/5 hover:text-black">Contact</a>
+                <a href="#testimonials"
+                    class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-black/5 hover:text-black">Testimonial</a>
+                 @auth
+                    <div class="border-t border-gray-200 pt-2 mt-2">
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit"
+                                class="block w-full text-left rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-black/5 hover:text-black">
+                                Log Out
+                            </button>
+                        </form>
+                    </div>
+                @else
+                    <a href="{{ route('signup') }}"
+                        class="block rounded-md bg-[#00C3B3] px-3 py-2 text-base font-medium text-white">
+                        Sign Up
+                    </a>
+                @endauth
             </div>
         </el-disclosure>
     </nav>
