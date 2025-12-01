@@ -1,13 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reset Password</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="overflow-hidden">
+@extends('layouts.auth')
+@section('title', 'Reset Password')
 
+@section('content')
     <div class="flex" style="height: 100vh;">
         <!-- Left Container-->
         <div class="hidden lg:block lg:w-[30%] relative">
@@ -75,7 +69,4 @@
             </div>
         </div>
     </div>
-
-    <script src="{{ asset('js/auth.js') }}"></script>
-</body>
-</html>
+@endsection

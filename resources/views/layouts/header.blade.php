@@ -34,25 +34,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="mr-4 items-center justify-center">
-                    @php
-                        $isEnglish = session('locale', 'en') === 'en';
-                    @endphp
-
-                    <div class="flex items-center gap-2 px-3 py-1 bg-gray-50 rounded-full shadow-sm">
-                        <a href="{{ route('switch.lang', ['lang' => 'en']) }}"
-                            class="{{ $isEnglish ? 'font-semibold text-gray-800' : 'text-gray-400' }} hover:text-teal-500 transition">
-                            EN
-                        </a>
-
-                        <span class="text-gray-400">|</span>
-
-                        <a href="{{ route('switch.lang', ['lang' => 'id']) }}"
-                            class="{{ !$isEnglish ? 'font-semibold text-gray-800' : 'text-gray-400' }} hover:text-teal-500 transition">
-                            ID
-                        </a>
-                    </div>
-                </div>
+                @include('components.language-toggle')
 
                 <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                     @auth

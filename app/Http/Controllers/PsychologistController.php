@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Psychologist;
 use App\Http\Requests\StorePsychologistRequest;
 use App\Http\Requests\UpdatePsychologistRequest;
+use Illuminate\Http\Request; 
 
 class PsychologistController extends Controller
 {
@@ -23,11 +24,29 @@ class PsychologistController extends Controller
                 $q->orderBy('start_year', 'desc');
             },
             'schedules', 
-            'reviews'])
+            'reviews' => function ($query) {
+                $query->latest()->take(2);
+            }])
             ->findOrFail($id);
-
+        
         return view('pages.psychologist.profile', compact('psychologist'));
     }
+
+    public function showSearch(Request $request) {
+
+        $query = $request->input('q');
+
+        $results = Psychologist::where('full_name', 'LIKE', "%{$query}%")->select('id', 'full_name', 'title', 'photo_url', 'gender')->get();
+
+        return response()->json($results);
+    }
+
+    public function showReview($id) {
+        $psychologist = Psychologist::with('reviews')->orderBy('created_at', 'desc')->findOrFail($id);
+
+        return view('pages.psychologist.review', compact('psychologist'));
+    }
+    
 
     /**
      * Show the form for creating a new resource.

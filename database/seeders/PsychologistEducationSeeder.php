@@ -26,6 +26,24 @@ class PsychologistEducationSeeder extends Seeder
                 'institution' => 'University of Melbourne',
                 'year' => '2015',
             ],
+            [
+                'psychologist_id' => '2',
+                'degree' => 'Bachelor of Psychology',
+                'institution' => 'Universitas Indonesia',
+                'year' => '2010',
+            ],
+            [
+                'psychologist_id' => '2',
+                'degree' => 'Master of Counseling Psychology',
+                'institution' => 'Monash University',
+                'year' => '2013',
+            ],
+            [
+                'psychologist_id' => '2',
+                'degree' => 'Professional Certification in Cognitive Behavioral Therapy (CBT)',
+                'institution' => 'Beck Institute, USA',
+                'year' => '2016',
+            ],
         ];
 
         foreach ($educations as $e) {
