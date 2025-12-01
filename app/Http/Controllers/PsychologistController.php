@@ -5,30 +5,31 @@ namespace App\Http\Controllers;
 use App\Models\Psychologist;
 use App\Http\Requests\StorePsychologistRequest;
 use App\Http\Requests\UpdatePsychologistRequest;
-use Illuminate\Http\Request; 
+use Illuminate\Http\Request;
 
 class PsychologistController extends Controller
 {
-    
+
     public function showFindPsychologist()
     {
-        $psychologists = Psychologist::all();
+        $psychologists = Psychologist::with('user')->get();
 
         return view('pages.psychologist.find', compact('psychologists'));
     }
 
     public function showProfile($id) {
         $psychologist = Psychologist::with([
-            'educations', 
+            'user',
+            'educations',
             'experiences' => function ($q) {
                 $q->orderBy('start_year', 'desc');
             },
-            'schedules', 
+            'schedules',
             'reviews' => function ($query) {
                 $query->latest()->take(2);
             }])
             ->findOrFail($id);
-        
+
         return view('pages.psychologist.profile', compact('psychologist'));
     }
 
@@ -36,17 +37,31 @@ class PsychologistController extends Controller
 
         $query = $request->input('q');
 
-        $results = Psychologist::where('full_name', 'LIKE', "%{$query}%")->select('id', 'full_name', 'title', 'photo_url', 'gender')->get();
+         $results = Psychologist::with('user')
+            ->whereHas('user', function ($q) use ($query) {
+                $q->where('full_name', 'LIKE', "%{$query}%");
+            })
+            ->select('id', 'user_id', 'title')
+            ->get()
+            ->map(function ($psychologist) {
+                return [
+                    'id' => $psychologist->id,
+                    'full_name' => $psychologist->user->full_name,
+                    'title' => $psychologist->title,
+                    'photo_url' => $psychologist->user->photo_url,
+                    'gender' => $psychologist->user->gender,
+                ];
+            });
 
         return response()->json($results);
     }
 
     public function showReview($id) {
-        $psychologist = Psychologist::with('reviews')->orderBy('created_at', 'desc')->findOrFail($id);
+        $psychologist = Psychologist::with('user', 'reviews')->orderBy('created_at', 'desc')->findOrFail($id);
 
         return view('pages.psychologist.review', compact('psychologist'));
     }
-    
+
 
     /**
      * Show the form for creating a new resource.

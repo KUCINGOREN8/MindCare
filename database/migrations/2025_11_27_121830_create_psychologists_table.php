@@ -13,25 +13,17 @@ return new class extends Migration
     {
         Schema::create('psychologists', function (Blueprint $table) {
             $table->id();
-            $table->string('full_name');
-            $table->string('photo_url')->nullable();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade')->unique();
+
             $table->text('short_bio')->nullable();
             $table->text('about_me')->nullable();
-            $table->enum('gender', ['male', 'female', 'other']);
-            $table->json('languages')->nullable(); 
-            
+            $table->json('languages')->nullable();
             $table->string('title');
             $table->string('specialization');
-            $table->string('license_number'); 
+            $table->string('license_number');
             $table->integer('years_experience')->default(0);
-            $table->integer('consultation_fee')->default(0); // rupiah per hour
+            $table->decimal('consultation_fee', 10, 2)->default(0); // rupiah per hour
 
-            $table->string('email')->unique();
-            $table->string('password');
-
-            $table->enum('preferred_language', ['en','id'])->default('en');
-            $table->boolean('agree_to_terms')->default(false);
-            $table->rememberToken();
             $table->timestamps();
         });
     }

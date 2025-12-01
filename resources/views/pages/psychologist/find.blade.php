@@ -27,15 +27,15 @@ Find Psychologist
                 @foreach($psychologists as $psychologist)
                 <div class="flex flex-col bg-white rounded-md border border-grey-border p-6 items-center text-center gap-3">
                     <div class="justify-items-center">
-                        <img src="{{ $psychologist->photo_url ? asset($psychologist->photo_url) : ($psychologist->gender=="female" ? asset('assets/icons/user_female.svg') : asset('assets/icons/user_male.svg')) }}" alt="" style='width:100px;'>
+                        <img src="{{ $psychologist->user->photo_url ? asset($psychologist->user->photo_url) : ($psychologist->user->gender=="female" ? asset('assets/icons/user_female.svg') : asset('assets/icons/user_male.svg')) }}">
                     </div>
-                    
+
                     <div class="mb-2">
-                        <div class="font-semibold">{{ $psychologist->full_name }}</div>
+                        <div class="font-semibold">{{ $psychologist->user->full_name }}</div>
                         <div class="text-xs text-gray-400">{{ $psychologist->title }}</div>
                     </div>
-                    
-                    
+
+
                     <div class="flex gap-4 flex-col lg:flex-row">
                         <x-rounded-button text="Book" active="true" route="#"></x-rounded-button>
                         <x-rounded-button text="Details" secondary="true" route="{{ Route('psychologist.profile', $psychologist->id) }}"></x-rounded-button>
@@ -49,22 +49,22 @@ Find Psychologist
                 <template x-for="item in results" :key="item.id">
                     <div class="flex flex-col bg-white rounded-md border border-grey-border p-6 items-center text-center gap-3" >
                         <div class="justify-items-center">
-                            <img 
-                                :src="item.photo_url 
-                                    ? item.photo_url 
-                                    : (item.gender === 'female' 
-                                        ? '{{ asset('assets/icons/user_female.svg') }}' 
+                            <img
+                                :src="item.photo_url
+                                    ? item.photo_url
+                                    : (item.gender === 'female'
+                                        ? '{{ asset('assets/icons/user_female.svg') }}'
                                         : '{{ asset('assets/icons/user_male.svg') }}')"
                                 style="width:100px;"
                                 alt=""
                             >
                         </div>
-    
+
                         <div class="mb-2">
                             <div class="font-semibold" x-text="item.full_name"></div>
                             <div class="text-xs text-gray-400" x-text="item.title"></div>
                         </div>
-    
+
                         <div class="flex gap-4 flex-col lg:flex-row">
                             <x-rounded-button text="Book" active="true" route="#"></x-rounded-button>
                             <a :href="`${'{{ url('/psychologist') }}'}/${item.id}`" class="bg-white hover:bg-caption/2 text-caption-dark border border-grey-border flex rounded-md px-2 md:px-4 py-2 md:py-2 text-center flex-1 items-center justify-center text-xs sm:text-sm lg:text-base">Details</a>
@@ -73,8 +73,8 @@ Find Psychologist
                 </template>
 
             </div>
-            
-            
+
+
             {{-- No Search Result --}}
             <p x-show="query.length > 0 && results.length === 0" class="text-captiondark">
                 No results found.
@@ -94,7 +94,7 @@ function liveSearch() {
                 this.results = [];
                 return;
             }
-            
+
             fetch(`{{ route('psychologist.search') }}?q=` + this.query)
                 .then(res => res.json())
                 .then(data => {
