@@ -2,9 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\Psychologist;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\PsychologistReview;
+use App\Models\User;
 
 class PsychologistReviewSeeder extends Seeder
 {
@@ -13,42 +15,31 @@ class PsychologistReviewSeeder extends Seeder
      */
     public function run(): void
     {
+        $psychologist = Psychologist::whereHas('user', function($q) {
+            $q->where('email', 'doctor@gmail.com');
+        })->first();
+
+        $patient1 = User::where('email', 'test@gmail.com')->first();
+
+
         $reviews = [
             [
-                'psychologist_id' => '1',
-                'user_id' => '1',
+                'psychologist_id' => $psychologist->id,
+                'user_id' => $patient1->id,
                 'rating' => 5,
                 'review' => 'Amazing psychologist, very helpful and professional.',
             ],
             [
-                'psychologist_id' => '1',
-                'user_id' => '1',
+                'psychologist_id' => $psychologist->id,
+                'user_id' => $patient1->id,
                 'rating' => 5,
                 'review' => 'Very patient, warm, and understanding. I always feel safe during sessions.',
             ],
             [
-                'psychologist_id' => '2',
-                'user_id' => '2',
-                'rating' => 5,
-                'review' => 'Highly insightful and empathetic. Helped me understand my anxiety triggers clearly.',
-            ],
-            [
-                'psychologist_id' => '2',
-                'user_id' => '1',
+                'psychologist_id' => $psychologist->id,
+                'user_id' => $patient1->id,
                 'rating' => 4,
                 'review' => 'Very professional and supportive. Gave practical tools I could apply daily.',
-            ],
-            [
-                'psychologist_id' => '2',
-                'user_id' => '2',
-                'rating' => 5,
-                'review' => 'She helped me regain confidence and manage stress at work. Truly life-changing sessions.',
-            ],
-            [
-                'psychologist_id' => '2',
-                'user_id' => '2',
-                'rating' => 4,
-                'review' => 'Warm and understanding, though sometimes sessions felt a bit rushed. Still very helpful.',
             ],
         ];
 

@@ -18,7 +18,7 @@
                         {{ __('messages.button1') }}
                     </a>
                 @else
-                    <a href="{{ route('signup') }}"
+                    <a href="{{ route('login') }}"
                         class="bg-[#00C3B3] hover:bg-[#33D1C2] active:bg-[#66DED0] text-white font-semibold w-40 py-3 rounded-[1vw] transition flex items-center justify-center">
                         {{ __('messages.button1') }}
                     </a>
