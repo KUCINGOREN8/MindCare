@@ -15,8 +15,8 @@ class DatabaseSeeder extends Seeder
             PsychologistExperienceSeeder::class,
             PsychologistScheduleSeeder::class,
             PsychologistReviewSeeder::class,
+            TestimonialSeeder::class
         ]);
-        $this->call(TestimonialSeeder::class);
     }
 }
 
