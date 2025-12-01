@@ -1,21 +1,21 @@
 @extends('layouts.dashboard')
 
 @section('title')
-{{ $psychologist->full_name }} Profile
+{{ $psychologist->user->full_name }} Profile
 @endsection
 
 @section('content')
     <div class="flex flex-1">
         <div class="flex flex-col flex-1 gap-6">
             <div class="flex flex-col  bg-white p-6 rounded-md border-grey-border border justify-between gap-6">
-                
+
                 <div class="flex flex-col md:flex-row justify-between gap-3">
                     <div class="flex flex-1 flex-col items-center justify-center text-center ">
-                        <img src="{{ $psychologist->photo_url ? asset($psychologist->photo_url) : ($psychologist->gender=="female" ? asset('assets/icons/user_female.svg') : asset('assets/icons/user_male.svg')) }}" alt="" class='rounded-full mb-4' style='width:200px;'>
-                        <h1 class="font-semibold text-lg"> {{ $psychologist->full_name }} </h1>
+                        <img src="{{ $psychologist->user->photo_url ? asset($psychologist->user->photo_url) : ($psychologist->user->gender=="female" ? asset('assets/icons/user_female.svg') : asset('assets/icons/user_male.svg')) }}">
+                        <h1 class="font-semibold text-lg"> {{ $psychologist->user->full_name }} </h1>
                         <h5 class="text-captiondark text-sm"> {{ $psychologist->title }} </h5>
                     </div>
-    
+
                     <div class="flex flex-1 flex-col">
                         <div>
                             <h5 class="text-captiondark text-sm font-semibold">Short Bio:</h5>
@@ -51,11 +51,11 @@
 
             <div class="flex flex-col bg-white p-6 rounded-md border-grey-border border justify-between gap-6">
                 <div class="flex flex-col">
-                    <h1 class="font-semibold text-lg mb-[10px]">About {{ $psychologist->full_name}}</h1>
+                    <h1 class="font-semibold text-lg mb-[10px]">About {{ $psychologist->user->full_name}}</h1>
                     <p class="text-captiondark text-sm">{{$psychologist->about_me}}</p>
                 </div>
             </div>
-            
+
             <div class="flex flex-col bg-white p-6 rounded-md border-grey-border border justify-between gap-6">
                 <div class="flex flex-col">
                     <h1 class="font-semibold text-lg mb-[10px] ">Education</h1>
@@ -64,14 +64,14 @@
                     @endforeach
                 </div>
             </div>
-            
+
             <div class="flex flex-col bg-white p-6 rounded-md border-grey-border border justify-between gap-6">
                 <div class="flex flex-col">
                     <h1 class="font-semibold text-lg mb-[10px]">Experiences</h1>
                     @foreach ($psychologist->experiences as $exp)
                         <p class="text-captiondark text-sm">
-                            {{ $exp->position . " - " . $exp->organization . 
-                                ($exp->start_year ? " (" . $exp->start_year . "-" . 
+                            {{ $exp->position . " - " . $exp->organization .
+                                ($exp->start_year ? " (" . $exp->start_year . "-" .
                                 ($exp->end_year ? $exp->end_year : "present") . ")" : null)
                             }}
                         </p>
