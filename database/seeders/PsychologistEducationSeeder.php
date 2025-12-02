@@ -14,23 +14,6 @@ class PsychologistEducationSeeder extends Seeder
      */
     public function run(): void
     {
-        $educations = [
-            [
-                'psychologist_id' => '1',
-                'degree' => 'Master of Clinical Psychology',
-                'institution' => 'University of Melbourne',
-                'year' => '2012',
-            ],
-            [
-                'psychologist_id' => '1',
-                'degree' => 'Master of Science in Psychology',
-                'institution' => 'University of Melbourne',
-                'year' => '2015',
-            ],
-        ];
-
-        foreach ($educations as $e) {
-            PsychologistEducation::create($e);
         $psychologist = Psychologist::whereHas('user', function($q) {
             $q->where('email', 'doctor@gmail.com');
         })->first();
@@ -61,6 +44,5 @@ class PsychologistEducationSeeder extends Seeder
                 PsychologistEducation::create($e);
             }
         }
-    }
     }
 }
