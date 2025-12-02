@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OTPController;
 use App\Http\Controllers\PsychologistController;
@@ -56,9 +57,16 @@ Route::middleware(['auth', 'otp'])->group(function () {
     }) -> name('appointments');
 
     // Messages Page
-    Route::get('messages', function () {
-        return view('pages.message.index');
-    }) -> name('messages');
+    // Route::get('messages', function () {
+    //     return view('pages.message.index');
+    // }) -> name('messages');
+
+    Route::get('/messages', [ChatController::class, 'index'])->name('messages');
+    Route::get('/chat/start/{psychologist}', [ChatController::class, 'startChat'])->name('chat.start');
+    Route::get('/chat/conversation/{conversation}', [ChatController::class, 'show'])->name('chat.show');
+    Route::post('/chat/conversation/{conversation}/send', [ChatController::class, 'sendMessage'])->name('chat.send');
+    Route::get('/chat/conversation/{conversation}/messages', [ChatController::class, 'getMessages'])->name('chat.messages');
+
 
     // User Profile Page
     Route::get('/profile', [UserController::class, 'settings'])->name('profile.edit');
