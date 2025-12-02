@@ -29,6 +29,7 @@ class PsychologistController extends Controller
         return view('pages.psychologist.profile', compact('psychologist'));
     }
 
+    
     /**
      * Show the form for creating a new resource.
      */
