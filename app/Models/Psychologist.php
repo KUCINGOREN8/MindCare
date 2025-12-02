@@ -12,11 +12,6 @@ class Psychologist extends Model
     use HasFactory;
 
     protected $fillable = [
-        'full_name',
-        'short_bio',
-        'photo_url',
-        'gender',
-        'languages', 
         'user_id',
         'short_bio',
         'about_me',
@@ -25,31 +20,13 @@ class Psychologist extends Model
         'specialization',
         'license_number',
         'years_experience',
-        'consultation_fee',
-        'email',
-        'password',
-        'preferred_language',
-        'agree_to_terms',
-    ];
-
-    protected $hidden = [
-        'password',
-        'remember_token',
         'consultation_fee'
     ];
 
     protected $casts = [
         'languages' => 'array',
-        'agree_to_terms' => 'boolean',
         'consultation_fee' => 'decimal:2'
     ];
-
-    // public function getPhotoUrlAttribute($value)
-    // {
-    //     return $value ?? asset('images/default-avatar.png');
-    // }
-        
-    
 
     public function user()
     {
