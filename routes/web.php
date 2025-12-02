@@ -1,14 +1,15 @@
 <?php
 
+use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OTPController;
 use App\Http\Controllers\PsychologistController;
 use App\Http\Middleware\OTPMiddleware;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\AppoinmentController;
 
 app('router')->aliasMiddleware('otp', OTPMiddleware::class);
 
@@ -57,25 +58,32 @@ Route::middleware(['auth', 'otp'])->group(function () {
     }) -> name('appointments');
 
     // Messages Page
-    Route::get('messages', function () {
-        return view('pages.message.index');
-    }) -> name('messages');
+    // Route::get('messages', function () {
+    //     return view('pages.message.index');
+    // }) -> name('messages');
+
+    Route::get('/messages', [ChatController::class, 'index'])->name('messages');
+    Route::get('/chat/start/{psychologist}', [ChatController::class, 'startChat'])->name('chat.start');
+    Route::get('/chat/conversation/{conversation}', [ChatController::class, 'show'])->name('chat.show');
+    Route::post('/chat/conversation/{conversation}/send', [ChatController::class, 'sendMessage'])->name('chat.send');
+    Route::get('/chat/conversation/{conversation}/messages', [ChatController::class, 'getMessages'])->name('chat.messages');
+
 
     // User Profile Page
     Route::get('/profile', [UserController::class, 'settings'])->name('profile.edit');
     // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
+
     //Appointment
     Route::prefix('appointments')
         ->name('appointments.')
         ->controller(AppointmentController::class)
         ->group(function () {
-            
+
             // Halaman utama appointments (History/List)
-            
-            Route::get('/', 'index')->name('index'); 
+
+            Route::get('/', 'index')->name('index');
 
             // Ini yang load more data ges
             Route::get('/load-more', 'loadMore')->name('load-more');
