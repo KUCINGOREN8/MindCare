@@ -8,6 +8,7 @@ use App\Http\Controllers\PsychologistController;
 use App\Http\Middleware\OTPMiddleware;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\AppoinmentController;
 
 app('router')->aliasMiddleware('otp', OTPMiddleware::class);
 
@@ -65,7 +66,25 @@ Route::middleware(['auth', 'otp'])->group(function () {
     // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
+    //Appointment
+    Route::prefix('appointments')
+        ->name('appointments.')
+        ->controller(AppointmentController::class)
+        ->group(function () {
+            
+            // Halaman utama appointments (History/List)
+            
+            Route::get('/', 'index')->name('index'); 
 
+            // Ini yang load more data ges
+            Route::get('/load-more', 'loadMore')->name('load-more');
+
+            // Actions (Confirm, Cancel, Reschedule)
+            Route::post('/{id}/confirm', 'confirm')->name('confirm');
+            Route::post('/{id}/cancel', 'cancel')->name('cancel');
+            Route::post('/{id}/reschedule', 'reschedule')->name('reschedule');
+        });
 
     // Logout boleh pakai POST untuk security
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -83,3 +102,4 @@ Route::get('/lang/{lang}', function ($lang) {
 // Route::get('/user/psychologist/dashboard', function () {
 //     return view('pages.dashboard.index');
 // });
+
