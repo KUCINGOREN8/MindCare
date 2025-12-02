@@ -19,25 +19,70 @@ class User extends Authenticatable
         'gender',
         'preferred_language',
         'agree_to_terms',
+        'otp_code',
+        'otp_expires_at',
+        'otp_verified',
+        'role'
     ];
 
     protected $hidden = [
         'password',
         'remember_token',
+        'otp_code'
     ];
 
-    protected function casts(): array
+    protected $casts = [
+        'date_of_birth' => 'date',
+        'agree_to_terms' => 'boolean',
+        'otp_verified' => 'boolean',
+        'otp_expires_at' => 'datetime'
+    ];
+
+    public function generateOTP()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-            'date_of_birth' => 'date',
-            'agree_to_terms' => 'boolean',
-        ];
+        $this->update([
+            'otp_code' => rand(100000, 999999),
+            'otp_expires_at' => now()->addMinutes(10),
+            'otp_verified' => false
+        ]);
+
+        return $this->otp_code;
+    }
+
+    public function isOTPValid($code)
+    {
+        return $this->otp_code === $code &&
+            now()->lt($this->otp_expires_at);
+    }
+
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isPsychologist()
+    {
+        return $this->role === 'psychologist';
+    }
+
+    public function isPatient()
+    {
+        return $this->role === 'patient';
     }
 
     public function psychologistReviews()
     {
         return $this->hasMany(PsychologistReview::class);
     }
+
+    public function moods()
+    {
+        return $this->hasMany(Mood::class);
+    }
+
+    public function psychologist()
+    {
+    return $this->hasOne(Psychologist::class);
+    }
+
 }

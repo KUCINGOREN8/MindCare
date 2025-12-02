@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 
+{{-- DEL SOON DUPLICATE DENGAN DASHBOARD --}}
 @section('content')
     <div class="flex items-center justify-start h-[600px] bg-cover bg-fit w-full pl-52"
         style="background-image: url('{{ asset('img/welcome.png') }}')">

@@ -2,6 +2,7 @@
 
 @section('title')
 {{ $psychologist->full_name }} Profile
+{{ $psychologist->user->full_name }} Profile
 @endsection
 
 @section('content')
@@ -16,6 +17,15 @@
                         <h5 class="text-captiondark text-sm"> {{ $psychologist->title }} </h5>
                     </div>
     
+            <div class="flex flex-col  bg-white p-6 rounded-md border-grey-border border justify-between gap-6">
+
+                <div class="flex flex-col md:flex-row justify-between gap-3">
+                    <div class="flex flex-1 flex-col items-center justify-center text-center ">
+                        <img src="{{ $psychologist->user->photo_url ? asset($psychologist->user->photo_url) : ($psychologist->user->gender=="female" ? asset('assets/icons/user_female.svg') : asset('assets/icons/user_male.svg')) }}">
+                        <h1 class="font-semibold text-lg"> {{ $psychologist->user->full_name }} </h1>
+                        <h5 class="text-captiondark text-sm"> {{ $psychologist->title }} </h5>
+                    </div>
+
                     <div class="flex flex-1 flex-col">
                         <div>
                             <h5 class="text-captiondark text-sm font-semibold">Short Bio:</h5>
@@ -31,7 +41,11 @@
                         </div>
                         <div>
                             <h5 class="text-captiondark text-sm font-semibold">Experience:</h5>
+<<<<<<< HEAD
                             <p class="text-captiondark text-sm">{{ $psychologist->years_experience ? $psychologist->years_experience . 'years' : 'N/A' }}</p>
+=======
+                            <p class="text-captiondark text-sm">{{ $psychologist->years_experience ? $psychologist->years_experience . ' years' : 'N/A' }}</p>
+>>>>>>> 05965638d654be5556a9a63ac9d22ecc8010904b
                         </div>
                         <div>
                             <h5 class="text-captiondark text-sm font-semibold">Specialization:</h5>
@@ -51,11 +65,19 @@
 
             <div class="flex flex-col bg-white p-6 rounded-md border-grey-border border justify-between gap-6">
                 <div class="flex flex-col">
+<<<<<<< HEAD
                     <h1 class="font-semibold text-lg mb-[10px]">About {{ $psychologist->full_name}}</h1>
                     <p class="text-captiondark text-sm">{{$psychologist->about_me}}</p>
                 </div>
             </div>
             
+=======
+                    <h1 class="font-semibold text-lg mb-[10px]">About {{ $psychologist->user->full_name}}</h1>
+                    <p class="text-captiondark text-sm">{{$psychologist->about_me}}</p>
+                </div>
+            </div>
+
+>>>>>>> 05965638d654be5556a9a63ac9d22ecc8010904b
             <div class="flex flex-col bg-white p-6 rounded-md border-grey-border border justify-between gap-6">
                 <div class="flex flex-col">
                     <h1 class="font-semibold text-lg mb-[10px] ">Education</h1>
@@ -64,14 +86,23 @@
                     @endforeach
                 </div>
             </div>
+<<<<<<< HEAD
             
+=======
+
+>>>>>>> 05965638d654be5556a9a63ac9d22ecc8010904b
             <div class="flex flex-col bg-white p-6 rounded-md border-grey-border border justify-between gap-6">
                 <div class="flex flex-col">
                     <h1 class="font-semibold text-lg mb-[10px]">Experiences</h1>
                     @foreach ($psychologist->experiences as $exp)
                         <p class="text-captiondark text-sm">
+<<<<<<< HEAD
                             {{ $exp->position . " - " . $exp->organization . 
                                 ($exp->start_year ? " (" . $exp->start_year . "-" . 
+=======
+                            {{ $exp->position . " - " . $exp->organization .
+                                ($exp->start_year ? " (" . $exp->start_year . "-" .
+>>>>>>> 05965638d654be5556a9a63ac9d22ecc8010904b
                                 ($exp->end_year ? $exp->end_year : "present") . ")" : null)
                             }}
                         </p>
@@ -107,8 +138,19 @@
             <div class="flex flex-col bg-white p-6 rounded-md border-grey-border border justify-between gap-6">
                 <div class="flex flex-col gap-3">
                     <div class="flex justify-between">
+<<<<<<< HEAD
                         <h1 class="font-semibold text-lg">Reviews</h1>
                         <button class="text-caption underline" href="">See All</button>
+=======
+                        <div class="flex flex-col">
+                            <h1 class="font-semibold text-lg">Reviews</h1>
+                            <div class="flex gap-2">
+                                <img src="{{ asset('assets/icons/star.png') }}" alt="">
+                                <p class="text-sm">{{ number_format($psychologist->reviews->avg('rating'),1)}}/5.0</p>
+                            </div>
+                        </div>
+                        <a class="text-caption underline" href="{{ route('psychologist.review', $psychologist->id) }}">See All</a>
+>>>>>>> 05965638d654be5556a9a63ac9d22ecc8010904b
                     </div>
                     <div class="flex">
                         <p class="text-caption"></p>

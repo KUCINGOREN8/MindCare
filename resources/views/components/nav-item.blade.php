@@ -19,6 +19,7 @@
         hidden
         md:inline
         md:text-xs
+        lg:text-sm
     ">
         {{ $text }}
     </span>

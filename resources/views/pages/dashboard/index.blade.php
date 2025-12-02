@@ -12,6 +12,11 @@ $notifications = [
     ],
     [
         'icon' => 'assets/icons/calendar.svg',
+        'time' => '1 hour ago',
+        'type' => 'reminder',
+    ],
+    [
+        'icon' => 'assets/icons/check.svg',
         'title' => 'Mood Entry Complete',
         'message' => 'Great job logging your mood for 7 days straight!',
         'time' => '3 hours ago',
@@ -25,7 +30,11 @@ $notifications = [
         'type' => 'message',
     ],
     [
+<<<<<<< HEAD
         'icon' => 'assets/icons/calendar.svg',
+=======
+        'icon' => 'assets/icons/tips.svg',
+>>>>>>> 05965638d654be5556a9a63ac9d22ecc8010904b
         'title' => 'Daily Tip',
         'message' => 'Try a 5-minute meditation to start your day',
         'time' => '1 day ago',
@@ -46,6 +55,7 @@ Dashboard
                     <h1 class="text-primary font-bold text-lg">Good Day, {{ $user->full_name }}!</h1>
                     <h5 class="text-captiondark text-sm">How are you feeling today?</h5>
                 </div>
+<<<<<<< HEAD
                 <div class="flex items-center gap-4">
                     <p class="text-caption-dark">Rate your mood:</p>
                     <div class="flex gap-4">
@@ -56,6 +66,40 @@ Dashboard
                         <button class="p-2 rounded-full bg-transparent hover:bg-primary/5 "><img src="{{ asset("assets/dashboard/blissful.png") }}" alt="Sad"></button>
                     </div>
                 </div>
+=======
+                @if($user->role == 'patient')
+                    <form action="{{ route('mood.store') }}" method="POST" x-data="{ selected: null }">
+                        @csrf
+                        <input type="hidden" name="mood" :value="selected">
+
+                        <div class="flex items-center gap-4">
+                            <p class="text-caption-dark">Rate your mood:</p>
+                            <div class="flex gap-4">
+                                @foreach ([
+                                    ['id' => 'sad', 'img' => 'sad.png', 'alt' => 'Sad'],
+                                    ['id' => 'flat', 'img' => 'flat.png', 'alt' => 'Flat'],
+                                    ['id' => 'good', 'img' => 'good.png', 'alt' => 'Good'],
+                                    ['id' => 'happy', 'img' => 'happy.png', 'alt' => 'Happy'],
+                                    ['id' => 'blissful', 'img' => 'blissful.png', 'alt' => 'Blissful'],
+                                ] as $mood)
+                                    <button
+                                        type="button"
+                                        @click="selected = '{{ $mood['id'] }}'; $nextTick(() => $el.closest('form').submit())"
+                                        :class="selected === '{{ $mood['id'] }}'
+                                            ? 'bg-secondary text-white scale-110'
+                                            : 'bg-transparent hover:bg-secondary/10'"
+                                        class="p-2 rounded-full transition transform duration-300 hover:scale-110"
+                                    >
+                                        <img src="{{ asset('assets/dashboard/' . $mood['img']) }}" 
+                                            alt="{{ $mood['alt'] }}" 
+                                            class="w-8 h-8">
+                                    </button>
+                                @endforeach
+                            </div>
+                        </div>
+                    </form>
+                @endif
+>>>>>>> 05965638d654be5556a9a63ac9d22ecc8010904b
             </div>
 
             @include('components.upcoming-appointment')
@@ -81,8 +125,18 @@ Dashboard
 
             {{-- Action --}}
             <div class="flex gap-4 flex-col lg:flex-row">
+<<<<<<< HEAD
                 <x-rounded-button text="Settings" active="true" route="#"></x-rounded-button>
                 <x-rounded-button text="Logout" secondary="true" route="#"></x-rounded-button>
+=======
+                <x-rounded-button text="Settings" active="true" route="{{ route('profile.edit') }}"></x-rounded-button>
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="rounded-button secondary bg-white hover:bg-gray-100 text-caption-dark border border-grey-border rounded-md  px-2 md:px-4 py-2 md:py-2 text-center flex flex-1 items-center justify-center text-xs sm:text-sm lg:text-base">
+                        Logout
+                    </button>
+                </form>
+>>>>>>> 05965638d654be5556a9a63ac9d22ecc8010904b
             </div>
             
         </div>

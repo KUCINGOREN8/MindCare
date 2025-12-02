@@ -8,6 +8,7 @@
 
 @php
     //Mapping warna berdasarkan tipe notifikasi
+    // Mapping warna berdasarkan tipe notifikasi
     $typeMap = [
         'reminder' => ['border' => 'border-notification-blue', 'bg' => 'bg-notification-blue-bg', 'text' => 'text-notification-blue'],
         'message' => ['border' => 'border-notification-purple', 'bg' => 'bg-notification-purple-bg', 'text' => 'text-notification-purple'],

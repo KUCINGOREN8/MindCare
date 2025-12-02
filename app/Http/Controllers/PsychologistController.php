@@ -1,35 +1,39 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers; // <--- WAJIB ADA INI!
 
 use App\Models\Psychologist;
 use App\Http\Requests\StorePsychologistRequest;
 use App\Http\Requests\UpdatePsychologistRequest;
+use Illuminate\Http\Request;
 
 class PsychologistController extends Controller
 {
     
     public function showFindPsychologist()
     {
+      
         $psychologists = Psychologist::all();
 
+        
         return view('pages.psychologist.find', compact('psychologists'));
     }
 
+    // 2. Menampilkan Profil Detail
     public function showProfile($id) {
         $psychologist = Psychologist::with([
             'educations', 
+            'schedules', 
             'experiences' => function ($q) {
                 $q->orderBy('start_year', 'desc');
             },
-            'schedules', 
-            'reviews'])
-            ->findOrFail($id);
+            'reviews'
+        ])
+        ->findOrFail($id);
 
         return view('pages.psychologist.profile', compact('psychologist'));
     }
 
-    
     /**
      * Show the form for creating a new resource.
      */

@@ -63,6 +63,7 @@ class AuthController extends Controller
 
         Auth::login($user);
         return redirect()->route('dashboard.index')->with('success', 'Registration successful!');
+        return redirect()->route('otp.send')->with('success', 'Registration successful! Please verify your email with OTP.');
     }
 
     // Login
@@ -157,7 +158,6 @@ class AuthController extends Controller
             : back()->withErrors(['email' => [__($status)]]);
     }
 
-    // BLM IMPLEMENT
     // Handle logout
     public function logout(Request $request)
     {

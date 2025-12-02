@@ -13,5 +13,12 @@
     <main class="flex flex-1 p-6 gap-6 w-full min-w-0">
         @yield('content')
     </main>
+    @include('components.toast')
+
+    <main class="flex flex-1 p-6 gap-6 w-full min-w-0">
+        @yield('content')
+    </main>
+
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </body>
 </html>

@@ -17,6 +17,10 @@ class Psychologist extends Model
         'photo_url',
         'gender',
         'languages', 
+        'user_id',
+        'short_bio',
+        'about_me',
+        'languages',
         'title',
         'specialization',
         'license_number',
@@ -31,17 +35,26 @@ class Psychologist extends Model
     protected $hidden = [
         'password',
         'remember_token',
+        'consultation_fee'
     ];
 
     protected $casts = [
         'languages' => 'array',
         'agree_to_terms' => 'boolean',
+        'consultation_fee' => 'decimal:2'
     ];
 
     // public function getPhotoUrlAttribute($value)
     // {
     //     return $value ?? asset('images/default-avatar.png');
     // }
+        
+    
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function educations()
     {
