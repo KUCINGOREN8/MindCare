@@ -62,7 +62,6 @@ class AuthController extends Controller
         ]);
 
         Auth::login($user);
-        return redirect()->route('dashboard.index')->with('success', 'Registration successful!');
         return redirect()->route('otp.send')->with('success', 'Registration successful! Please verify your email with OTP.');
     }
 
