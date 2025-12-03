@@ -1,7 +1,7 @@
 
 @php
 $navItems = [
-    ['icon' => 'assets/icons/home.svg', 'text' => 'Dashboard', 'route' => 'dashboard.index', 'active' => Route::is('dashboard.index')],
+    ['icon' => 'assets/icons/home.svg', 'text' => 'Dashboard', 'route' => 'dashboard.index', 'active' => (Route::is('dashboard.index') || Route::is('settings.profile'))],
     ['icon' => 'assets/icons/find-user.svg', 'text' => 'Find Psychologist', 'route' => 'find.psychologist', 'active' => ( Route::is('find.psychologist') || Route::is('psychologist.profile') || Route::is('psychologist.review') )],
     ['icon' => 'assets/icons/book.svg', 'text' => 'Book Appointment', 'route' => 'book.appointment', 'active' => Route::is('book.appointment')],
     ['icon' => 'assets/icons/calendar.svg', 'text' => 'Appointments', 'route' => 'appointments', 'active' => Route::is('appointments')],

@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OTPController;
@@ -61,11 +61,8 @@ Route::middleware(['auth', 'otp'])->group(function () {
     }) -> name('messages');
 
     // User Profile Page
-    Route::get('/profile', [UserController::class, 'settings'])->name('profile.edit');
-    // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
+    Route::get('/profile', [UserController::class, 'showProfile'])->name('profile');
+    Route::put('/profile', [UserController::class, 'updateProfile'])->name('profile.update');
 
     // Logout boleh pakai POST untuk security
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
