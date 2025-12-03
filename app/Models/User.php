@@ -74,9 +74,44 @@ class User extends Authenticatable
     {
         return $this->hasMany(PsychologistReview::class);
     }
-    
+
     public function moods()
     {
         return $this->hasMany(Mood::class);
+    }
+
+    public function psychologist()
+    {
+    return $this->hasOne(Psychologist::class);
+    }
+
+    public function conversationsAsPatient()
+    {
+        return $this->hasMany(Conversation::class, 'patient_id');
+    }
+
+    public function conversationsAsPsychologist()
+    {
+        return $this->hasMany(Conversation::class, 'psychologist_id');
+    }
+
+    public function conversations()
+    {
+        if ($this->isPatient()) {
+            return $this->conversationsAsPatient();
+        } elseif ($this->isPsychologist()) {
+            return $this->conversationsAsPsychologist();
+        }
+        return $this->hasMany(Conversation::class, 'id')->whereNull('id');
+    }
+
+    public function sentMessages()
+    {
+        return $this->hasMany(Message::class, 'sender_id');
+    }
+
+    public function receivedMessages()
+    {
+        return $this->hasMany(Message::class, 'receiver_id');
     }
 }

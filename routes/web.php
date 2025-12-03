@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OTPController;
 use App\Http\Controllers\PsychologistController;
@@ -56,13 +58,39 @@ Route::middleware(['auth', 'otp'])->group(function () {
     }) -> name('appointments');
 
     // Messages Page
-    Route::get('messages', function () {
-        return view('pages.message.index');
-    }) -> name('messages');
+    // Route::get('messages', function () {
+    //     return view('pages.message.index');
+    // }) -> name('messages');
+
+    Route::get('/messages', [ChatController::class, 'index'])->name('messages');
+    Route::get('/chat/start/{psychologist}', [ChatController::class, 'startChat'])->name('chat.start');
+    Route::get('/chat/conversation/{conversation}', [ChatController::class, 'show'])->name('chat.show');
+    Route::post('/chat/conversation/{conversation}/send', [ChatController::class, 'sendMessage'])->name('chat.send');
+    Route::get('/chat/conversation/{conversation}/messages', [ChatController::class, 'getMessages'])->name('chat.messages');
+
 
     // User Profile Page
     Route::get('/profile', [UserController::class, 'showProfile'])->name('profile');
     Route::put('/profile', [UserController::class, 'updateProfile'])->name('profile.update');
+
+    //Appointment
+    Route::prefix('appointments')
+        ->name('appointments.')
+        ->controller(AppointmentController::class)
+        ->group(function () {
+
+            // Halaman utama appointments (History/List)
+
+            Route::get('/', 'index')->name('index');
+
+            // Ini yang load more data ges
+            Route::get('/load-more', 'loadMore')->name('load-more');
+
+            // Actions (Confirm, Cancel, Reschedule)
+            Route::post('/{id}/confirm', 'confirm')->name('confirm');
+            Route::post('/{id}/cancel', 'cancel')->name('cancel');
+            Route::post('/{id}/reschedule', 'reschedule')->name('reschedule');
+        });
 
     // Logout boleh pakai POST untuk security
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -80,3 +108,4 @@ Route::get('/lang/{lang}', function ($lang) {
 // Route::get('/user/psychologist/dashboard', function () {
 //     return view('pages.dashboard.index');
 // });
+
