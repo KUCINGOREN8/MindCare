@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>@yield('title')</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
 </head>
 
 <body class="flex flex-col min-h-screen bg-white-50">
