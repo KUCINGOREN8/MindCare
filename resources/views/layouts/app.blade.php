@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>@yield('title', 'BeOkay')</title>
     {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
-     <link rel="stylesheet" href="/build/tailwind.css">
+    <link rel="stylesheet" href="/css/app.css">
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.5/dist/cdn.min.js" defer></script>
 </head>
 

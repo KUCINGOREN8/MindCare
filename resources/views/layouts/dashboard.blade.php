@@ -6,7 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title')</title>
     {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.14/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/app.css">
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.5/dist/cdn.min.js" defer></script>
     {{-- <link href="{{ asset('build/output.css') }}" rel="stylesheet"> --}}
     {{-- @stack('styles') --}}
