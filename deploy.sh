@@ -6,6 +6,8 @@ npm install alpinejs --save-dev --legacy-peer-deps 2>/dev/null || true
 
 # Laravel setup
 php artisan migrate --force
+php artisan db:seed --force
+
 php artisan optimize:clear
 php artisan config:cache
 php artisan route:cache

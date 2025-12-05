@@ -13,8 +13,8 @@
 
         <!-- Scripts -->
         {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
-        <link rel="stylesheet" href="{{ asset('build/assets/app-ccb80f30.css') }}">
-        <script type="module" src="{{ asset('build/assets/app-9b71c473.js') }}"></script>
+        <link rel="stylesheet" href="{{ asset('dist/assets/app-ccb80f30.css') }}">
+        <script type="module" src="{{ asset('dist/assets/app-9b71c473.js') }}"></script>
     </head>
     <body class="font-sans text-gray-900 antialiased">
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
