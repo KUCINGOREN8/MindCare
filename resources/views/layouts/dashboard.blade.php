@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title')</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
+    <link rel="stylesheet" href="{{ asset('build/assets/app-ccb80f30.css') }}">
+    <script type="module" src="{{ asset('build/assets/app-9b71c473.js') }}"></script>
     <link href="{{ asset('build/output.css') }}" rel="stylesheet">
     @stack('styles')
 </head>
