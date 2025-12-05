@@ -12,7 +12,9 @@ return new class extends Migration
     Schema::create('appointments', function (Blueprint $table) {
         $table->id();
         $table->foreignId('user_id')->constrained()->onDelete('cascade');
-        $table->string('with'); 
+        $table->foreignId('psychologist_id')->constrained()->onDelete('cascade');
+
+        $table->string('with');
         $table->string('job_title')->nullable();
 
         $table->date('date');
@@ -31,14 +33,6 @@ return new class extends Migration
     });
 }
 
-    /**
-     * Run the migrations.
-     */
-    
-
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('appointments');

@@ -52,4 +52,10 @@ class Psychologist extends Model
     {
         return $this->hasMany(PsychologistReview::class);
     }
+
+        public function appointments()
+    {
+        return $this->hasMany(Appointment::class);
+    }
+
 }
