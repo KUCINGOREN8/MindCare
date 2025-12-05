@@ -1,21 +1,21 @@
-@extends('layouts.dashboard') 
+@extends('layouts.dashboard')
 @section('title', 'Appointments')
 
 @section('content')
 
     <div class="flex-1 flex flex-col h-full overflow-y-auto pr-2 pb-20 scroll-smooth">
-        
+
         {{-- Header --}}
         <div class="mb-8 mt-2">
-            <h2 class="text-3xl font-bold text-teal-700">Appointments</h2>
-            <p class="text-gray-500 mt-1">Manage your sessions and history.</p>
+            <h2 class="text-2xl font-bold">Appointments</h2>
+            <p class="text-captiondark text-sm">Manage your sessions and history.</p>
         </div>
 
         {{-- A. UPCOMING SESSION --}}
         <section class="mb-8">
             <div class="flex items-center gap-2 mb-4">
-                <h3 class="font-bold text-lg text-gray-800">Upcoming Session</h3>
-                
+                <h3 class="font-bold text-lg">Upcoming Session</h3>
+
                 {{-- Indikator Ping (Hanya muncul jika ada jadwal) --}}
                 @if(isset($ongoing) && $ongoing)
                     <span class="relative flex h-3 w-3">
@@ -24,10 +24,10 @@
                     </span>
                 @endif
             </div>
-            
+
             @if(isset($ongoing) && $ongoing)
-              
-                
+
+
                 @include('components.upcoming-appointment', ['appointment' => $ongoing])
 
             @else
@@ -40,7 +40,7 @@
 
         {{-- B. HISTORY (Tetap Sama) --}}
         <section class="mb-8">
-            <h3 class="font-bold text-lg text-gray-800 mb-4">History</h3>
+            <h3 class="font-bold text-l mb-4">History</h3>
             <div class="space-y-3">
                 @forelse($history ?? [] as $item)
                     <div class="bg-white p-4 rounded-xl border border-gray-100 hover:shadow-md transition flex items-center justify-between group cursor-pointer">
@@ -63,7 +63,7 @@
 
         {{-- C. RESCHEDULE (Tetap Sama) --}}
         <section>
-            <h3 class="font-bold text-lg text-gray-800 mb-4">Reschedule Requests</h3>
+            <h3 class="font-bold text-lg mb-4">Reschedule Requests</h3>
             <div class="bg-white p-6 rounded-2xl border border-gray-100 relative overflow-hidden">
                 <div class="absolute top-0 right-0 bg-yellow-100 text-yellow-700 text-[10px] font-bold px-3 py-1 rounded-bl-xl">PENDING</div>
                 <div class="flex items-center gap-4">
@@ -71,7 +71,7 @@
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                     </div>
                     <div>
-                        <h4 class="font-bold text-gray-900">Dr. Jacob Jones</h4>
+                        <h4 class="font-bold">Dr. Jacob Jones</h4>
                         <p class="text-sm text-gray-500">Requested: <strong>Friday, 10:00 AM</strong></p>
                     </div>
                 </div>
