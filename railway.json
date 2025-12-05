@@ -1,5 +1,5 @@
 {
   "deploy": {
-    "startCommand": "./deploy.sh"
+    "startCommand": "chmod +x deploy.sh && ./deploy.sh"
   }
 }
