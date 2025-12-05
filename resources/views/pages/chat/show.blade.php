@@ -174,7 +174,7 @@
     </div>
 </div>
 
-@push('styles')
+{{-- @push('styles')
 <style>
     main {
         padding: 0 !important;
@@ -400,5 +400,5 @@ document.addEventListener('DOMContentLoaded', function() {
     @endif
 });
 </script>
-@endpush
+@endpush --}}
 @endsection

@@ -169,7 +169,7 @@ use Illuminate\Support\Str;
 </div>
 @endsection
 
-@push('styles')
+{{-- @push('styles')
 <style>
     main {
         padding: 0 !important;
@@ -236,4 +236,4 @@ use Illuminate\Support\Str;
         }
     });
 </script>
-@endpush
+@endpush --}}

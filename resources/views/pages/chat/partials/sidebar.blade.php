@@ -114,7 +114,7 @@
     @endforelse
 </div>
 
-@push('scripts')
+{{-- @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('sidebar-search');
@@ -152,4 +152,4 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-@endpush
+@endpush --}}
