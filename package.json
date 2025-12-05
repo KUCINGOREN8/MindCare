@@ -1,8 +1,5 @@
 {
   "private": true,
-  "scripts": {
-    "build": "echo 'Build disabled - using CDN'"
-  },
   "dependencies": {
     "alpinejs": "^3.13.5"
   }
