@@ -28,7 +28,11 @@
 
                      <div>
                         <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
-                            <img src="{{ asset('assets/signup/password.svg') }}" alt="icon" class="w-5 h-5 mr-4 opacity-50">
+                            {!! str_replace(
+                                '<svg ',
+                                '<svg class="w-6 h-6 text-[#A1AAB2] opacity-50 mr-4" fill="currentColor" ',
+                                file_get_contents(public_path('assets/signup/password.svg'))
+                            ) !!}
                             <input type="password" name="password" placeholder="Password" class="w-full outline-none text-black placeholder-gray-400 bg-transparent" id="password">
                             <button type="button" class="password-toggle" onclick="togglePassword('password')">
                                 <img src="{{ asset('assets/signup/eye-closed.svg') }}" alt="Show password" class="w-5 h-5 opacity-50" id="password-eye"
