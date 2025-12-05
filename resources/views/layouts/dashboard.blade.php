@@ -6,8 +6,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title')</title>
     {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
-    <link rel="stylesheet" href="{{ asset('dist/assets/app-ccb80f30.css') }}">
-    <script type="module" src="{{ asset('dist/assets/app-9b71c473.js') }}"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.14/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.5/dist/cdn.min.js" defer></script>
     <link href="{{ asset('build/output.css') }}" rel="stylesheet">
     @stack('styles')
 </head>

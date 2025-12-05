@@ -1,17 +1,10 @@
 #!/bin/bash
+echo "Using CDN for Tailwind and AlpineJS"
 
-# Build ke dist
-echo "Building assets to dist folder..."
-npm install --legacy-peer-deps --force
-npm run build 2>&1 || npx vite build 2>&1
+# Skip npm install & build
+echo "Skipping Vite build (using CDN)"
 
-# Fallback ke dist
-if [ ! -f "public/dist/assets/app.css" ]; then
-    echo "Manual Tailwind build..."
-    npx tailwindcss -i resources/css/app.css -o public/dist/assets/app.css --minify
-fi
-
-# Laravel
+# Laravel setup
 php artisan migrate --force
 php artisan db:seed --force
 php artisan optimize:clear
