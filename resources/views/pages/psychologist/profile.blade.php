@@ -11,7 +11,7 @@
 
                 <div class="flex flex-col md:flex-row justify-between gap-3">
                     <div class="flex flex-1 flex-col items-center justify-center text-center ">
-                        <img src="{{ $psychologist->user->photo_url ? asset($psychologist->user->photo_url) : ($psychologist->user->gender=="female" ? asset('assets/icons/user_female.svg') : asset('assets/icons/user_male.svg')) }}">
+                        <img src="{{ $psychologist->user->photo_url ? asset($psychologist->user->photo_url) : ($psychologist->user->gender=="female" ? asset('assets/icons/user_female.svg') : asset('assets/icons/user_male.svg')) }}" alt="" style='width:100px;'>
                         <h1 class="font-semibold text-lg"> {{ $psychologist->user->full_name }} </h1>
                         <h5 class="text-captiondark text-sm"> {{ $psychologist->title }} </h5>
                     </div>
