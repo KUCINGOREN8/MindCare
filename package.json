@@ -1,17 +1,7 @@
 {
   "private": true,
-  "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build"
-  },
-  "devDependencies": {
-    "@tailwindcss/forms": "^0.5.10",
-    "autoprefixer": "^10.4.22",
-    "axios": "^1.11.0",
-    "postcss": "^8.5.6",
-    "tailwindcss": "^3.4.14",
-    "vite": "4.5.0"
+    "build": "echo 'Build disabled - using CDN'"
   },
   "dependencies": {
     "alpinejs": "^3.13.5"
