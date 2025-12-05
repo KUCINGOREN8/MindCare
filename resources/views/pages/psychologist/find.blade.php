@@ -22,7 +22,7 @@ Find Psychologist
                 </form>
             </div>
 
-            {{-- Default Layout --}}    
+            {{-- Default Layouts --}}
             <div x-show="query.length === 0" class="grid grid-cols-3 gap-6">
                 @foreach($psychologists as $psychologist)
                 <div class="flex flex-col bg-white rounded-md border border-grey-border p-6 items-center text-center gap-3">
