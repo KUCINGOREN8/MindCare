@@ -132,7 +132,7 @@
         </div>
     </div>
 
-   {{-- BLM DIINTEGRATE HANYA BUAT TESITNG KE CHAT --}}
+   {{-- BLM DIINTEGRATE HANYA BUAT TESITNG KE CHATs --}}
     @auth
     @if(auth()->user()->isPatient())
         <a
