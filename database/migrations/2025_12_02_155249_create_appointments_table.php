@@ -18,9 +18,18 @@ return new class extends Migration
         $table->string('job_title')->nullable();
 
         $table->date('date');
-        $table->time('time');
+        $table->time('start_time');
+        $table->time('end_time');
+        $table->decimal('consultation_fee', 10, 2);
 
-        $table->enum('status', ['pending', 'confirmed', 'canceled'])->default('pending');
+        $table->enum('status', [
+            'pending_payment',
+            'pending',
+            'confirmed',
+            'completed',
+            'cancelled',
+            'expired'
+        ])->default('pending_payment');
 
         $table->text('notes')->nullable();
 

@@ -76,11 +76,9 @@ Book Appointment
 
     <!-- RIGHT SIDEBAR -->
         <div class="w-80 bg-white border border-gray-200 rounded-xl p-6 h-fit sticky top-6 shadow-sm">
-
             <h3 class="font-semibold text-lg mb-4">Appointment Summary</h3>
 
             <div class="text-sm space-y-4">
-
                 <div class="flex justify-between">
                     <span class="text-gray-500">Date</span>
                     <span class="font-medium" x-text="selectedDate || '-'"></span>
@@ -88,7 +86,12 @@ Book Appointment
 
                 <div class="flex justify-between">
                     <span class="text-gray-500">Time</span>
-                    <span class="font-medium" x-text="selectedTime || '-'"></span>
+                    <span class="font-medium" x-text="selectedTime ? selectedTime + ' - ' + calculateEndTime(selectedTime) : '-'"></span>
+                </div>
+
+                 <div class="flex justify-between">
+                    <span class="text-gray-500">Duration</span>
+                    <span class="font-medium">90 minutes</span>
                 </div>
 
                 <div>
@@ -96,24 +99,33 @@ Book Appointment
                     <div class="mt-1 font-medium text-right">
                         @foreach($psychologists as $p)
                             <span class="block"
-                                x-show="selectedPsychologist == {{ $p->id }}">
-                                {{ $p->user->full_name }}
+                                x-show="selectedPsychologist == {{ $p->id }}"
+                                x-text="'{{ $p->user->full_name }} - {{ $p->title }}'">
                             </span>
                         @endforeach
-
                         <span x-show="!selectedPsychologist">-</span>
                     </div>
                 </div>
 
+                <div class="flex justify-between border-t pt-4">
+                    <span class="text-gray-500 font-semibold">Fee</span>
+                    <span class="font-bold text-lg"
+                        x-text="selectedPsychologist ? 'Rp ' + getConsultationFee(selectedPsychologist).toLocaleString('id-ID') : '-'">
+                    </span>
+                </div>
             </div>
 
             <!-- FORM HERE -->
-            <form method="POST" action="{{ route('appointments.store') }}" class="mt-6">
+            <form method="POST" action="{{ route('appointments.store') }}" class="mt-6" id="appointmentForm">
                 @csrf
 
                 <input type="hidden" name="date" x-model="selectedDate">
-                <input type="hidden" name="time" x-model="selectedTime">
+                <input type="hidden" name="start_time" x-model="selectedTime">
                 <input type="hidden" name="psychologist_id" x-model="selectedPsychologist">
+                <input type="hidden" name="end_time" x-bind:value="calculateEndTime(selectedTime)">
+                <input type="hidden" name="consultation_fee" x-bind:value="getConsultationFee(selectedPsychologist)">
+                <input type="hidden" name="with" x-bind:value="getPsychologistName(selectedPsychologist)">
+                <input type="hidden" name="job_title" x-bind:value="getPsychologistTitle(selectedPsychologist)">
 
                 <button
                     type="submit"
@@ -131,3 +143,29 @@ Book Appointment
 </div>
 
 @endsection
+
+<script>
+    const psychologists = @json($psychologists->keyBy('id'));
+
+    function calculateEndTime(startTime) {
+        if (!startTime) return '';
+        const [hours, minutes] = startTime.split(':');
+
+        const totalMinutes = parseInt(hours) * 60 + parseInt(minutes) + 90;
+        const endHour = Math.floor(totalMinutes / 60);
+        const endMinute = totalMinutes % 60;
+        return `${endHour.toString().padStart(2, '0')}:${endMinute.toString().padStart(2, '0')}`;
+    }
+
+    function getConsultationFee(psychologistId) {
+        return psychologists[psychologistId]?.consultation_fee || 0;
+    }
+
+    function getPsychologistName(psychologistId) {
+        return psychologists[psychologistId]?.user?.full_name || '';
+    }
+
+    function getPsychologistTitle(psychologistId) {
+        return psychologists[psychologistId]?.title || '';
+    }
+</script>

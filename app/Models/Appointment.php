@@ -26,4 +26,14 @@ class Appointment extends Model
         return $this->belongsTo(Psychologist::class);
     }
 
+    public function getPaymentStatusAttribute()
+    {
+        return $this->payment?->status ?? 'unpaid';
+    }
+
+    public function getIsPaidAttribute()
+    {
+        return $this->payment?->status === 'success';
+    }
+
 }
