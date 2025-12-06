@@ -15,12 +15,12 @@ Book Appointment
      }">
 
     <!-- LEFT CONTENT -->
-    <div class="flex flex-col flex-1 gap-6 min-w-0">
+    <div class="flex flex-col flex-1 gap-6">
 
         <!-- HEADER -->
-        <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-            <h1 class="text-primary font-bold text-xl">Book an Appointment</h1>
-            <p class="text-gray-500 text-sm mt-1">
+        <div class="flex flex-col bg-white p-6 rounded-md border-grey-border border">
+            <h1 class="text-primary font-bold text-lg">Book an Appointment</h1>
+            <p class="text-captiondark text-sm">
                 Choose your preferred date, time, and psychologist to continue.
             </p>
         </div>

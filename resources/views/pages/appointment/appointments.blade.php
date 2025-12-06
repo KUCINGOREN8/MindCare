@@ -1,21 +1,21 @@
-@extends('layouts.dashboard') 
+@extends('layouts.dashboard')
 @section('title', 'Appointments')
 
 @section('content')
 
     <div class="flex-1 flex flex-col h-full overflow-y-auto pr-2 pb-20 scroll-smooth">
-        
+
         {{-- Header --}}
         <div class="mb-8 mt-2">
-            <h2 class="text-3xl font-bold text-teal-700">Appointments</h2>
-            <p class="text-gray-500 mt-1">Manage your sessions and history.</p>
+            <h2 class="text-primary font-bold text-3xl">Appointments</h2>
+            <p class="text-captiondark text-base">Manage your sessions and history.</p>
         </div>
 
         {{-- A. UPCOMING SESSION --}}
         <section class="mb-8">
             <div class="flex items-center gap-2 mb-4">
                 <h3 class="font-bold text-lg text-gray-800">Upcoming Session</h3>
-                
+
                 {{-- Indikator Ping (Hanya muncul jika ada jadwal) --}}
                 @if(isset($ongoing) && $ongoing)
                     <span class="relative flex h-3 w-3">
@@ -24,10 +24,10 @@
                     </span>
                 @endif
             </div>
-            
+
             @if(isset($ongoing) && $ongoing)
-              
-                
+
+
                 @include('components.upcoming-appointment', ['appointment' => $ongoing])
 
             @else
