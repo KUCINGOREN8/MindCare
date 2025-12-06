@@ -62,7 +62,9 @@ class AuthController extends Controller
         ]);
 
         Auth::login($user);
-        return redirect()->route('otp.send')->with('success', 'Registration successful! Please verify your email with OTP.');
+
+        $user->sendOTPNotification();
+        return redirect()->route('otp.verify')->with('success', 'Registration successful! Please verify your email with OTP.');
     }
 
     // Login
