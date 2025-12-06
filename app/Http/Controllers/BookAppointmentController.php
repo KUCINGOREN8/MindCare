@@ -12,21 +12,21 @@ class BookAppointmentController extends Controller
 {
     public function showBook()
     {
-        
+
         $psychologists = Psychologist::with('user')->get();
 
-        return view('pages.appointment.book_appointment', compact('psychologists'));
+        return view('pages.appointment.book-appointment', compact('psychologists'));
 
     }
 
 
-   
+
     public function showAvailableTimes(Request $request)
-    {   
+    {
         $psychologistId = $request->input('psychologist_id');
         $date = $request->input('date');
 
-     
+
 
         $availableTimes = [
             '09:00 AM', '09:30 AM', '10:00 AM', '10:30 AM',
@@ -60,8 +60,8 @@ class BookAppointmentController extends Controller
         //                  ->with('success', 'Your appointment has been booked!');
     }
 
-    
 
-    
+
+
 
 }

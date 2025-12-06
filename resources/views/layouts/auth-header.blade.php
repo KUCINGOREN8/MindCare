@@ -7,7 +7,7 @@
                 <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                     <div class="flex shrink-0 items-center">
                         <a href="{{ route('dashboard') }}">
-                        <img src="img/logo.svg" alt="Your Company" class="h-8 w-auto" />
+                        <img src="{{ asset('img/logo.svg') }}" alt="Your Company" class="h-8 w-auto" />
                         </a>
                     </div>
                 </div>
