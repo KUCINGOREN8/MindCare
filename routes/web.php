@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\AppointmentController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookAppointmentController;
 use App\Http\Controllers\ChatController;
@@ -75,7 +74,8 @@ Route::middleware(['auth', 'otp'])->group(function () {
     Route::get('/chat/conversation/{conversation}/messages', [ChatController::class, 'getMessages'])->name('chat.messages');
 
     // User Profile
-    Route::get('/profile', [UserController::class, 'settings'])->name('profile.edit');
+    Route::get('/profile', [UserController::class, 'showProfile'])->name('profile');
+    Route::put('/profile', [UserController::class, 'updateProfile'])->name('profile.update');
 
     // Logout
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
