@@ -13,7 +13,9 @@ class Appointment extends Model
         'with',
         'job_title',
         'date',
-        'time',
+        'start_time',
+        'end_time',
+        'consultation_fee',
         'status',
         'notes',
         'reschedule_date',
@@ -21,9 +23,24 @@ class Appointment extends Model
         'reschedule_reason',
     ];
 
-        public function psychologist()
+    protected $casts = [
+        'date' => 'date',
+        'consultation_fee' => 'decimal:2'
+    ];
+
+    public function psychologist()
     {
         return $this->belongsTo(Psychologist::class);
+    }
+
+    public function patient()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function payment()
+    {
+        return $this->morphOne(Payment::class, 'paymentable');
     }
 
     public function getPaymentStatusAttribute()
@@ -35,5 +52,4 @@ class Appointment extends Model
     {
         return $this->payment?->status === 'success';
     }
-
 }

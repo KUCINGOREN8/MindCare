@@ -10,6 +10,7 @@ use App\Http\Controllers\OTPController;
 use App\Http\Controllers\PsychologistController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\MoodController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Middleware\OTPMiddleware;
 use Illuminate\Support\Facades\Route;
 
@@ -51,7 +52,7 @@ Route::middleware(['auth', 'otp'])->group(function () {
     Route::get('psychologist/{id}', [PsychologistController::class, 'showProfile'])->name('psychologist.profile');
     Route::get('psychologist/{id}/review', [PsychologistController::class, 'showReview'])->name('psychologist.review');
 
-    //Book Appointment 
+    //Book Appointment
     Route::get('book_appointment', [BookAppointmentController::class, 'showBook'])->name('book.appointment');
     Route::post('/appointments/store', [BookAppointmentController::class, 'store'])->name('appointments.store');
 
@@ -65,6 +66,15 @@ Route::middleware(['auth', 'otp'])->group(function () {
             Route::post('/{id}/confirm', 'confirm')->name('confirm');
             Route::post('/{id}/cancel', 'cancel')->name('cancel');
             Route::post('/{id}/reschedule', 'reschedule')->name('reschedule');
+    });
+
+    // Payment
+    Route::prefix('payment')->name('payment.')->group(function () {
+        Route::get('/process/{payment}', [PaymentController::class, 'process'])->name('process');
+        Route::get('/finish', [PaymentController::class, 'finish'])->name('finish');
+        Route::get('/error', [PaymentController::class, 'error'])->name('error');
+        Route::get('/pending', [PaymentController::class, 'pending'])->name('pending');
+        Route::post('/webhook', [PaymentController::class, 'webhook'])->name('webhook');
     });
 
     // Messages
