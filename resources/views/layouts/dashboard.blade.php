@@ -6,7 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <link href="{{ asset('build/output.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/output.css') }}" rel="stylesheet">
     @stack('styles')
 </head>
 <body class="bg-background font-sans min-h-screen flex">
