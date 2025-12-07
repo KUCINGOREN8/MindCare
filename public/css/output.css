@@ -1726,13 +1726,29 @@ video {
 .text-caption {
   --tw-text-opacity: 1;
   color: #A1AAB2;
-  
+
 }
 .text-caption-dark {
   --tw-text-opacity: 1;
   color: #4D4D4E;
 }
-  
+.text-notification-blue {
+  --tw-text-opacity: 1;
+  color: #3B82F6;
+}
+.text-notification-green {
+  --tw-text-opacity: 1;
+  color: #22C55E;
+}
+.text-notification-purple {
+  --tw-text-opacity: 1;
+  color: #A855F7;
+}
+.text-notification-yellow {
+  --tw-text-opacity: 1;
+  color: #EAB308;
+}
+
 .text-rose-900 {
   --tw-text-opacity: 1;
   color: rgb(136 19 55 / var(--tw-text-opacity));

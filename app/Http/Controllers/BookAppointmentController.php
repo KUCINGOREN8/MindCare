@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Psychologist;
 use App\Models\Appointment;
+use App\Models\Payment;
+use App\Services\MidtransService;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -19,49 +21,67 @@ class BookAppointmentController extends Controller
 
     }
 
+     public function store(Request $request)
+    {
+        $appointment = Appointment::create([
+            'user_id' => Auth::id(),
+            'psychologist_id' => $request->psychologist_id,
+            'date' => $request->date,
+            'start_time' => $request->start_time,
+            'end_time' => $request->end_time,
+            'consultation_fee' => $request->consultation_fee,
+            'with' => $request->with,
+            'job_title' => $request->job_title,
+            'status' => 'pending_payment',
+        ]);
 
+        $midtransService = new MidtransService();
+        $orderId = $midtransService->generateOrderId();
+
+        $payment = Payment::create([
+            'paymentable_id' => $appointment->id,
+            'paymentable_type' => Appointment::class,
+            'order_id' => $orderId,
+            'amount' => $request->consultation_fee,
+            'status' => 'pending',
+        ]);
+
+        $customerDetails = [
+            'first_name' => Auth::user()->full_name,
+            'email' => Auth::user()->email,
+        ];
+
+        try {
+            $transaction = $midtransService->createTransaction(
+                $orderId,
+                $request->consultation_fee,
+                $customerDetails
+            );
+
+            $payment->update([
+                'payment_url' => $transaction['redirect_url']
+            ]);
+
+            return redirect()->route('payment.process', $payment);
+
+        } catch (\Exception $e) {
+            $appointment->delete();
+            $payment->delete();
+
+            return back()->with('error', 'Payment gateway error: ' . $e->getMessage());
+        }
+    }
 
     public function showAvailableTimes(Request $request)
     {
         $psychologistId = $request->input('psychologist_id');
         $date = $request->input('date');
 
-
-
         $availableTimes = [
-            '09:00 AM', '09:30 AM', '10:00 AM', '10:30 AM',
-            '11:00 AM', '01:00 PM', '02:00 PM', '03:00 PM'
+            '09:00', '09:30', '10:00', '10:30',
+            '11:00', '13:00', '14:00', '15:00'
         ];
 
         return response()->json($availableTimes);
     }
-
-    public function store(Request $request)
-    {
-        $request->validate([
-            'psychologist_id' => 'required|exists:psychologists,id',
-            'date' => 'required|date',
-            'time' => 'required'
-        ]);
-
-        $psychologist = Psychologist::findOrFail($request->psychologist_id);
-
-        Appointment::create([
-            'user_id' => Auth::id(),
-            'psychologist_id' => $psychologist->id,
-            'with' => $psychologist->user->full_name,
-            'job_title' => $psychologist->title,
-            'date' => $request->date,
-            'time' => $request->time,
-            'status' => 'pending',
-        ]);
-
-        // return redirect()->route('appointments.history')
-        //                  ->with('success', 'Your appointment has been booked!');
-    }
-
-
-
-
-
 }
