@@ -14,9 +14,9 @@ class DashboardController extends Controller
     {
         $testimonials = Testimonial::inRandomOrder()->take(3)->get();
 
-        return view('dashboard', compact('testimonials'));
+        return view('index', compact('testimonials'));
     }
-    
+
     public function showDashboard() {
         $user = Auth::user();
 
