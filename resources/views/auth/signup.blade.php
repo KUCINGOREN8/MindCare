@@ -60,7 +60,8 @@
                                 '<svg ',
                                 '<svg class="w-6 h-6 text-[#A1AAB2] opacity-50 mr-4" fill="currentColor" ',
                                 file_get_contents(public_path('assets/signup/password.svg'))
-                            ) !!}                            <input type="password" name="password_confirmation" placeholder="Confirm Password" class="w-full outline-none text-black placeholder-gray-400 bg-transparent" id="confirm-password">
+                            ) !!}
+                            <input type="password" name="password_confirmation" placeholder="Confirm Password" class="w-full outline-none text-black placeholder-gray-400 bg-transparent" id="confirm-password">
                             <button type="button" class="password-toggle" onclick="togglePassword('confirm-password')">
                                 <img src="{{ asset('assets/signup/eye-closed.svg') }}" alt="Show password" class="w-5 h-5 opacity-50" id="confirm-password-eye"
                                     data-closed-icon="{{ asset('assets/signup/eye-closed.svg') }}"
@@ -96,12 +97,12 @@
 
                     <div>
                         <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
-                                {!! str_replace(
+                            {!! str_replace(
                                     '<svg ',
-                                    '<svg class="w-6 h-6 text-[#A1AAB2] opacity-50 mr-4" fill="currentColor" ',
-                                    file_get_contents(public_path('assets/signup/language.svg'))
-                                ) !!}                            
-                                <select name="language" class="w-full outline-none bg-transparent text-gray-400" onchange="this.style.color = this.value ? '#000000' : '#9CA3AF'">
+                                '<svg class="w-6 h-6 text-[#A1AAB2] opacity-50 mr-4" fill="currentColor" ',
+                                file_get_contents(public_path('assets/signup/language.svg'))
+                            ) !!}   
+                            <select name="language" class="w-full outline-none bg-transparent text-gray-400" onchange="this.style.color = this.value ? '#000000' : '#9CA3AF'">
                                 <option value="" disabled selected class="text-gray-400">Preferred Language</option>
                                 <option value="en" {{ old('language') == 'en' ? 'selected' : '' }} class="text-black" >English</option>
                                 <option value="id" {{ old('language') == 'id' ? 'selected' : '' }} class="text-black">Indonesian</option>

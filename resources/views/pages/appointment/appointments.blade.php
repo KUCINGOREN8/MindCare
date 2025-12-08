@@ -7,14 +7,14 @@
 
         {{-- Header --}}
         <div class="mb-8 mt-2">
-            <h2 class="text-2xl font-bold">Appointments</h2>
-            <p class="text-captiondark text-sm">Manage your sessions and history.</p>
+            <h2 class="text-primary font-bold text-3xl">Appointments</h2>
+            <p class="text-captiondark text-base">Manage your sessions and history.</p>
         </div>
 
         {{-- A. UPCOMING SESSION --}}
         <section class="mb-8">
             <div class="flex items-center gap-2 mb-4">
-                <h3 class="font-bold text-lg">Upcoming Session</h3>
+                <h3 class="font-bold text-lg text-gray-800">Upcoming Session</h3>
 
                 {{-- Indikator Ping (Hanya muncul jika ada jadwal) --}}
                 @if(isset($ongoing) && $ongoing)

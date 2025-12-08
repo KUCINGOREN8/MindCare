@@ -55,10 +55,7 @@
                     alt="{{ $otherUser->full_name }}"
                 >
                 <!-- Online -->
-               <div class="absolute bottom-0 right-0 w-3 h-3
-                {{ optional($conv->last_message_at)->diffInMinutes(now()) < 5 ? 'bg-green-500' : 'bg-gray-400' }}
-                rounded-full border-2 border-white">
-                </div>
+                <div class="absolute bottom-0 right-0 w-3 h-3 {{ optional($conv->last_message_at)->diffInMinutes(now()) < 5 ? 'bg-green-500' : 'bg-gray-400' }} rounded-full border-2 border-white"></div>
             </div>
 
             <!-- Details -->

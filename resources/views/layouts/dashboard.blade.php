@@ -6,6 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <link href="{{ asset('build/output.css') }}" rel="stylesheet">
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
     @stack('styles')

@@ -27,7 +27,7 @@ Find Psychologist
                 @foreach($psychologists as $psychologist)
                 <div class="flex flex-col bg-white rounded-md border border-grey-border p-6 items-center text-center gap-3">
                     <div class="justify-items-center">
-                        <img src="{{ $psychologist->user->photo_url ? asset($psychologist->user->photo_url) : ($psychologist->user->gender=="female" ? asset('assets/icons/user_female.svg') : asset('assets/icons/user_male.svg')) }}"  alt="" style='width:100px;'>
+                        <img src="{{ $psychologist->user->photo_url ? asset($psychologist->user->photo_url) : ($psychologist->user->gender=="female" ? asset('assets/icons/user_female.svg') : asset('assets/icons/user_male.svg')) }}" alt="" style='width:100px;'>
                     </div>
 
                     <div class="mb-2">

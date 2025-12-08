@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use App\Mail\OTPCodeMail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Mail;
 
 class User extends Authenticatable
 {
@@ -53,6 +55,12 @@ class User extends Authenticatable
     {
         return $this->otp_code === $code &&
             now()->lt($this->otp_expires_at);
+    }
+
+    public function sendOTPNotification()
+    {
+        $otpCode = $this->generateOTP();
+        Mail::to($this->email)->send(new OTPCodeMail($otpCode));
     }
 
     public function isAdmin()

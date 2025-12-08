@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
     <div class="w-full md:w-1/3 lg:w-1/4 border-r border-gray-200 bg-white flex flex-col h-full">
         <!-- Header -->
         <div class="p-6 border-b">
-            <h1 class="text-2xl font-bold text-gray-800">My Messages</h1>
+            <h1 class="text-captiondark font-bold text-xl">My Messages</h1>
 
             <!-- Search Bar -->
             <div class="mt-4 relative">
