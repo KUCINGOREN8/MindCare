@@ -13,9 +13,9 @@
 
             <div class="bg-white p-6 flex flex-col gap-6 rounded-md border-grey-border border">
                 <div class="flex justify-between items-center">
-                    <div>
-                        <h1 class="text-2xl font-bold text-primary">User Management</h1>
-                        <p class="text-sm text-caption-dark">Manage all registered users and admins.</p>
+                    <div class="flex flex-col gap-1 justify-between items-start">
+                        <h3 class="font-bold">User Management</h3>
+                        <p class="text-xs text-caption-dark">Manage all registered users and admins.</p>
                     </div>
                     <a href="{{ route('admin.users.create') }}"
                         class="bg-primary hover:bg-primary-dark text-white text-sm font-medium py-2 px-4 rounded-md transition-colors shadow-sm flex items-center gap-2">

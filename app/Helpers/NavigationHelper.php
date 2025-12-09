@@ -73,12 +73,11 @@ class NavigationHelper
             ],
 
             'admin' => [
-                // TO-DO: nnti ubah, ini masih copas navbar patient
                 [
                     'icon' => 'assets/icons/home.svg',
                     'text' => 'Dashboard',
                     'route' => 'admin.dashboard',
-                    'patterns' => ['admin.*']
+                    'patterns' => ['admin.*', 'profile.*']
                 ],
             ]
         ];
