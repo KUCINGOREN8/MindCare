@@ -3,20 +3,30 @@
         <h3 class="font-bold">Upcoming Appointments</h3>
         <a href="{{ route("patient.appointments.index") }}" class="underline hover:text-primary text-caption text-sm ">See all</a>
     </div>
-    <x-appointment-card 
-        name="Dr. Emily Chen" 
-        specialization="Clinical Psychologist" 
-        time="12.00 PM" 
-        joinRoute="#"
-        rescheduleRoute="#"
-        isSessionAvailable="true"
-        />
-        
-        <x-appointment-card 
-        name="Dr. Michael Tan" 
-        specialization="Child Therapist" 
-        time="3.30 PM"
-        joinRoute="#"
-        rescheduleRoute="#"
-    />
+    @if($upcomingAppointments->count() > 0)
+        @foreach ($upcomingAppointments as $appointment)
+            <x-appointment-card 
+                name={{ $user->role === 'patient' ? $appointment->psychologist->user->full_name : $appointment->user->full_name }} 
+                specialization="Clinical Psychologist" 
+                time="\Carbon\Carbon::parse($appointment->start_time)->format('h:i A');" 
+                joinRoute="$user->role === 'patient' 
+                        ? route('patient.appointments.chat.session', $appointment)
+                        : route('messages');"
+                rescheduleRoute="#"
+                isSessionAvailable="$appointment->is_session_available;"
+                />
+        @endforeach
+    @else
+        <div class="bg-white p-6 text-center rounded-md border-grey-border border flex flex-col gap-6">
+            <p class="text-gray-500">No upcoming appointment found</p>
+            
+            @if ($user->role === 'patient')
+                <div>
+                    <a href="{{ route('patient.book.appointment') }}" class="px-4 py-2 bg-[#00C3B3] hover:bg-[#179990] text-white rounded-md items-center justify-center">
+                        Book your first session
+                    </a>
+                </div>
+            @endif
+        </div>
+    @endif
 </div>

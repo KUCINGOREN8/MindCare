@@ -80,30 +80,7 @@ Dashboard
                 @endif
             </div>
 
-            {{-- Upcoming Appointment --}}
-            <div class="bg-white p-6 rounded-xl border-grey-border border">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="font-bold text-lg text-gray-800">Upcoming Appointments</h3>
-                    <a href="{{ route('appointments.index') }}" class="text-primary text-sm hover:underline">
-                        See all
-                    </a>
-                </div>
-
-                @if($upcomingAppointments && $upcomingAppointments->count() > 0)
-                    <div class="space-y-4">
-                        @foreach($upcomingAppointments as $appointment)
-                            <x-appointment-card :appointment="$appointment" />
-                        @endforeach
-                    </div>
-                @else
-                    <div class="text-center py-6">
-                        <p class="text-gray-400 text-sm">No upcoming appointments</p>
-                        <a href="{{ route('book.appointment') }}" class="text-primary text-sm underline mt-2 inline-block">
-                            Book your first session
-                        </a>
-                    </div>
-                @endif
-            </div>
+            @include('components.upcoming-appointment')
         </div>
     </div>
 

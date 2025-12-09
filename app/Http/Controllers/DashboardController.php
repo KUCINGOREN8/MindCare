@@ -41,8 +41,17 @@ class DashboardController extends Controller
     public function showPsychologistDashboard() {
         $user = Auth::user();
         
-        // $upcomingAppointments
-        return view('dashboard.psychologist.index', compact('user'));
+        $upcomingAppointments = Appointment::with(['user'])
+            ->where('psychologist_id', $user->id)
+            ->where('status', 'confirmed')
+            ->get()
+            ->filter(function ($appointment) {
+                return $appointment->is_upcoming;
+            })
+            ->sortBy('start_date_time')
+            ->take(3);
+
+        return view('dashboard.psychologist.index', compact('user', 'upcomingAppointments'));
     }
 
     public function moodStore(Request $request)

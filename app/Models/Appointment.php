@@ -8,7 +8,7 @@ use Carbon\Carbon;
 class Appointment extends Model
 {
 
-     protected $fillable = [
+    protected $fillable = [
         'user_id',
         'psychologist_id',
         'with',
