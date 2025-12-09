@@ -116,7 +116,7 @@ Book Appointment
             </div>
 
             <!-- FORM HERE -->
-            <form method="POST" action="{{ route('appointments.store') }}" class="mt-6" id="appointmentForm">
+            <form method="POST" action="{{ route('patient.appointments.store') }}" class="mt-6" id="appointmentForm">
                 @csrf
 
                 <input type="hidden" name="date" x-model="selectedDate">

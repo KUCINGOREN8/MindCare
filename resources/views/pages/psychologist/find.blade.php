@@ -22,7 +22,7 @@ Find Psychologist
                 </form>
             </div>
 
-            {{-- Default Layout --}}
+            {{-- Default Layout --}}    
             <div x-show="query.length === 0" class="grid grid-cols-3 gap-6">
                 @foreach($psychologists as $psychologist)
                 <div class="flex flex-col bg-white rounded-md border border-grey-border p-6 items-center text-center gap-3">
@@ -38,7 +38,7 @@ Find Psychologist
 
                     <div class="flex gap-4 flex-col lg:flex-row">
                         <x-rounded-button text="Book" active="true" route="#"></x-rounded-button>
-                        <x-rounded-button text="Details" secondary="true" route="{{ Route('psychologist.profile', $psychologist->id) }}"></x-rounded-button>
+                        <x-rounded-button text="Details" secondary="true" route="{{ Route('patient.psychologist.profile', $psychologist->id) }}"></x-rounded-button>
                     </div>
                 </div>
                 @endforeach
@@ -67,7 +67,7 @@ Find Psychologist
 
                         <div class="flex gap-4 flex-col lg:flex-row">
                             <x-rounded-button text="Book" active="true" route="#"></x-rounded-button>
-                            <a :href="`${'{{ url('/psychologist') }}'}/${item.id}`" class="bg-white hover:bg-caption/2 text-caption-dark border border-grey-border flex rounded-md px-2 md:px-4 py-2 md:py-2 text-center flex-1 items-center justify-center text-xs sm:text-sm lg:text-base">Details</a>
+                            <a :href="`${'{{ url('patient/psychologist') }}'}/${item.id}`" class="bg-white hover:bg-caption/2 text-caption-dark border border-grey-border flex rounded-md px-2 md:px-4 py-2 md:py-2 text-center flex-1 items-center justify-center text-xs sm:text-sm lg:text-base">Details</a>
                         </div>
                     </div>
                 </template>
@@ -95,7 +95,7 @@ function liveSearch() {
                 return;
             }
 
-            fetch(`{{ route('psychologist.search') }}?q=` + this.query)
+            fetch(`{{ route('patient.psychologist.search') }}?q=` + this.query)
                 .then(res => res.json())
                 .then(data => {
                     this.results = data;

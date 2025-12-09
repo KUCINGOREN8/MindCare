@@ -16,7 +16,7 @@ Payment Status
             </div>
             <h2 class="text-2xl font-bold text-gray-800 mb-2">Payment Successful!</h2>
             <p class="text-gray-600 mb-6">{{ $message }}</p>
-            <a href="{{ route('appointments.index') }}"
+            <a href="{{ route('patient.appointments.index') }}"
                class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90 transition inline-block">
                 View My Appointments
             </a>
@@ -30,11 +30,11 @@ Payment Status
             <h2 class="text-2xl font-bold text-gray-800 mb-2">Payment Pending</h2>
             <p class="text-gray-600 mb-6">{{ $message }}</p>
             <div class="space-y-3">
-                <a href="{{ route('appointments.index') }}"
+                <a href="{{ route('patient.appointments.index') }}"
                    class="block bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90 transition">
                     Check Appointment Status
                 </a>
-                <a href="{{ route('book.appointment') }}"
+                <a href="{{ route('patient.book.appointment') }}"
                    class="block border border-primary text-primary px-6 py-3 rounded-lg hover:bg-primary/10 transition">
                     Book Another Session
                 </a>
@@ -49,11 +49,11 @@ Payment Status
             <h2 class="text-2xl font-bold text-gray-800 mb-2">Payment Failed</h2>
             <p class="text-gray-600 mb-6">{{ $message }}</p>
             <div class="space-y-3">
-                <a href="{{ route('book.appointment') }}"
+                <a href="{{ route('patient.book.appointment') }}"
                    class="block bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90 transition">
                     Try Again
                 </a>
-                <a href="{{ route('appointments.index') }}"
+                <a href="{{ route('patient.appointments.index') }}"
                    class="block border border-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-50 transition">
                     Back to Dashboard
                 </a>

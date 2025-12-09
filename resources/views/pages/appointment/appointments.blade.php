@@ -40,7 +40,7 @@
 
         {{-- B. HISTORY --}}
         <section class="mb-8">
-            <h3 class="font-bold text-lg text-gray-800 mb-4">History</h3>
+            <h3 class="font-bold text-l mb-4">History</h3>
             <div class="space-y-3">
                 @forelse($history ?? [] as $item)
                     <div

@@ -29,9 +29,9 @@ class MidtransService
                 'qris', 'credit_card', 'bca_klikbca'
             ],
             'callbacks' => [
-                'finish' => route('payment.finish'),
-                'error' => route('payment.error'),
-                'pending' => route('payment.pending'),
+                'finish' => route('patient.payment.finish'),
+                'error' => route('patient.payment.error'),
+                'pending' => route('patient.payment.pending'),
             ],
         ];
 

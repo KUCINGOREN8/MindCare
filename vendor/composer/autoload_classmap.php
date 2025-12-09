@@ -13,7 +13,6 @@ return array(
     'App\\Http\\Controllers\\Controller' => $baseDir . '/app/Http/Controllers/Controller.php',
     'App\\Http\\Controllers\\DashboardController' => $baseDir . '/app/Http/Controllers/DashboardController.php',
     'App\\Http\\Controllers\\OTPController' => $baseDir . '/app/Http/Controllers/OTPController.php',
-    'App\\Http\\Controllers\\PaymentController' => $baseDir . '/app/Http/Controllers/PaymentController.php',
     'App\\Http\\Controllers\\PsychologistController' => $baseDir . '/app/Http/Controllers/PsychologistController.php',
     'App\\Http\\Middleware\\CheckRole' => $baseDir . '/app/Http/Middleware/CheckRole.php',
     'App\\Http\\Middleware\\OTPMiddleware' => $baseDir . '/app/Http/Middleware/OTPMiddleware.php',

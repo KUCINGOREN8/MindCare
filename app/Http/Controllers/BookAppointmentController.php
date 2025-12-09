@@ -62,7 +62,7 @@ class BookAppointmentController extends Controller
                 'payment_url' => $transaction['redirect_url']
             ]);
 
-            return redirect()->route('payment.process', $payment);
+            return redirect()->route('patient.payment.process', $payment);
 
         } catch (\Exception $e) {
             $appointment->delete();
