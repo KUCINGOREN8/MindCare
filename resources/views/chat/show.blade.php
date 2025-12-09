@@ -5,7 +5,7 @@
 @section('content')
 <div class="absolute inset-0 flex bg-gray-50">
     <div class="hidden md:block w-96 border-r border-gray-200 bg-white h-full overflow-hidden">
-        @include('pages.chat.partials.sidebar', [
+        @include('chat.partials.sidebar', [
             'conversations' => $conversations,
             'userType' => $userType,
             'conversation' => $conversation

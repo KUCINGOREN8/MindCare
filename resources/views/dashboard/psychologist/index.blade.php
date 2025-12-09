@@ -13,7 +13,7 @@ Dashboard
                     <h5 class="text-captiondark text-sm">Welcome back, here's your practice summary</h5>
                 </div>
             </div>
-            
+
             <div class="flex flex-col md:flex-row gap-6">
                 <div class="flex flex-1 flex-col bg-white p-6 gap-6 rounded-md border-grey-border border">
                     <div class="flex gap-4 justify-between items-start">
@@ -24,7 +24,7 @@ Dashboard
                                 file_get_contents(public_path( 'assets/icons/users.svg' ))
                                 ) !!}
                         </div>
-                        
+
                         <div class="flex flex-row gap-1 items-center">
                             <img src="{{ asset('assets/icons/arrow-up.svg') }}" class="mt-[3px]" alt="">
                             <p class="text-[#16A34A]">12%</p>
@@ -45,7 +45,7 @@ Dashboard
                                 file_get_contents(public_path( 'assets/icons/users.svg' ))
                                 ) !!}
                         </div>
-                        
+
                         <div class="flex flex-row gap-1 items-center">
                             <img src="{{ asset('assets/icons/arrow-up.svg') }}" class="mt-[3px]" alt="">
                             <p class="text-[#16A34A]">8%</p>
@@ -66,7 +66,7 @@ Dashboard
                                 file_get_contents(public_path( 'assets/icons/users.svg' ))
                                 ) !!}
                         </div>
-                        
+
                         <div class="flex flex-row gap-1 items-center">
                             <img src="{{ asset('assets/icons/arrow-up.svg') }}" class="mt-[3px]" alt="">
                             <p class="text-[#16A34A]">22%</p>
@@ -93,7 +93,7 @@ Dashboard
                             ->with('user')
                             ->orderBy('created_at', 'desc')
                             ->get();
-                        
+
                         $uniqueAppointments = $appointments->unique('user_id')->take(2);
                     @endphp
 
@@ -102,13 +102,13 @@ Dashboard
                             @php
                                 $patient = $appointment->user;
                             @endphp
-                            
+
                             @if($patient)
                                 <div class="bg-white p-3 flex flex-1 gap-6 rounded-md border-grey-border border">
                                     <div class="flex flex-1 justify-between">
                                         <div class="flex flex-row gap-3 items-center">
-                                            <img src="{{ $patient->photo_url ? asset($patient->photo_url) : ($patient->gender=="female" ? asset('assets/icons/user_female.svg') : asset('assets/icons/user_male.svg')) }}" 
-                                                class="rounded-full w-12 h-12 lg:mx-0 mx-auto" alt="pfp"> 
+                                            <img src="{{ $patient->photo_url ? asset($patient->photo_url) : ($patient->gender=="female" ? asset('assets/icons/user_female.svg') : asset('assets/icons/user_male.svg')) }}"
+                                                class="rounded-full w-12 h-12 lg:mx-0 mx-auto" alt="pfp">
                                             <p>{{ $patient->full_name }}</p>
                                         </div>
                                         <div>
@@ -125,42 +125,10 @@ Dashboard
                             <p class="text-gray-500">No recent clients found</p>
                         </div>
                     @endif
-                </div>                    
+                </div>
             </div>
         </div>
     </div>
-    
-    {{-- Profile section --}}
-    <div class="flex flex-col p-6 gap-6 bg-white rounded-md border-grey-border border max-w-[300px]">
-        {{-- User card --}}
-        <div class="flex flex-col gap-4 justify-start">
-            {{-- User Information --}}
-            <div class="flex flex-col gap-4 lg:flex-row transition-all duration-300"> 
-                <img src="{{ $user->photo_url ? asset($user->photo_url) : ($user->gender=="female" ? asset('assets/icons/user_female.svg') : asset('assets/icons/user_male.svg')) }}" class="rounded-full w-16 h-16 lg:mx-0 mx-auto" alt="pfp"> 
-                <div class="flex flex-col justify-left text-left"> 
-                    <h4 class="user-name font-semibold "> {{ $user->full_name }} </h4> 
-                    <p class="text-caption">{{ $user->psychologist->title }}</p> 
-                    <div class="flex gap-2 items-center "> 
-                        <div class="rounded-full w-2 h-2 bg-primary"></div> 
-                        <p class="text-primary text-sm">Active</p> 
-                    </div> 
-                </div> 
-            </div>
 
-            {{-- Action --}}
-            <div class="flex gap-4 flex-col lg:flex-row">
-                <x-rounded-button text="Settings" active="true" route="{{ route('profile.index') }}"></x-rounded-button>
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="rounded-button secondary bg-white hover:bg-gray-100 text-caption-dark border border-grey-border rounded-md  px-2 md:px-4 py-2 md:py-2 text-center flex flex-1 items-center justify-center text-xs sm:text-sm lg:text-base">
-                        Logout
-                    </button>
-                </form>
-            </div>
-            
-        </div>
-
-        @include('components.notifications')
-        
-    </div>
+    <x-user-profile-card :user="$user" />
 @endsection

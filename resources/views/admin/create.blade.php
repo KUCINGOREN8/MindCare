@@ -141,35 +141,5 @@
         </div>
     </div>
 
-    {{-- === BAGIAN KANAN: SIDEBAR PROFILE (TETAP PAKAI AUTH USER) === --}}
-    <div class="hidden lg:flex flex-col w-[300px] gap-6 sticky top-4 h-fit">
-        <div class="flex flex-col p-6 gap-6 bg-white rounded-md border-grey-border border">
-            <div class="flex flex-col gap-4 justify-start">
-                <div class="flex flex-col gap-4 items-center text-center transition-all duration-300">
-                    {{-- Gunakan auth()->user() untuk menampilkan foto admin yang sedang login --}}
-                    <img src="{{ auth()->user()->photo_url ? asset(auth()->user()->photo_url) : (auth()->user()->gender == 'female' ? asset('assets/icons/user_female.svg') : asset('assets/icons/user_male.svg')) }}"
-                        class="rounded-full w-20 h-20" alt="pfp">
-                    <div class="flex flex-col">
-                        <h4 class="user-name font-semibold text-lg">{{ auth()->user()->full_name }}</h4>
-                        <p class="text-caption text-sm text-gray-500">Administrator</p>
-                        <div class="flex gap-2 items-center justify-center mt-2">
-                            <div class="rounded-full w-2 h-2 bg-primary"></div>
-                            <p class="text-primary text-sm">Active</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex flex-col gap-3 mt-2">
-                    <x-rounded-button text="Settings" active="true"
-                        route="{{ route('profile.edit') }}"></x-rounded-button>
-                    <form action="{{ route('logout') }}" method="POST" class="w-full">
-                        @csrf
-                        <button type="submit"
-                            class="w-full bg-white hover:bg-gray-50 text-gray-700 border border-grey-border rounded-full px-4 py-2 text-sm font-medium transition-colors">Logout</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-        @include('components.notifications')
-    </div>
+    <x-user-profile-card :user="$user" />
 @endsection

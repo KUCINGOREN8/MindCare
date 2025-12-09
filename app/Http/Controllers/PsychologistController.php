@@ -15,7 +15,7 @@ class PsychologistController extends Controller
     {
         $psychologists = Psychologist::with('user')->get();
 
-        return view('pages.psychologist.find', compact('psychologists'));
+        return view('patient.psychologist.find', compact('psychologists'));
     }
 
     public function showProfile($id) {
@@ -31,7 +31,7 @@ class PsychologistController extends Controller
             }])
             ->findOrFail($id);
 
-        return view('pages.psychologist.profile', compact('psychologist'));
+        return view('patient.psychologist.profile', compact('psychologist'));
     }
 
     public function showSearch(Request $request) {
@@ -60,7 +60,7 @@ class PsychologistController extends Controller
     public function showReview($id) {
         $psychologist = Psychologist::with('user', 'reviews')->orderBy('created_at', 'desc')->findOrFail($id);
 
-        return view('pages.psychologist.review', compact('psychologist'));
+        return view('patient.psychologist.review', compact('psychologist'));
     }
 
     public function showClients() {

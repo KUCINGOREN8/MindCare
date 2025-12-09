@@ -7,16 +7,15 @@
             <div class="flex flex-col bg-white p-6 gap-4 rounded-md border-grey-border border">
                 <div class="flex flex-col">
                     <h1 class="text-primary font-bold text-lg">Good Day, {{ $user->full_name }}!</h1>
-                    <h5 class="text-captiondark text-sm">How are you feeling today?</h5>
+                    <h5 class="text-captiondark text-sm">Manage user who using BeOkay</h5>
                 </div>
             </div>
 
-            {{-- Main Content --}}
             <div class="bg-white p-6 flex flex-col gap-6 rounded-md border-grey-border border">
                 <div class="flex justify-between items-center">
-                    <div>
-                        <h1 class="text-2xl font-bold text-primary">User Management</h1>
-                        <p class="text-sm text-caption-dark">Manage all registered users and admins.</p>
+                    <div class="flex flex-col gap-1 justify-between items-start">
+                        <h3 class="font-bold">User Management</h3>
+                        <p class="text-xs text-caption-dark">Manage all registered users and admins.</p>
                     </div>
                     <a href="{{ route('admin.users.create') }}"
                         class="bg-primary hover:bg-primary-dark text-white text-sm font-medium py-2 px-4 rounded-md transition-colors shadow-sm flex items-center gap-2">
@@ -100,34 +99,7 @@
             </div>
         </div>
 
-        {{-- Sidebar Profile (Tetap sama) --}}
-        <div class="hidden lg:flex flex-col w-[300px] gap-6 sticky top-4 h-fit">
-            <div class="flex flex-col p-6 gap-6 bg-white rounded-md border-grey-border border">
-                <div class="flex flex-col gap-4 justify-start">
-                    <div class="flex flex-col gap-4 items-center text-center">
-                        <img src="{{ auth()->user()->photo_url ? asset(auth()->user()->photo_url) : (auth()->user()->gender == 'female' ? asset('assets/icons/user_female.svg') : asset('assets/icons/user_male.svg')) }}"
-                            class="rounded-full w-20 h-20" alt="pfp">
-                        <div class="flex flex-col">
-                            <h4 class="user-name font-semibold text-lg">{{ auth()->user()->full_name }}</h4>
-                            <p class="text-caption text-sm text-gray-500">Administrator</p>
-                            <div class="flex gap-2 items-center justify-center mt-2">
-                                <div class="rounded-full w-2 h-2 bg-primary"></div>
-                                <p class="text-primary text-sm">Active</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex flex-col gap-3 mt-2">
-                        <x-rounded-button text="Settings" active="true"
-                            route="{{ route('profile.edit') }}"></x-rounded-button>
-                        <form action="{{ route('logout') }}" method="POST" class="w-full">
-                            @csrf <button type="submit"
-                                class="w-full bg-white hover:bg-gray-50 text-gray-700 border border-grey-border rounded-full px-4 py-2 text-sm font-medium transition-colors">Logout</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            @include('components.notifications')
-        </div>
+        <x-user-profile-card :user="$user" />
 
         {{-- 3. MODAL POPUP (Letakkan di paling bawah, sebelum penutup div utama) --}}
 

@@ -45,7 +45,7 @@ class ChatController extends Controller
         } else {
             return redirect()->route('admin.dashboard')->with('info', 'Chat feature is not available for admin role');
         }
-            return view('pages.chat.index', array_merge($viewData, ['user' => $user]));
+            return view('chat.index', array_merge($viewData, ['user' => $user]));
     }
 
     public function startChat(User $psychologist)
@@ -117,7 +117,7 @@ class ChatController extends Controller
             $userType = 'admin';
         }
 
-        return view('pages.chat.show', [
+        return view('chat.show', [
             'conversation' => $conversation,
             'messages' => $messages,
             'conversations' => $conversations,
@@ -191,7 +191,7 @@ class ChatController extends Controller
             ->orderBy('last_message_at', 'desc')
             ->get();
 
-        return view('pages.chat.psychologist-index', [
+        return view('chat.index', [
             'conversations' => $conversations,
             'user' => $user
         ]);

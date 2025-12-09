@@ -84,37 +84,5 @@ Dashboard
         </div>
     </div>
 
-    {{-- Profile section --}}
-    <div class="flex flex-col p-6 gap-6 bg-white rounded-md border-grey-border border max-w-[300px]">
-        {{-- User card --}}
-        <div class="flex flex-col gap-4 justify-start">
-            {{-- User Information --}}
-            <div class="flex flex-col gap-4 lg:flex-row transition-all duration-300">
-                <img src="{{ $user->photo_url ? asset($user->photo_url) : ($user->gender=="female" ? asset('assets/icons/user_female.svg') : asset('assets/icons/user_male.svg')) }}" class="rounded-full w-16 h-16 lg:mx-0 mx-auto" alt="pfp">
-                <div class="flex flex-col justify-left text-left">
-                    <h4 class="user-name font-semibold "> {{ $user->full_name }} </h4>
-                    <p class="text-caption">Premium Member</p>
-                    <div class="flex gap-2 items-center ">
-                        <div class="rounded-full w-2 h-2 bg-primary"></div>
-                        <p class="text-primary text-sm">Active</p>
-                    </div>
-                </div>
-            </div>
-
-            {{-- Action --}}
-            <div class="flex gap-4 flex-col lg:flex-row">
-                <x-rounded-button text="Settings" active="true" route="{{ route('profile.index') }}"></x-rounded-button>
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="rounded-button secondary bg-white hover:bg-gray-100 text-caption-dark border border-grey-border rounded-md  px-2 md:px-4 py-2 md:py-2 text-center flex flex-1 items-center justify-center text-xs sm:text-sm lg:text-base">
-                        Logout
-                    </button>
-                </form>
-            </div>
-
-        </div>
-
-        @include('components.notifications')
-
-    </div>
+    <x-user-profile-card :user="$user" :notifications="$notifications" />
 @endsection

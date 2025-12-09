@@ -19,9 +19,9 @@ class NavigationHelper
                     'text' => 'Find Psychologist',
                     'route' => 'patient.find.psychologist',
                     'patterns' => [
-                        'patient.find.psychologist', 
-                        'patient.psychologist.search', 
-                        'patient.psychologist.profile', 
+                        'patient.find.psychologist',
+                        'patient.psychologist.search',
+                        'patient.psychologist.profile',
                         'patient.psychologist.review'
                     ]
                 ],
@@ -44,7 +44,7 @@ class NavigationHelper
                     'patterns' => ['messages', 'chat.*']
                 ],
             ],
-            
+
             'psychologist' => [
                 [
                     'icon' => 'assets/icons/home.svg',
@@ -71,50 +71,20 @@ class NavigationHelper
                     'patterns' => ['messages', 'chat.*']
                 ],
             ],
-            
+
             'admin' => [
-                // TO-DO: nnti ubah, ini masih copas navbar patient
                 [
                     'icon' => 'assets/icons/home.svg',
                     'text' => 'Dashboard',
-                    'route' => 'patient.dashboard',
-                    'patterns' => ['patient.dashboard', 'profile.*']
-                ],
-                [
-                    'icon' => 'assets/icons/find-user.svg',
-                    'text' => 'Find Psychologist',
-                    'route' => 'patient.find.psychologist',
-                    'patterns' => [
-                        'patient.find.psychologist', 
-                        'patient.psychologist.search', 
-                        'patient.psychologist.profile', 
-                        'patient.psychologist.review'
-                    ]
-                ],
-                [
-                    'icon' => 'assets/icons/book.svg',
-                    'text' => 'Book Appointment',
-                    'route' => 'patient.book.appointment',
-                    'patterns' => ['patient.book.appointment']
-                ],
-                [
-                    'icon' => 'assets/icons/calendar.svg',
-                    'text' => 'Appointments',
-                    'route' => 'patient.appointments.index',
-                    'patterns' => ['patient.appointments.*']
-                ],
-                [
-                    'icon' => 'assets/icons/messages.svg',
-                    'text' => 'Messages',
-                    'route' => 'patient.messages',
-                    'patterns' => ['patient.messages', 'patient.chat.*']
+                    'route' => 'admin.dashboard',
+                    'patterns' => ['admin.*', 'profile.*']
                 ],
             ]
         ];
-        
+
         return $items[$role] ?? [];
     }
-    
+
     public static function isActive($patterns)
     {
         foreach ((array)$patterns as $pattern) {

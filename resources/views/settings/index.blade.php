@@ -7,14 +7,14 @@ Profile Settings
 @section('content')
 @php
     $tab = request('tab', 'profile');
-    
+
     $tabs = [
         'profile' => [
             'name' => 'Profile',
             'title' => 'Profile Settings',
             'subtitle' => 'Update your photo and personal details here.',
             'icon' => 'user.svg',
-            'roles' => ['patient', 'psychologist']
+            'roles' => ['patient', 'psychologist', 'admin']
         ],
         'professional' => [
             'name' => 'Professional',
@@ -45,15 +45,15 @@ Profile Settings
             'roles' => ['patient', 'psychologist', 'admin']
         ],
     ];
-    
+
     $availableTabs = array_filter($tabs, function($tabConfig) use ($user) {
         return in_array($user->role, $tabConfig['roles']);
     });
-    
+
     if (!isset($availableTabs[$tab])) {
         $tab = 'profile';
     }
-    
+
     $title = $tabs[$tab]['title'];
     $subtitle = $tabs[$tab]['subtitle'];
 @endphp
@@ -74,7 +74,7 @@ Profile Settings
                     <a href="?tab={{ $tabKey }}"
                         class="group px-4 py-2 rounded-md inline-flex items-center gap-2
                         {{ $tab === $tabKey ? 'bg-[#00C3B3] text-white' : 'hover:bg-[#00C3B3]/10 hover:text-[#00C3B3] text-[#4D4D4E]' }}">
-                        
+
                         @if($tabConfig['icon'] === 'user.svg')
                             {!! str_replace(
                                 '<svg ',
@@ -106,7 +106,7 @@ Profile Settings
                                 file_get_contents(public_path('assets/icons/calendar.svg'))
                             ) !!}
                         @endif
-                        
+
                         <span class="hidden sm:inline">{{ $tabConfig['name'] }}</span>
                     </a>
                 @endforeach
@@ -146,14 +146,14 @@ Profile Settings
 <script>
 const EditModeManager = {
     states: {},
-    
+
     init() {
         this.initializeAllForms();
         this.setupNotifications();
         this.setupPasswordToggles();
         this.setupScheduleToggles();
     },
-    
+
     initializeAllForms() {
         document.querySelectorAll('form[id]').forEach(form => {
             const formId = form.id;
@@ -166,7 +166,7 @@ const EditModeManager = {
                 isPasswordForm: hasPasswordFields,
                 isScheduleForm: isScheduleForm
             };
-            
+
             const inputs = form.querySelectorAll('input, select, textarea');
             inputs.forEach(input => {
                 if (input.hasAttribute('readonly')) {
@@ -176,7 +176,7 @@ const EditModeManager = {
                 if (input.hasAttribute('disabled')) {
                     input.setAttribute('data-disabled', 'true');
                 }
-                
+
                 if (input.name && input.type !== 'password') {
                     if (input.type === 'checkbox' || input.type === 'radio') {
                         input.setAttribute('data-original-value', input.checked);
@@ -194,7 +194,7 @@ const EditModeManager = {
                 e.preventDefault();
                 const input = button.previousElementSibling;
                 const eyeIcon = button.querySelector('img');
-                
+
                 if (input.type === 'password') {
                     input.type = 'text';
                     eyeIcon.src = eyeIcon.getAttribute('data-open-icon');
@@ -212,24 +212,24 @@ const EditModeManager = {
         document.querySelectorAll('.availability-toggle').forEach(toggle => {
             toggle.addEventListener('change', function() {
                 if (this.hasAttribute('disabled')) return;
-                
+
                 const day = this.getAttribute('data-day');
                 const timeInputs = document.querySelector(`.time-inputs[data-day="${day}"]`);
                 const label = document.getElementById(`availability-label-${day}`);
-                
+
                 const hiddenInput = document.querySelector(`input[type="hidden"][data-hidden-for="${day}"]`);
-                
+
                 if (this.checked) {
                     timeInputs.classList.remove('hidden');
                     if (label) label.textContent = 'Available';
-                    
+
                     if (hiddenInput) {
                         hiddenInput.disabled = true;
                     }
-                    
+
                     const startInput = timeInputs.querySelector('input[name*="start_time"]');
                     const endInput = timeInputs.querySelector('input[name*="end_time"]');
-                    
+
                     if (startInput && !startInput.value) {
                         startInput.value = '09:00';
                     }
@@ -239,21 +239,21 @@ const EditModeManager = {
                 } else {
                     timeInputs.classList.add('hidden');
                     if (label) label.textContent = 'Not Available';
-                    
+
                     if (hiddenInput) {
                         hiddenInput.disabled = false;
                     }
                 }
             });
-            
+
             toggle.dispatchEvent(new Event('change'));
         });
     },
-    
+
     getFormValues(form) {
         const values = {};
         const inputs = form.querySelectorAll('input, select, textarea');
-        
+
         inputs.forEach(input => {
             if (input.name) {
                 if (input.type === 'checkbox' || input.type === 'radio') {
@@ -267,29 +267,29 @@ const EditModeManager = {
                 }
             }
         });
-        
+
         return values;
     },
-    
+
     toggleEditMode(formId) {
         const form = document.getElementById(formId);
         if (!form) return;
-        
+
         const state = this.states[formId];
         const editButton = form.querySelector(`[data-edit-form="${formId}"]`);
         const cancelButton = form.querySelector(`[data-cancel-form="${formId}"]`);
-        
+
         if (!state.isEditMode) {
             state.isEditMode = true;
             state.originalValues = this.getFormValues(form);
             this.enableFormInputs(form);
-            
+
             if (editButton) {
                 editButton.textContent = 'Confirm';
                 editButton.onclick = () => this.submitForm(formId);
                 editButton.classList.add('confirm-mode');
             }
-            
+
             if (cancelButton) {
                 cancelButton.classList.remove('hidden');
             }
@@ -297,10 +297,10 @@ const EditModeManager = {
             this.submitForm(formId);
         }
     },
-    
+
     enableFormInputs(form) {
         const inputs = form.querySelectorAll('input, select, textarea');
-        
+
         inputs.forEach(input => {
             if (input.hasAttribute('data-readonly')) {
                 input.removeAttribute('readonly');
@@ -314,7 +314,7 @@ const EditModeManager = {
                 input.type = 'password';
             }
         });
-        
+
         const selectArrows = form.querySelectorAll('select + svg');
         selectArrows.forEach(arrow => {
             arrow.classList.remove('opacity-0');
@@ -328,10 +328,10 @@ const EditModeManager = {
             });
         }
     },
-    
+
     disableFormInputs(form) {
         const inputs = form.querySelectorAll('input, select, textarea');
-        
+
         inputs.forEach(input => {
             if (input.hasAttribute('data-readonly')) {
                 input.setAttribute('readonly', 'true');
@@ -342,7 +342,7 @@ const EditModeManager = {
                 input.classList.add('disabled:text-[#A1AAB2]', 'disabled:opacity-100');
             }
         });
-        
+
         const selectArrows = form.querySelectorAll('select + svg');
         selectArrows.forEach(arrow => {
             arrow.classList.remove('opacity-100');
@@ -356,7 +356,7 @@ const EditModeManager = {
             });
         }
     },
-    
+
     submitForm(formId) {
         const form = document.getElementById(formId);
         if (form) {
@@ -368,24 +368,24 @@ const EditModeManager = {
 
     validateScheduleForm(form) {
         let isValid = true;
-        
+
         const checkedToggles = form.querySelectorAll('.availability-toggle:checked');
-        
+
         checkedToggles.forEach(toggle => {
             const day = toggle.getAttribute('data-day');
             const startTime = form.querySelector(`[name="schedules[${day}][start_time]"]`);
             const endTime = form.querySelector(`[name="schedules[${day}][end_time]"]`);
-            
+
             if (startTime && !startTime.value.trim()) {
                 isValid = false;
                 this.showValidationError(startTime, 'Start time is required');
             }
-            
+
             if (endTime && !endTime.value.trim()) {
                 isValid = false;
                 this.showValidationError(endTime, 'End time is required');
             }
-            
+
             if (startTime && endTime && startTime.value && endTime.value) {
                 if (startTime.value >= endTime.value) {
                     isValid = false;
@@ -393,14 +393,14 @@ const EditModeManager = {
                 }
             }
         });
-        
+
         return isValid;
     },
-    
+
     validateRequiredFields(form) {
         let isValid = true;
         const requiredInputs = form.querySelectorAll('[required]');
-        
+
         if (this.states[form.id]?.isScheduleForm) {
             return this.validateScheduleForm(form);
         }
@@ -411,36 +411,36 @@ const EditModeManager = {
                 this.showValidationError(input, 'This field is required');
             }
         });
-        
+
         return isValid;
     },
-    
+
     showValidationError(input, message) {
         const existingError = input.parentElement.nextElementSibling;
         if (existingError && existingError.classList.contains('text-red-500')) {
             existingError.remove();
         }
-        
+
         const errorElement = document.createElement('p');
         errorElement.className = 'text-red-500 mt-2 ml-1';
         errorElement.textContent = message;
-        
+
         input.parentElement.parentElement.appendChild(errorElement);
-        
+
         input.classList.add('border-red-500', 'border');
         setTimeout(() => {
             input.classList.remove('border-red-500', 'border');
         }, 3000);
     },
-    
+
     cancelEdit(formId) {
         const form = document.getElementById(formId);
         if (!form) return;
-        
+
         const state = this.states[formId];
         const editButton = form.querySelector(`[data-edit-form="${formId}"]`);
         const cancelButton = form.querySelector(`[data-cancel-form="${formId}"]`);
-        
+
         if (state.isPasswordForm) {
             const passwordInputs = form.querySelectorAll('[type="password"], [type="text"][data-password-field]');
             passwordInputs.forEach(input => {
@@ -449,7 +449,7 @@ const EditModeManager = {
                     input.type = 'password';
                 }
             });
-            
+
             const eyeIcons = form.querySelectorAll('.password-toggle img');
             eyeIcons.forEach(icon => {
                 icon.src = icon.getAttribute('data-closed-icon');
@@ -460,29 +460,29 @@ const EditModeManager = {
         }
 
         this.disableFormInputs(form);
-        
+
         if (editButton) {
             editButton.textContent = 'Edit';
             editButton.onclick = () => this.toggleEditMode(formId);
             editButton.classList.remove('confirm-mode');
         }
-        
+
         if (cancelButton) {
             cancelButton.classList.add('hidden');
         }
-        
+
         state.isEditMode = false;
-        
+
         this.clearFormErrors(form);
     },
-    
+
     restoreOriginalValues(form) {
         const inputs = form.querySelectorAll('input, select, textarea');
-        
+
         inputs.forEach(input => {
             if (input.name && input.hasAttribute('data-original-value')) {
                 const originalValue = input.getAttribute('data-original-value');
-                
+
                 if (input.type === 'checkbox' || input.type === 'radio') {
                     input.checked = originalValue === 'true';
 
@@ -490,7 +490,7 @@ const EditModeManager = {
                         const day = input.getAttribute('data-day');
                         const timeInputs = document.querySelector(`.time-inputs[data-day="${day}"]`);
                         const label = document.getElementById(`availability-label-${day}`);
-                        
+
                         if (originalValue === 'true') {
                             if (timeInputs) timeInputs.classList.remove('hidden');
                             if (label) label.textContent = 'Available';
@@ -515,17 +515,17 @@ const EditModeManager = {
             }
         });
     },
-    
+
     clearFormErrors(form) {
         const errorElements = form.querySelectorAll('.text-red-500');
         errorElements.forEach(error => error.remove());
     },
-    
+
     setupNotifications() {
         @if(session('success'))
             this.showNotification('{{ session('success') }}', 'success');
         @endif
-        
+
         @if(session('error'))
             this.showNotification('{{ session('error') }}', 'error');
         @endif
@@ -540,14 +540,14 @@ const EditModeManager = {
             }
         @endif
     },
-    
+
     showNotification(message, type = 'success') {
         window.dispatchEvent(new CustomEvent('open-snackbar', {
             detail: { message, type }
         }));
     }
 
-    
+
 };
 
 document.addEventListener('DOMContentLoaded', () => {
