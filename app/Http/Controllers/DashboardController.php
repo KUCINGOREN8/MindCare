@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Appointment;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,7 +24,19 @@ class DashboardController extends Controller
         $user = Auth::user();
 
         // $upcomingAppointments
-        return view('pages.dashboard.index', compact('user'));
+        $upcomingAppointments = Appointment::with(['psychologist' => function($query) {
+                $query->with('user');
+            }])
+            ->where('user_id', $user->id)
+            ->where('status', 'confirmed')
+            ->get()
+            ->filter(function($appointment) {
+                return $appointment->is_upcoming;
+            })
+            ->sortBy('start_date_time')
+            ->take(3);
+
+        return view('pages.dashboard.index', compact('user', 'upcomingAppointments'));
     }
 
     public function moodStore(Request $request)
