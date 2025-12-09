@@ -13,27 +13,29 @@
 
         {{-- A. UPCOMING SESSION --}}
         <section class="mb-8">
-            <div class="flex items-center gap-2 mb-4">
-                <h3 class="font-bold text-lg text-gray-800">Upcoming Sessions</h3>
+            <div class="bg-white p-6 rounded-xl border-grey-border border">
+                <div class="flex items-center gap-2 mb-4">
+                    <h3 class="font-bold text-lg text-gray-800">Upcoming Sessions</h3>
+                    @if($ongoing->count() > 0)
+                        <span class="relative flex h-3 w-3">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-3 w-3 bg-teal-500"></span>
+                        </span>
+                    @endif
+                </div>
+
                 @if($ongoing->count() > 0)
-                    <span class="relative flex h-3 w-3">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-3 w-3 bg-teal-500"></span>
-                    </span>
+                    <div class="space-y-4">
+                        @foreach($ongoing as $appointment)
+                            <x-appointment-card :appointment="$appointment" />
+                        @endforeach
+                    </div>
+                @else
+                    <div class="bg-white p-8 rounded-2xl border border-dashed border-gray-300 text-center">
+                        <p class="text-gray-400 text-sm">No upcoming session right now.</p>
+                    </div>
                 @endif
             </div>
-
-            @if($ongoing->count() > 0)
-                <div class="space-y-4">
-                    @foreach($ongoing as $appointment)
-                        <x-appointment-card :appointment="$appointment" />
-                    @endforeach
-                </div>
-            @else
-                <div class="bg-white p-8 rounded-2xl border border-dashed border-gray-300 text-center">
-                    <p class="text-gray-400 text-sm">No upcoming session right now.</p>
-                </div>
-            @endif
         </section>
 
         {{-- B. HISTORY --}}
