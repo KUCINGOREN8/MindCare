@@ -62,6 +62,13 @@ class PsychologistController extends Controller
         return view('pages.psychologist.review', compact('psychologist'));
     }
 
+    public function showClient() {
+        $psychologist = Psychologist::with('reviews')->get();
+        $clients = $psychologist->reviews;
+
+        return view('psychologist.clients.index', compact('clients'));
+    }
+
 
     /**
      * Show the form for creating a new resource.

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Testimonial;
 use App\Models\Mood;
+use App\Models\Psychologist;
 use Illuminate\Validation\Rule;
 
 class DashboardController extends Controller
@@ -17,11 +18,18 @@ class DashboardController extends Controller
         return view('index', compact('testimonials'));
     }
 
-    public function showDashboard() {
+    public function showPatientDashboard() {
         $user = Auth::user();
 
         // $upcomingAppointments
-        return view('pages.dashboard.index', compact('user'));
+        return view('dashboard.patient.index', compact('user'));
+    }
+    
+    public function showPsychologistDashboard() {
+        $user = Auth::user();
+        
+        // $upcomingAppointments
+        return view('dashboard.psychologist.index', compact('user'));
     }
 
     public function moodStore(Request $request)
