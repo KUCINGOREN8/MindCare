@@ -17,7 +17,7 @@ class BookAppointmentController extends Controller
 
         $psychologists = Psychologist::with('user')->get();
 
-        return view('pages.appointment.book-appointment', compact('psychologists'));
+        return view('patient.appointment.book-appointment', compact('psychologists'));
 
     }
 

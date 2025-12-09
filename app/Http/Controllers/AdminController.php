@@ -9,26 +9,21 @@ use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
         $user = Auth::user();
         $users = User::latest()->paginate(10);
-        return view('pages.admin.index', compact('user'))->with('users', $users);
+        return view('dashboard.admin.index', compact('user'))->with('users', $users);
     }
 
     public function create()
     {
         $user = Auth::user();
-        return view('pages.admin.create', compact('user'));
+        return view('admin.create', compact('user'));
     }
 
     public function store(Request $request)
     {
-        //
         $validator = Validator::make($request->all(), [
             'full_name' => 'required|string|min:3|max:255',
             'email' => 'required|email|unique:users|max:255',
@@ -79,14 +74,12 @@ class AdminController extends Controller
 
     public function edit($id)
     {
-        //
         $user = User::findOrFail($id);
-        return view('pages.admin.edit', compact('user'));
+        return view('admin.edit', compact('user'));
     }
 
     public function update(Request $request, $id)
     {
-        //
         $user = User::findOrFail($id);
 
         $request->validate([
@@ -115,7 +108,6 @@ class AdminController extends Controller
 
     public function destroy($id)
     {
-        //
         UserModel::where('id', $id)->delete();
         return redirect()->route('admin.dashboard')->with('success', 'User deleted successfully.');
     }
