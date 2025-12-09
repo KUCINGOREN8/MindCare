@@ -1,0 +1,175 @@
+@extends('layouts.dashboard')
+@section('title', 'Admin Dashboard')
+
+@section('content')
+    <div class="flex flex-1">
+        <div class="flex flex-col flex-1 gap-6 min-w-0">
+            <div class="flex flex-col bg-white p-6 gap-4 rounded-md border-grey-border border">
+                <div class="flex flex-col">
+                    <h1 class="text-primary font-bold text-lg">Good Day, {{ $user->full_name }}!</h1>
+                    <h5 class="text-captiondark text-sm">How are you feeling today?</h5>
+                </div>
+            </div>
+
+            {{-- Flash Message (Notifikasi Sukses) --}}
+            @if (session('success'))
+                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+                    <span class="block sm:inline">{{ session('success') }}</span>
+                </div>
+            @endif
+
+
+            <div class="bg-white p-6 flex flex-col gap-6 rounded-md border-grey-border border">
+                {{-- Judul Form --}}
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h1 class="text-2xl font-bold text-primary">Add New User</h1>
+                        <p class="text-sm text-caption-dark">Fill in the details below</p>
+                    </div>
+                    <a href="{{ route('admin.dashboard') }}" class="text-sm text-gray-500 hover:text-primary">
+                        &larr; Back to List
+                    </a>
+                </div>
+
+                {{-- FORM START --}}
+                <form action="{{ route('admin.users.store') }}" method="POST">
+                    @csrf
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                        {{-- Full Name --}}
+                        <div class="col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                            <input type="text" name="full_name" value="{{ old('full_name') }}"
+                                class="w-full rounded-md border-gray-300 shadow-sm p-2 border focus:ring-primary focus:border-primary">
+                            @error('full_name')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        {{-- Email --}}
+                        <div class="col-span-1">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                            <input type="email" name="email" value="{{ old('email') }}"
+                                class="w-full rounded-md border-gray-300 shadow-sm p-2 border focus:ring-primary focus:border-primary">
+                            @error('email')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        {{-- Date of Birth --}}
+                        <div class="col-span-1">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
+                            <input type="date" name="date_of_birth" value="{{ old('date_of_birth') }}"
+                                class="w-full rounded-md border-gray-300 shadow-sm p-2 border focus:ring-primary focus:border-primary">
+                            @error('date_of_birth')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        {{-- Password --}}
+                        <div class="col-span-1">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                            <input type="password" name="password"
+                                class="w-full rounded-md border-gray-300 shadow-sm p-2 border focus:ring-primary focus:border-primary">
+                            @error('password')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        {{-- Confirm Password --}}
+                        <div class="col-span-1">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+                            <input type="password" name="password_confirmation"
+                                class="w-full rounded-md border-gray-300 shadow-sm p-2 border focus:ring-primary focus:border-primary">
+                        </div>
+
+                        {{-- Gender --}}
+                        <div class="col-span-1">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+                            <select name="gender" class="w-full rounded-md border-gray-300 shadow-sm p-2 border bg-white">
+                                <option value="" disabled selected>Select Gender</option>
+                                <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }}>Male</option>
+                                <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>Female
+                                </option>
+                            </select>
+                            @error('gender')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        {{-- Language --}}
+                        <div class="col-span-1">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Language</label>
+                            <select name="language" class="w-full rounded-md border-gray-300 shadow-sm p-2 border bg-white">
+                                <option value="en" {{ old('language') == 'en' ? 'selected' : '' }}>English</option>
+                                <option value="id" {{ old('language') == 'id' ? 'selected' : '' }}>Indonesia
+                                </option>
+                            </select>
+                            @error('language')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        {{-- Terms --}}
+                        <div class="col-span-2 mt-2">
+                            <div class="flex items-center gap-2">
+                                <input type="checkbox" name="terms" id="terms"
+                                    class="rounded border-gray-300 text-primary shadow-sm focus:ring-primary"
+                                    {{ old('terms') ? 'checked' : '' }}>
+                                <label for="terms" class="text-sm text-gray-600">
+                                    I agree to the Terms and Conditions
+                                </label>
+                            </div>
+                            @error('terms')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    {{-- Buttons --}}
+                    <div class="flex justify-end gap-4 mt-8 pt-6 border-t border-gray-100">
+                        <a href="{{ route('admin.dashboard') }}"
+                            class="px-6 py-2 rounded-md border border-gray-300 text-gray-600 hover:bg-gray-50">Cancel</a>
+                        <button type="submit"
+                            class="px-6 py-2 rounded-md bg-primary text-white hover:bg-primary-dark shadow-sm">Save
+                            User</button>
+                    </div>
+                </form>
+                {{-- FORM END --}}
+            </div>
+        </div>
+    </div>
+
+    {{-- === BAGIAN KANAN: SIDEBAR PROFILE (TETAP PAKAI AUTH USER) === --}}
+    <div class="hidden lg:flex flex-col w-[300px] gap-6 sticky top-4 h-fit">
+        <div class="flex flex-col p-6 gap-6 bg-white rounded-md border-grey-border border">
+            <div class="flex flex-col gap-4 justify-start">
+                <div class="flex flex-col gap-4 items-center text-center transition-all duration-300">
+                    {{-- Gunakan auth()->user() untuk menampilkan foto admin yang sedang login --}}
+                    <img src="{{ auth()->user()->photo_url ? asset(auth()->user()->photo_url) : (auth()->user()->gender == 'female' ? asset('assets/icons/user_female.svg') : asset('assets/icons/user_male.svg')) }}"
+                        class="rounded-full w-20 h-20" alt="pfp">
+                    <div class="flex flex-col">
+                        <h4 class="user-name font-semibold text-lg">{{ auth()->user()->full_name }}</h4>
+                        <p class="text-caption text-sm text-gray-500">Administrator</p>
+                        <div class="flex gap-2 items-center justify-center mt-2">
+                            <div class="rounded-full w-2 h-2 bg-primary"></div>
+                            <p class="text-primary text-sm">Active</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-3 mt-2">
+                    <x-rounded-button text="Settings" active="true"
+                        route="{{ route('profile.edit') }}"></x-rounded-button>
+                    <form action="{{ route('logout') }}" method="POST" class="w-full">
+                        @csrf
+                        <button type="submit"
+                            class="w-full bg-white hover:bg-gray-50 text-gray-700 border border-grey-border rounded-full px-4 py-2 text-sm font-medium transition-colors">Logout</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        @include('components.notifications')
+    </div>
+@endsection
