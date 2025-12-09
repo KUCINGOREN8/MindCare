@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Testimonial;
@@ -17,7 +18,8 @@ class DashboardController extends Controller
         return view('index', compact('testimonials'));
     }
 
-    public function showDashboard() {
+    public function showDashboard()
+    {
         $user = Auth::user();
 
         // $upcomingAppointments
@@ -36,7 +38,7 @@ class DashboardController extends Controller
         ]);
 
         return back()->with('success', 'Mood berhasil disimpan!')
-                     ->with('undo_id', $mood->id);
+            ->with('undo_id', $mood->id);
     }
 
     public function undo(Request $request)

@@ -27,6 +27,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'otp' => \App\Http\Middleware\OTPMiddleware::class,
             'role' => \App\Http\Middleware\CheckRole::class,
         ]);
+
+        $middleware->alias([
+            'is_admin' => \App\Http\Middleware\IsAdmin::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

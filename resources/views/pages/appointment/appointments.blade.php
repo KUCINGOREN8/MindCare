@@ -41,7 +41,8 @@
             <h3 class="font-bold text-lg text-gray-800 mb-4">History</h3>
             <div class="space-y-3">
                 @forelse($history ?? [] as $item)
-                    <div class="bg-white p-4 rounded-xl border border-gray-100 hover:shadow-md transition flex items-center justify-between group cursor-pointer">
+                    <div
+                        class="bg-white p-4 rounded-xl border border-gray-100 hover:shadow-md transition flex items-center justify-between group cursor-pointer">
                         <div class="flex items-center gap-4">
                             <div class="w-10 h-10 rounded-full
                                 @if($item->status === 'completed') bg-green-50 text-green-500
