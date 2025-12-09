@@ -3,30 +3,15 @@
 
 @section('content')
     <div class="flex flex-1 gap-6">
-
-        {{-- === BAGIAN KIRI: FORM EDIT === --}}
         <div class="flex flex-col flex-1 gap-6 min-w-0">
-
-            {{-- Header Card --}}
             <div class="flex flex-col bg-white p-6 gap-4 rounded-md border-grey-border border">
                 <div class="flex flex-col">
-                    {{-- PENTING: Gunakan auth()->user() untuk sapaan admin --}}
                     <h1 class="text-primary font-bold text-lg">Good Day, {{ auth()->user()->full_name }}!</h1>
                     <h5 class="text-captiondark text-sm">You are editing user: <b>{{ $user->full_name }}</b></h5>
                 </div>
             </div>
 
-            {{-- Flash Message --}}
-            @if (session('success'))
-                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-                    <span class="block sm:inline">{{ session('success') }}</span>
-                </div>
-            @endif
-
-            {{-- Form Wrapper --}}
             <div class="bg-white p-6 flex flex-col gap-6 rounded-md border-grey-border border">
-
-                {{-- Judul Form --}}
                 <div class="flex justify-between items-center">
                     <div>
                         <h1 class="text-2xl font-bold text-primary">Edit User</h1>
@@ -38,18 +23,14 @@
                     </a>
                 </div>
 
-                {{-- FORM START --}}
-                {{-- Perhatikan Action route ke 'update' dan mengirim ID user --}}
                 <form action="{{ route('admin.users.update', $user->id) }}" method="POST">
                     @csrf
-                    @method('PUT') {{-- WAJIB: Mengubah method POST menjadi PUT untuk update --}}
+                    @method('PUT')
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
                         {{-- Full Name --}}
                         <div class="col-span-2">
                             <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                            {{-- Value diambil dari old input (jika gagal validasi) ATAU dari data database ($user->full_name) --}}
                             <input type="text" name="full_name" value="{{ old('full_name', $user->full_name) }}"
                                 class="w-full rounded-md border-gray-300 shadow-sm p-2 border focus:ring-primary focus:border-primary">
                             @error('full_name')
@@ -78,7 +59,7 @@
                             @enderror
                         </div>
 
-                        {{-- Password (Opsional) --}}
+                        {{-- Password --}}
                         <div class="col-span-1">
                             <label class="block text-sm font-medium text-gray-700 mb-1">Password <span
                                     class="text-xs text-gray-400 font-normal">(Leave blank to keep current)</span></label>
@@ -129,7 +110,7 @@
                             @enderror
                         </div>
 
-                        {{-- Terms Checkbox (Biasanya tidak perlu diedit, tapi jika mau ditampilkan sebagai disabled/info) --}}
+                        {{-- Terms Checkbox --}}
                         <div class="col-span-2 mt-2">
                             <div class="flex items-center gap-2 text-gray-500">
                                 <input type="checkbox" checked disabled
@@ -151,42 +132,8 @@
                             User</button>
                     </div>
                 </form>
-                {{-- FORM END --}}
-
             </div>
         </div>
 
-        {{-- === BAGIAN KANAN: SIDEBAR PROFILE (TETAP PAKAI AUTH USER) === --}}
-        <div class="hidden lg:flex flex-col w-[300px] gap-6 sticky top-4 h-fit">
-            <div class="flex flex-col p-6 gap-6 bg-white rounded-md border-grey-border border">
-                <div class="flex flex-col gap-4 justify-start">
-                    <div class="flex flex-col gap-4 items-center text-center transition-all duration-300">
-                        {{-- Gunakan auth()->user() untuk menampilkan foto admin yang sedang login --}}
-                        <img src="{{ auth()->user()->photo_url ? asset(auth()->user()->photo_url) : (auth()->user()->gender == 'female' ? asset('assets/icons/user_female.svg') : asset('assets/icons/user_male.svg')) }}"
-                            class="rounded-full w-20 h-20" alt="pfp">
-                        <div class="flex flex-col">
-                            <h4 class="user-name font-semibold text-lg">{{ auth()->user()->full_name }}</h4>
-                            <p class="text-caption text-sm text-gray-500">Administrator</p>
-                            <div class="flex gap-2 items-center justify-center mt-2">
-                                <div class="rounded-full w-2 h-2 bg-primary"></div>
-                                <p class="text-primary text-sm">Active</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="flex flex-col gap-3 mt-2">
-                        <x-rounded-button text="Settings" active="true"
-                            route="{{ route('profile.edit') }}"></x-rounded-button>
-                        <form action="{{ route('logout') }}" method="POST" class="w-full">
-                            @csrf
-                            <button type="submit"
-                                class="w-full bg-white hover:bg-gray-50 text-gray-700 border border-grey-border rounded-full px-4 py-2 text-sm font-medium transition-colors">Logout</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            @include('components.notifications')
-        </div>
-
-    </div>
+        <x-user-profile-card :user="$user" />
 @endsection
