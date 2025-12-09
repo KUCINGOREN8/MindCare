@@ -1,28 +1,43 @@
 @props([
-    'name',
-    'specialization',
-    'time',
+    'appointment' => null,
+    'name' => '',
+    'specialization' => '',
+    'time' => '',
     'joinRoute' => '#',
     'rescheduleRoute' => '#',
     'isSessionAvailable' => false
 ])
 
-<div class="p-4 flex flex-col gap-4 rounded-md border border-grey-border">
-    <div class="flex flex-col gap-0">
-        <h4>{{ $name }}</h4>
-        <p class="text-caption">{{ $specialization }}</p>
-    </div>
+@if($appointment)
+    <div class="p-4 flex flex-col gap-4 rounded-md border border-grey-border bg-white">
+        <div class="flex flex-col gap-0">
+            <h4 class="font-bold text-gray-900">{{ $appointment->psychologist->user->full_name ?? $appointment->with ?? 'Psychologist' }}</h4>
+            <p class="text-gray-600 text-sm">{{ $appointment->psychologist->specialization ?? $appointment->psychologist->title ?? 'Specialization' }}</p>
+        </div>
 
-    <div class="flex items-center gap-2">
-        @php
-            $icon = file_get_contents(public_path('assets/icons/calendar.svg'));
-            echo str_replace('<svg ', '<svg class="text-caption" fill="currentColor" ', $icon);
-        @endphp
-        <p class="text-caption">{{ $time }}</p>
-    </div>
+        <div class="flex items-center gap-2">
+            @php
+                $icon = file_get_contents(public_path('assets/icons/calendar.svg'));
+                echo str_replace('<svg ', '<svg class="text-gray-500" fill="currentColor" ', $icon);
+            @endphp
+            <p class="text-gray-600 text-sm">
+                {{ \Carbon\Carbon::parse($appointment->date)->format('d M Y') }} •
+                {{ $appointment->start_time }} - {{ $appointment->end_time }}
+            </p>
+        </div>
 
-    <div class="flex gap-2">
-        <x-rounded-button text="Join Session" active="{{ $isSessionAvailable }}" route="{{ $joinRoute }}" />
-        <x-rounded-button text="Reschedule" secondary="true" route="{{ $rescheduleRoute }}" />
+        <div class="flex gap-2">
+            <x-rounded-button
+                text="Join Session"
+                active="{{ $appointment->is_session_available }}"
+                route="{{ route('appointments.chat.session', $appointment->id) }}"
+
+            />
+            <x-rounded-button
+                text="Reschedule"
+                secondary="true"
+                route="{{ route('appointments.reschedule', $appointment->id) }}"
+            />
+        </div>
     </div>
-</div>
+@endif
