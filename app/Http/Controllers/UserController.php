@@ -11,13 +11,13 @@ class UserController extends Controller
 {
     public function showProfile() {
         $user = Auth::user();
-        
+
         // Load psychologist data (only if user role is psychologist)
         $psychologist = null;
         if ($user->isPsychologist()) {
             $psychologist = $user->psychologist()->with(['educations', 'experiences', 'schedules'])->first();
         }
-        
+
         return view('settings.index', compact('user', 'psychologist'));
     }
 
@@ -53,13 +53,13 @@ class UserController extends Controller
     public function updateProfessional(Request $request)
     {
         $user = Auth::user();
-        
+
         if (!$user->isPsychologist()) {
             abort(403, 'Unauthorized access.');
         }
-        
+
         $psychologist = $user->psychologist;
-        
+
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
             'specialization' => 'required|string|max:255',
@@ -71,14 +71,14 @@ class UserController extends Controller
             'languages' => 'nullable|array',
             'languages.*' => 'string',
         ]);
-        
+
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
                 ->withInput()
                 ->with('error', 'Please fix the errors.');
         }
-        
+
         $psychologist->update([
             'title' => $request->title,
             'specialization' => $request->specialization,
@@ -89,7 +89,7 @@ class UserController extends Controller
             'about_me' => $request->about_me,
             'languages' => $request->languages,
         ]);
-        
+
         return redirect()->route('profile.index', ['tab' => 'professional'])
             ->with('success', 'Professional information updated successfully!');
     }
@@ -97,11 +97,11 @@ class UserController extends Controller
     public function updateSchedule(Request $request)
     {
         $user = Auth::user();
-    
+
         if (!$user->isPsychologist()) {
             abort(403, 'Unauthorized access.');
         }
-        
+
         $psychologist = $user->psychologist;
 
         $validator = Validator::make($request->all(), [
@@ -114,7 +114,7 @@ class UserController extends Controller
             'schedules.*.end_time.required_if' => 'End time is required when day is available',
             'schedules.*.end_time.after' => 'End time must be after start time',
         ]);
-        
+
         $validator->after(function ($validator) use ($request) {
             $hasAvailableDay = false;
             if ($request->has('schedules')) {
@@ -125,21 +125,21 @@ class UserController extends Controller
                     }
                 }
             }
-            
+
             if (!$hasAvailableDay) {
                 $validator->errors()->add('schedules', 'Please set at least one available day');
             }
         });
-        
+
         if ($validator->fails()) {
             return redirect()->route('profile.index', ['tab' => 'schedule'])
                 ->withErrors($validator)
                 ->withInput()
                 ->with('error', 'Please fix the errors below.');
         }
-        
+
         $psychologist->schedules()->delete();
-        
+
         foreach ($request->schedules as $scheduleData) {
             if (isset($scheduleData['is_available']) && $scheduleData['is_available'] == '1') {
                 $psychologist->schedules()->create([
@@ -149,7 +149,7 @@ class UserController extends Controller
                 ]);
             }
         }
-        
+
         return redirect()->route('profile.index', ['tab' => 'schedule'])
             ->with('success', 'Schedule updated successfully!');
     }
@@ -157,7 +157,26 @@ class UserController extends Controller
     public function updatePrivacy(Request $request)
     {
         $user = Auth::user();
-        
+
+        $validator = Validator::make($request->all(), [
+            'old_password' => 'required|string',
+        ], [
+            'old_password.required' => 'Old password is required',
+        ]);
+
+        if (!Hash::check($request->old_password, $user->password)) {
+            $validator->after(function ($validator) {
+                $validator->errors()->add('old_password', 'Old password is incorrect');
+            });
+
+            if ($validator->fails()) {
+                return redirect()->back()
+                    ->withErrors($validator)
+                    ->withInput()
+                    ->with('error', 'Please fix the errors.');
+            }
+        }
+
         $validator = Validator::make($request->all(), [
             'old_password' => 'required|string',
             'new_password' => 'required|string|min:6|different:old_password',
@@ -170,24 +189,24 @@ class UserController extends Controller
             'confirm_password.required' => 'Please confirm your new password',
             'confirm_password.same' => 'Passwords do not match',
         ]);
-        
+
         $validator->after(function ($validator) use ($user, $request) {
             if (!Hash::check($request->old_password, $user->password)) {
                 $validator->errors()->add('old_password', 'Old password is incorrect');
             }
         });
-        
+
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
                 ->withInput()
                 ->with('error', 'Please fix the errors.');
         }
-        
+
         $user->update([
             'password' => Hash::make($request->new_password),
         ]);
-        
+
         return redirect()->route('profile.index', ['tab' => 'privacy'])
             ->with('success', 'Password updated successfully!');
     }
@@ -195,27 +214,27 @@ class UserController extends Controller
     public function updatePreferences(Request $request)
     {
         $user = Auth::user();
-        
+
         $validator = Validator::make($request->all(), [
             'language' => 'required|string|in:en,id',
         ], [
             'language.required' => 'Please select a preferred language',
             'language.in' => 'Please select a valid language',
         ]);
-        
+
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
                 ->withInput()
                 ->with('error', 'Please fix the errors.');
         }
-        
+
         $user->update([
             'preferred_language' => $request->language,
         ]);
-        
+
         session()->put('locale', $request->language);
-        
+
         return redirect()->route('profile.index', ['tab' => 'preferences'])
             ->with('success', 'Preferences updated successfully!');
     }
