@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Appointment;
 use App\Models\User;
 use App\Models\Conversation;
 use App\Models\Message;
@@ -12,39 +13,39 @@ use Illuminate\Support\Facades\DB;
 class ChatController extends Controller
 {
   public function index()
-{
-    $user = Auth::user();
+    {
+        $user = Auth::user();
 
-    if ($user->isPatient()) {
-        $conversations = Conversation::where('patient_id', $user->id)
-            ->with(['psychologist', 'latestMessage'])
-            ->orderBy('last_message_at', 'desc')
-            ->get();
+        if ($user->isPatient()) {
+            $conversations = Conversation::where('patient_id', $user->id)
+                ->with(['psychologist', 'latestMessage'])
+                ->orderBy('last_message_at', 'desc')
+                ->get();
 
-        $viewData = [
-            'title' => 'My Messages',
-            'conversations' => $conversations,
-            'isPatient' => true,
-            'isPsychologist' => false
-        ];
+            $viewData = [
+                'title' => 'My Messages',
+                'conversations' => $conversations,
+                'isPatient' => true,
+                'isPsychologist' => false
+            ];
 
-    } elseif ($user->isPsychologist()) {
-        $conversations = Conversation::where('psychologist_id', $user->id)
-            ->with(['patient', 'latestMessage'])
-            ->orderBy('last_message_at', 'desc')
-            ->get();
+        } elseif ($user->isPsychologist()) {
+            $conversations = Conversation::where('psychologist_id', $user->id)
+                ->with(['patient', 'latestMessage'])
+                ->orderBy('last_message_at', 'desc')
+                ->get();
 
-        $viewData = [
-            'title' => 'Patient Messages',
-            'conversations' => $conversations,
-            'isPatient' => false,
-            'isPsychologist' => true
-        ];
+            $viewData = [
+                'title' => 'Patient Messages',
+                'conversations' => $conversations,
+                'isPatient' => false,
+                'isPsychologist' => true
+            ];
 
-    } else {
-        return redirect()->route('admin.dashboard')->with('info', 'Chat feature is not available for admin role');
-    }
-        return view('pages.chat.index', array_merge($viewData, ['user' => $user]));
+        } else {
+            return redirect()->route('admin.dashboard')->with('info', 'Chat feature is not available for admin role');
+        }
+            return view('pages.chat.index', array_merge($viewData, ['user' => $user]));
     }
 
     public function startChat(User $psychologist)
@@ -75,56 +76,56 @@ class ChatController extends Controller
     }
 
     public function show(Conversation $conversation)
-{
-    $user = Auth::user();
+    {
+        $user = Auth::user();
 
-    if (!$conversation->isParticipant($user->id)) {
-        abort(403, 'Unauthorized access to this conversation');
-    }
+        if (!$conversation->isParticipant($user->id)) {
+            abort(403, 'Unauthorized access to this conversation');
+        }
 
-    $messages = Message::where('conversation_id', $conversation->id)
-        ->with(['sender', 'receiver'])
-        ->orderBy('created_at', 'asc')
-        ->get();
-
-    Message::where('conversation_id', $conversation->id)
-        ->where('receiver_id', $user->id)
-        ->where('is_read', false)
-        ->update(['is_read' => true, 'read_at' => now()]);
-
-    if ($user->isPatient()) {
-        $conversations = Conversation::where('patient_id', $user->id)
-            ->with(['psychologist', 'latestMessage'])
-            ->orderBy('last_message_at', 'desc')
+        $messages = Message::where('conversation_id', $conversation->id)
+            ->with(['sender', 'receiver'])
+            ->orderBy('created_at', 'asc')
             ->get();
 
-        $otherUser = $conversation->psychologist;
-        $userType = 'patient';
+        Message::where('conversation_id', $conversation->id)
+            ->where('receiver_id', $user->id)
+            ->where('is_read', false)
+            ->update(['is_read' => true, 'read_at' => now()]);
 
-    } elseif ($user->isPsychologist()) {
-        $conversations = Conversation::where('psychologist_id', $user->id)
-            ->with(['patient', 'latestMessage'])
-            ->orderBy('last_message_at', 'desc')
-            ->get();
+        if ($user->isPatient()) {
+            $conversations = Conversation::where('patient_id', $user->id)
+                ->with(['psychologist', 'latestMessage'])
+                ->orderBy('last_message_at', 'desc')
+                ->get();
 
-        $otherUser = $conversation->patient;
-        $userType = 'psychologist';
+            $otherUser = $conversation->psychologist;
+            $userType = 'patient';
 
-    } else {
-        $conversations = collect();
-        $otherUser = null;
-        $userType = 'admin';
+        } elseif ($user->isPsychologist()) {
+            $conversations = Conversation::where('psychologist_id', $user->id)
+                ->with(['patient', 'latestMessage'])
+                ->orderBy('last_message_at', 'desc')
+                ->get();
+
+            $otherUser = $conversation->patient;
+            $userType = 'psychologist';
+
+        } else {
+            $conversations = collect();
+            $otherUser = null;
+            $userType = 'admin';
+        }
+
+        return view('pages.chat.show', [
+            'conversation' => $conversation,
+            'messages' => $messages,
+            'conversations' => $conversations,
+            'user' => $user,
+            'otherUser' => $otherUser,
+            'userType' => $userType
+        ]);
     }
-
-    return view('pages.chat.show', [
-        'conversation' => $conversation,
-        'messages' => $messages,
-        'conversations' => $conversations,
-        'user' => $user,
-        'otherUser' => $otherUser,
-        'userType' => $userType
-    ]);
-}
 
     public function sendMessage(Request $request, Conversation $conversation)
     {
@@ -199,5 +200,16 @@ class ChatController extends Controller
     public function psychologistShow(Conversation $conversation)
     {
         return $this->show($conversation);
+    }
+
+    public function startSession(Appointment $appointment)
+    {
+        $user = Auth::user();
+
+        if ($appointment->user_id !== $user->id) {
+            abort(403);
+        }
+
+        return $this->startChat($appointment->psychologist->user);
     }
 }

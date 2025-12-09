@@ -42,7 +42,7 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth', 'otp'])->group(function () {
 
     // Dashboard
-    Route::get('/dashboard' , [DashboardController::class, 'showDashboard'])->name('dashboard.index');
+    Route::get('/dashboard', [DashboardController::class, 'showDashboard'])->name('dashboard.index');
     Route::post('/mood', [DashboardController::class, 'moodStore'])->name('mood.store');
     Route::post('/mood/undo', [MoodController::class, 'undo'])->name('mood.undo');
 
@@ -62,10 +62,10 @@ Route::middleware(['auth', 'otp'])->group(function () {
         ->controller(AppointmentController::class)
         ->group(function () {
             Route::get('/', 'index')->name('index');
-            Route::get('/load-more', 'loadMore')->name('load-more');
             Route::post('/{id}/confirm', 'confirm')->name('confirm');
             Route::post('/{id}/cancel', 'cancel')->name('cancel');
             Route::post('/{id}/reschedule', 'reschedule')->name('reschedule');
+            Route::get('/chat/session/{appointment}', [ChatController::class, 'startSession'])->name('chat.session');
     });
 
     // Payment
@@ -99,3 +99,17 @@ Route::get('/lang/{lang}', function ($lang) {
     session(['locale' => $lang]);
     return back();
 })->name('switch.lang');
+
+Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')                    // Nama route diawali admin....
+    ->group(function () {
+
+        // 1. Dashboard Admin
+        // URL: /admin/dashboard
+        // Route Name: admin.dashboard
+        Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard');
+
+        // 2. User Management (CRUD Lengkap)
+        // URL: /admin/users, /admin/users/create, /admin/users/{id}/edit, dll
+        // Route Name: admin.users.index, admin.users.store, dll
+        Route::resource('users', UserController::class);
+    });
