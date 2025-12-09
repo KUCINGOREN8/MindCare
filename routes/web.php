@@ -62,10 +62,10 @@ Route::middleware(['auth', 'otp'])->group(function () {
         ->controller(AppointmentController::class)
         ->group(function () {
             Route::get('/', 'index')->name('index');
-            Route::get('/load-more', 'loadMore')->name('load-more');
             Route::post('/{id}/confirm', 'confirm')->name('confirm');
             Route::post('/{id}/cancel', 'cancel')->name('cancel');
             Route::post('/{id}/reschedule', 'reschedule')->name('reschedule');
+            Route::get('/chat/session/{appointment}', [ChatController::class, 'startSession'])->name('chat.session');
     });
 
     // Payment
