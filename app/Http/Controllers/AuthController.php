@@ -10,11 +10,11 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Str;
-
+use Illuminate\Validation\Rules\Password as RulesPassword;
 
 class AuthController extends Controller
 {
-    // SignUp
+        
     public function showSignup()
     {
         return view('auth.signup');
@@ -24,32 +24,20 @@ class AuthController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'full_name' => 'required|string|min:3|max:255',
-            'email' => 'required|email|unique:users|max:255',
-            'password' => 'required|min:6|confirmed',
+            'email' => 'required|email|unique:users,email|max:255',
+            'password' => [
+                'required',
+                'confirmed',
+                RulesPassword::min(6)->mixedCase()->numbers()
+            ],
             'date_of_birth' => 'required|date|before:today',
             'gender' => 'required|in:male,female,other',
             'language' => 'required|in:en,id',
-            'terms' => 'required|accepted',
-        ], [
-            'full_name.required' => 'Full name is required.',
-            'full_name.min' => 'Full name must be at least 3 characters.',
-            'email.required' => 'Email is required.',
-            'email.email' => 'Please enter a valid email address.',
-            'email.unique' => 'This email is already registered.',
-            'password.required' => 'Password is required.',
-            'password.min' => 'Password must be at least 6 characters.',
-            'password.confirmed' => 'The password confirmation does not match.',
-            'date_of_birth.required' => 'Date of birth is required.',
-            'date_of_birth.before' => 'Date of birth must be in the past.',
-            'gender.required' => 'Please select your gender.',
-            'language.required' => 'Please select your preferred language.',
-            'terms.required' => 'You must agree to the terms and conditions.',
+            'terms' => 'required|accepted'
         ]);
 
         if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
+            return back()->withErrors($validator)->withInput();
         }
 
         $user = User::create([
@@ -60,15 +48,16 @@ class AuthController extends Controller
             'gender' => $request->gender,
             'preferred_language' => $request->language,
             'agree_to_terms' => true,
+            'role' => 'user',
         ]);
 
         Auth::login($user);
-
         $user->sendOTPNotification();
-        return redirect()->route('otp.verify')->with('success', 'Registration successful! Please verify your email with OTP.');
+
+        return redirect()->route('otp.verify')
+            ->with('success', 'Registration successful! Please verify your email with OTP.');
     }
 
-    // Login
     public function showLogin()
     {
         return view('auth.login');
@@ -77,12 +66,8 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->validate([
-        'email' => 'required|email',
-        'password' => 'required',
-        ], [
-            'email.required' => 'Email is required.',
-            'email.email' => 'Please enter a valid email address.',
-            'password.required' => 'Password is required.',
+            'email' => 'required|email',
+            'password' => 'required',
         ]);
 
         if (Auth::attempt($credentials)) {
@@ -91,11 +76,11 @@ class AuthController extends Controller
         }
 
         return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
+            'email' => 'Invalid email or password.',
         ])->onlyInput('email');
     }
 
-    // Forgot Password
+    
     public function showForgotPassword()
     {
         return view('auth.forgot-password');
@@ -105,9 +90,7 @@ class AuthController extends Controller
     {
         $request->validate(['email' => 'required|email']);
 
-        $status = Password::sendResetLink(
-            $request->only('email')
-        );
+        $status = Password::sendResetLink($request->only('email'));
 
         return $status === Password::RESET_LINK_SENT
             ? back()->with(['status' => __($status)])
@@ -118,29 +101,17 @@ class AuthController extends Controller
     {
         return view('auth.reset-password', [
             'token' => $token,
-            'email' => $request->email
+            'email' => $request->email,
         ]);
     }
 
     public function resetPassword(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $request->validate([
             'token' => 'required',
             'email' => 'required|email',
-            'password' => 'required|min:6|confirmed',
-        ], [
-            'email.required' => 'Email is required.',
-            'email.email' => 'Please enter a valid email address.',
-            'password.required' => 'Password is required.',
-            'password.min' => 'Password must be at least 6 characters.',
-            'password.confirmed' => 'The password confirmation does not match.',
+            'password' => ['required', 'confirmed', RulesPassword::min(6)->mixedCase()->numbers()],
         ]);
-
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
 
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
@@ -150,7 +121,6 @@ class AuthController extends Controller
                 ])->setRememberToken(Str::random(60));
 
                 $user->save();
-
                 event(new PasswordReset($user));
             }
         );
@@ -160,7 +130,7 @@ class AuthController extends Controller
             : back()->withErrors(['email' => [__($status)]]);
     }
 
-    
+ 
     public function logout(Request $request)
     {
         Auth::logout();
@@ -169,76 +139,73 @@ class AuthController extends Controller
         return redirect('/')->with('success', 'You have been logged out successfully.');
     }
 
- 
-public function showSignupPsychologist()
-{
-    return view('auth.signup-psychologist');
-}
-
-
-
-public function registerPsychologist(Request $request)
-{
-    $validator = Validator::make($request->all(), [
-        // USER VALIDATIONS
-        'full_name' => 'required|string|min:3|max:255',
-        'email' => 'required|email|unique:users|max:255',
-        'password' => [
-            'required',
-            'confirmed',
-            Password::min(8)->mixedCase()->numbers()
-        ],
-        'date_of_birth' => 'required|date|before:today',
-        'gender' => 'required|in:male,female,other',
-        'language' => 'required|in:en,id',
-        'terms' => 'required|accepted',
-
-        // PSYCHOLOGIST VALIDATIONS
-        'title' => 'required|string|max:255',
-        'specialization' => 'required|string|max:255',
-        'license_number' => 'required|string|unique:psychologists,license_number',
-        'years_experience' => 'required|integer|min:0',
-        'consultation_fee' => 'required|numeric|min:0',
-        'short_bio' => 'nullable|string',
-        'about_me' => 'nullable|string',
-        'languages' => 'nullable|array',
-        'languages.*' => 'in:en,id',
-    ]);
-
-    if ($validator->fails()) {
-        return redirect()->back()->withErrors($validator)->withInput();
+    
+    public function showSignupPsychologist()
+    {
+        return view('auth.signup-psychologist');
     }
 
-    // CREATE USER (role: psychologist)
-    $user = User::create([
-        'full_name' => $request->full_name,
-        'email' => $request->email,
-        'password' => Hash::make($request->password),
-        'date_of_birth' => $request->date_of_birth,
-        'gender' => $request->gender,
-        'preferred_language' => $request->language,
-        'agree_to_terms' => true,
-        'role' => 'psychologist',
-    ]);
+    public function registerPsychologist(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            
+            'full_name' => 'required|string|min:3|max:255',
+            'email' => 'required|email|unique:users,email|max:255',
+            'password' => [
+                'required',
+                'confirmed',
+                RulesPassword::min(8)->mixedCase()->numbers()
+            ],
+            'date_of_birth' => 'required|date|before:today',
+            'gender' => 'required|in:male,female,other',
+            'language' => 'required|in:en,id',
+            'terms' => 'required|accepted',
 
-    // CREATE PSYCHOLOGIST PROFILE
-    $user->psychologist()->create([
-        'title' => $request->title,
-        'specialization' => $request->specialization,
-        'license_number' => $request->license_number,
-        'years_experience' => $request->years_experience,
-        'consultation_fee' => $request->consultation_fee,
-        'short_bio' => $request->short_bio,
-        'about_me' => $request->about_me,
-        'languages' => $request->input('languages') ? json_encode($request->input('languages')) : null,
-    ]);
+            
+            'title' => 'required|string|max:255',
+            'specialization' => 'required|string|max:255',
+            'license_number' => 'required|string|unique:psychologists,license_number',
+            'years_experience' => 'required|integer|min:0',
+            'consultation_fee' => 'required|numeric|min:0',
+            'short_bio' => 'nullable|string',
+            'about_me' => 'nullable|string',
+            'languages' => 'nullable|array',
+            'languages.*' => 'in:en,id',
+        ]);
 
-    // LOGIN & SEND OTP
-    Auth::login($user);
-    $user->sendOTPNotification();
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
 
-    return redirect()->route('otp.verify')->with('success', 'Registration successful! Please verify your email with OTP.');
-}
+       
+        $user = User::create([
+            'full_name' => $request->full_name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'date_of_birth' => $request->date_of_birth,
+            'gender' => $request->gender,
+            'preferred_language' => $request->language,
+            'agree_to_terms' => true,
+            'role' => 'psychologist',
+        ]);
 
+       
+        $user->psychologist()->create([
+            'title' => $request->title,
+            'specialization' => $request->specialization,
+            'license_number' => $request->license_number,
+            'years_experience' => $request->years_experience,
+            'consultation_fee' => $request->consultation_fee,
+            'short_bio' => $request->short_bio,
+            'about_me' => $request->about_me,
+            'languages' => $request->input('languages'),
 
+        ]);
+
+        Auth::login($user);
+        $user->sendOTPNotification();
+
+        return redirect()->route('otp.verify')
+            ->with('success', 'Registration successful! Please verify your email with OTP.');
+    }
 }
