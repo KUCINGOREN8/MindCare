@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Str;
 
+
 class AuthController extends Controller
 {
     // SignUp
@@ -159,7 +160,7 @@ class AuthController extends Controller
             : back()->withErrors(['email' => [__($status)]]);
     }
 
-    // Handle logout
+    
     public function logout(Request $request)
     {
         Auth::logout();
@@ -167,4 +168,77 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
         return redirect('/')->with('success', 'You have been logged out successfully.');
     }
+
+ 
+public function showSignupPsychologist()
+{
+    return view('auth.signup-psychologist');
+}
+
+
+
+public function registerPsychologist(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        // USER VALIDATIONS
+        'full_name' => 'required|string|min:3|max:255',
+        'email' => 'required|email|unique:users|max:255',
+        'password' => [
+            'required',
+            'confirmed',
+            Password::min(8)->mixedCase()->numbers()
+        ],
+        'date_of_birth' => 'required|date|before:today',
+        'gender' => 'required|in:male,female,other',
+        'language' => 'required|in:en,id',
+        'terms' => 'required|accepted',
+
+        // PSYCHOLOGIST VALIDATIONS
+        'title' => 'required|string|max:255',
+        'specialization' => 'required|string|max:255',
+        'license_number' => 'required|string|unique:psychologists,license_number',
+        'years_experience' => 'required|integer|min:0',
+        'consultation_fee' => 'required|numeric|min:0',
+        'short_bio' => 'nullable|string',
+        'about_me' => 'nullable|string',
+        'languages' => 'nullable|array',
+        'languages.*' => 'in:en,id',
+    ]);
+
+    if ($validator->fails()) {
+        return redirect()->back()->withErrors($validator)->withInput();
+    }
+
+    // CREATE USER (role: psychologist)
+    $user = User::create([
+        'full_name' => $request->full_name,
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
+        'date_of_birth' => $request->date_of_birth,
+        'gender' => $request->gender,
+        'preferred_language' => $request->language,
+        'agree_to_terms' => true,
+        'role' => 'psychologist',
+    ]);
+
+    // CREATE PSYCHOLOGIST PROFILE
+    $user->psychologist()->create([
+        'title' => $request->title,
+        'specialization' => $request->specialization,
+        'license_number' => $request->license_number,
+        'years_experience' => $request->years_experience,
+        'consultation_fee' => $request->consultation_fee,
+        'short_bio' => $request->short_bio,
+        'about_me' => $request->about_me,
+        'languages' => $request->input('languages') ? json_encode($request->input('languages')) : null,
+    ]);
+
+    // LOGIN & SEND OTP
+    Auth::login($user);
+    $user->sendOTPNotification();
+
+    return redirect()->route('otp.verify')->with('success', 'Registration successful! Please verify your email with OTP.');
+}
+
+
 }
