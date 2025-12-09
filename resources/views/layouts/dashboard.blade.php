@@ -12,7 +12,7 @@
     @stack('styles')
 </head>
 <body class="bg-background font-sans min-h-screen flex">
-    @include('components.navbar')
+    <x-navbar :role="auth()->user()->role" />
 
     @include('components.snackbar')
 

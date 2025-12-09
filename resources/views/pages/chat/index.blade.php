@@ -136,7 +136,7 @@ use Illuminate\Support\Str;
 
                     @if($isPatient)
                         <a
-                            href="{{ route('find.psychologist') }}"
+                            href="{{ route('patient.find.psychologist') }}"
                             class="inline-flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-lg hover:bg-primary-dark transition text-sm font-medium"
                         >
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

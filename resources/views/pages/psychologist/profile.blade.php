@@ -114,7 +114,7 @@
                                 <p class="text-sm">{{ number_format($psychologist->reviews->avg('rating'),1)}}/5.0</p>
                             </div>
                         </div>
-                        <a class="text-caption underline" href="{{ route('psychologist.review', $psychologist->id) }}">See All</a>
+                        <a class="text-caption underline" href="{{ route('patient.psychologist.review', $psychologist->id) }}">See All</a>
                     </div>
                     <div class="flex">
                         <p class="text-caption"></p>

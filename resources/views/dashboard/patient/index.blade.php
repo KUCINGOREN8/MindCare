@@ -47,7 +47,7 @@ Dashboard
                     <h5 class="text-captiondark text-sm">How are you feeling today?</h5>
                 </div>
                 @if($user->role == 'patient')
-                    <form action="{{ route('mood.store') }}" method="POST" x-data="{ selected: null }">
+                    <form action="{{ route('patient.mood.store') }}" method="POST" x-data="{ selected: null }">
                         @csrf
                         <input type="hidden" name="mood" :value="selected">
 
@@ -103,7 +103,7 @@ Dashboard
 
             {{-- Action --}}
             <div class="flex gap-4 flex-col lg:flex-row">
-                <x-rounded-button text="Settings" active="true" route="{{ route('profile') }}"></x-rounded-button>
+                <x-rounded-button text="Settings" active="true" route="{{ route('profile.index') }}"></x-rounded-button>
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf
                     <button type="submit" class="rounded-button secondary bg-white hover:bg-gray-100 text-caption-dark border border-grey-border rounded-md  px-2 md:px-4 py-2 md:py-2 text-center flex flex-1 items-center justify-center text-xs sm:text-sm lg:text-base">
