@@ -100,10 +100,10 @@ Route::middleware(['auth', 'otp', 'role:psychologist'])
 ->group(function () {
     // Dashboard
     Route::get('/dashboard' , [DashboardController::class, 'showPsychologistDashboard'])->name('dashboard');
-    
+
     // My Clients
     Route::get('/clients' , [PsychologistController::class, 'showClients'])->name('clients');
-    
+
     // Appointments
         Route::prefix('appointments')
         ->name('appointments.')
@@ -133,7 +133,7 @@ Route::middleware(['auth', 'otp'])->group(function () {
         Route::put('/update','updateProfile')->name('update');
         Route::put('/profile/password', 'updatePrivacy')->name('privacy.update');
         Route::put('/profile/preferences', 'updatePreferences')->name('preferences.update');
-    
+
         // Accessible for psychologist only
         Route::middleware('role:psychologist')->group(function () {
             Route::put('/professional', 'updateProfessional')->name('professional.update');
