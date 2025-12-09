@@ -22,7 +22,7 @@ $logoRoute = match($role) {
         {{-- Logo --}}
         <div class="flex justify-center logo w-12 sm:w-20 md:w-28 lg:w-60">
             <a href="{{ route($logoRoute ) }}">
-            {!! file_get_contents(public_path('assets/logo/logo.svg')) !!}
+                {!! file_get_contents(public_path('assets/logo/logo.svg')) !!}
             </a>
         </div>
 

@@ -76,10 +76,10 @@
             ->controller(AppointmentController::class)
             ->group(function () {
                 Route::get('/', 'index')->name('index');
-                Route::get('/load-more', 'loadMore')->name('load-more');
                 Route::post('/{id}/confirm', 'confirm')->name('confirm');
                 Route::post('/{id}/cancel', 'cancel')->name('cancel');
                 Route::post('/{id}/reschedule', 'reschedule')->name('reschedule');
+                Route::get('/chat/session/{appointment}', [ChatController::class, 'startSession'])->name('chat.session');
         });
 
         // Payment
@@ -113,6 +113,17 @@
         });
     });
 
+    // ADMIN ROUTES => Auth + OTP + Role protected
+    Route::middleware(['auth', 'otp', 'role:admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+        // Dashboard
+        Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard');
+        // Manage User
+        Route::resource('users', UserController::class);
+    });
+
     // SHARED ROUTES -> Auth + OTP Protected
     Route::middleware(['auth', 'otp'])->group(function () {
         // Settings Profile
@@ -135,7 +146,7 @@
         Route::get('/chat/conversation/{conversation}', [ChatController::class, 'show'])->name('chat.show');
         Route::post('/chat/conversation/{conversation}/send', [ChatController::class, 'sendMessage'])->name('chat.send');
         Route::get('/chat/conversation/{conversation}/messages', [ChatController::class, 'getMessages'])->name('chat.messages');
-        
+
         // Logout
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     });
