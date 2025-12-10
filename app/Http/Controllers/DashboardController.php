@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Testimonial;
 use App\Models\Mood;
+use App\Models\Psychologist;
 use Illuminate\Validation\Rule;
 
 class DashboardController extends Controller
@@ -19,11 +20,9 @@ class DashboardController extends Controller
         return view('index', compact('testimonials'));
     }
 
-    public function showDashboard()
-    {
+    public function showPatientDashboard() {
         $user = Auth::user();
 
-        // $upcomingAppointments
         $upcomingAppointments = Appointment::with(['psychologist' => function($query) {
                 $query->with('user');
             }])
@@ -36,7 +35,23 @@ class DashboardController extends Controller
             ->sortBy('start_date_time')
             ->take(3);
 
-        return view('pages.dashboard.index', compact('user', 'upcomingAppointments'));
+        return view('dashboard.patient.index', compact('user', 'upcomingAppointments'));
+    }
+    
+    public function showPsychologistDashboard() {
+        $user = Auth::user();
+        
+        $upcomingAppointments = Appointment::with(['user'])
+            ->where('psychologist_id', $user->id)
+            ->where('status', 'confirmed')
+            ->get()
+            ->filter(function ($appointment) {
+                return $appointment->is_upcoming;
+            })
+            ->sortBy('start_date_time')
+            ->take(3);
+
+        return view('dashboard.psychologist.index', compact('user', 'upcomingAppointments'));
     }
 
     public function moodStore(Request $request)

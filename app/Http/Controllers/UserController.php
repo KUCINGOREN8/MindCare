@@ -2,145 +2,240 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
-use App\Models\User as UserModel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
+    public function showProfile() {
         $user = Auth::user();
-        $users = User::latest()->paginate(10);
-        return view('pages.admin.index', compact('user'))->with('users', $users);
+
+        // Load psychologist data (only if user role is psychologist)
+        $psychologist = null;
+        if ($user->isPsychologist()) {
+            $psychologist = $user->psychologist()->with(['educations', 'experiences', 'schedules'])->first();
+        }
+
+        return view('settings.index', compact('user', 'psychologist'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function updateProfile(Request $request)
     {
-        //
         $user = Auth::user();
-        return view('pages.admin.create', compact('user'));
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
         $validator = Validator::make($request->all(), [
-            'full_name' => 'required|string|min:3|max:255',
-            'email' => 'required|email|unique:users|max:255',
-            'password' => 'required|min:6|confirmed',
-            'date_of_birth' => 'required|date|before:today',
-            'gender' => 'required|in:male,female,other',
-            'language' => 'required|in:en,id',
-            'terms' => 'required|accepted',
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'gender' => 'nullable|string|in:male,female,other',
+            'date_of_birth' => 'nullable|date|before:today',
         ], [
-            'full_name.required' => 'Full name is required.',
-            'full_name.min' => 'Full name must be at least 3 characters.',
-            'email.required' => 'Email is required.',
-            'email.email' => 'Please enter a valid email address.',
-            'email.unique' => 'This email is already registered.',
-            'password.required' => 'Password is required.',
-            'password.min' => 'Password must be at least 6 characters.',
-            'password.confirmed' => 'The password confirmation does not match.',
-            'date_of_birth.required' => 'Date of birth is required.',
-            'date_of_birth.before' => 'Date of birth must be in the past.',
-            'gender.required' => 'Please select your gender.',
-            'language.required' => 'Please select your preferred language.',
-            'terms.required' => 'You must agree to the terms and conditions.',
+            'date_of_birth.date' => 'Please enter a valid date',
+            'date_of_birth.before' => 'Date of birth must be in the past',
+        ]);
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Please fix the errors.');
+        }
+        $user->update([
+            'full_name' => $request->name,
+            'email' => $request->email,
+            'gender' => $request->gender,
+            'date_of_birth' => $request->date_of_birth,
+        ]);
+
+        return redirect()->route('profile.index', ['tab' => 'profile'])
+            ->with('success', 'Profile updated successfully!');
+    }
+
+    public function updateProfessional(Request $request)
+    {
+        $user = Auth::user();
+
+        if (!$user->isPsychologist()) {
+            abort(403, 'Unauthorized access.');
+        }
+
+        $psychologist = $user->psychologist;
+
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string|max:255',
+            'specialization' => 'required|string|max:255',
+            'license_number' => 'required|string|max:100',
+            'years_experience' => 'required|integer|min:0',
+            'consultation_fee' => 'required|numeric|min:0',
+            'short_bio' => 'nullable|string|max:500',
+            'about_me' => 'nullable|string',
+            'languages' => 'nullable|array',
+            'languages.*' => 'string',
         ]);
 
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
-                ->withInput();
+                ->withInput()
+                ->with('error', 'Please fix the errors.');
         }
 
-        $user = User::create([
-            'full_name' => $request->full_name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'date_of_birth' => $request->date_of_birth,
-            'gender' => $request->gender,
-            'preferred_language' => $request->language,
-            'agree_to_terms' => true,
+        $psychologist->update([
+            'title' => $request->title,
+            'specialization' => $request->specialization,
+            'license_number' => $request->license_number,
+            'years_experience' => $request->years_experience,
+            'consultation_fee' => $request->consultation_fee,
+            'short_bio' => $request->short_bio,
+            'about_me' => $request->about_me,
+            'languages' => $request->languages,
         ]);
 
-        return redirect()->route('admin.dashboard')->with('success', 'User created successfully!');
+        return redirect()->route('profile.index', ['tab' => 'professional'])
+            ->with('success', 'Professional information updated successfully!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function updateSchedule(Request $request)
     {
-        //
-    }
+        $user = Auth::user();
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        //
-        $user = User::findOrFail($id);
-        return view('pages.admin.edit', compact('user'));
-    }
+        if (!$user->isPsychologist()) {
+            abort(403, 'Unauthorized access.');
+        }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id)
-    {
-        //
-        $user = User::findOrFail($id);
+        $psychologist = $user->psychologist;
 
-        // Validasi (Password dibuat nullable/opsional)
-        $request->validate([
-            'full_name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . $id, // Ignore email milik sendiri saat cek unique
-            'date_of_birth' => 'required|date',
-            'gender' => 'required|in:male,female',
-            'language' => 'required|in:en,id',
-            'password' => 'nullable|min:6|confirmed', // Nullable: boleh kosong
+        $validator = Validator::make($request->all(), [
+            'schedules.*.day_of_week' => 'required|string|in:mon,tue,wed,thu,fri,sat,sun',
+            'schedules.*.is_available' => 'nullable|in:1,0',
+            'schedules.*.start_time' => 'required_if:schedules.*.is_available,1|nullable|date_format:H:i',
+            'schedules.*.end_time' => 'required_if:schedules.*.is_available,1|nullable|date_format:H:i|after:schedules.*.start_time',
+        ], [
+            'schedules.*.start_time.required_if' => 'Start time is required when day is available',
+            'schedules.*.end_time.required_if' => 'End time is required when day is available',
+            'schedules.*.end_time.after' => 'End time must be after start time',
         ]);
 
-        // Update data dasar
+        $validator->after(function ($validator) use ($request) {
+            $hasAvailableDay = false;
+            if ($request->has('schedules')) {
+                foreach ($request->schedules as $schedule) {
+                    if (isset($schedule['is_available']) && $schedule['is_available'] == '1') {
+                        $hasAvailableDay = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!$hasAvailableDay) {
+                $validator->errors()->add('schedules', 'Please set at least one available day');
+            }
+        });
+
+        if ($validator->fails()) {
+            return redirect()->route('profile.index', ['tab' => 'schedule'])
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Please fix the errors below.');
+        }
+
+        $psychologist->schedules()->delete();
+
+        foreach ($request->schedules as $scheduleData) {
+            if (isset($scheduleData['is_available']) && $scheduleData['is_available'] == '1') {
+                $psychologist->schedules()->create([
+                    'day_of_week' => $scheduleData['day_of_week'],
+                    'start_time' => $scheduleData['start_time'],
+                    'end_time' => $scheduleData['end_time'],
+                ]);
+            }
+        }
+
+        return redirect()->route('profile.index', ['tab' => 'schedule'])
+            ->with('success', 'Schedule updated successfully!');
+    }
+
+    public function updatePrivacy(Request $request)
+    {
+        $user = Auth::user();
+
+        $validator = Validator::make($request->all(), [
+            'old_password' => 'required|string',
+        ], [
+            'old_password.required' => 'Old password is required',
+        ]);
+
+        if (!Hash::check($request->old_password, $user->password)) {
+            $validator->after(function ($validator) {
+                $validator->errors()->add('old_password', 'Old password is incorrect');
+            });
+
+            if ($validator->fails()) {
+                return redirect()->back()
+                    ->withErrors($validator)
+                    ->withInput()
+                    ->with('error', 'Please fix the errors.');
+            }
+        }
+
+        $validator = Validator::make($request->all(), [
+            'old_password' => 'required|string',
+            'new_password' => 'required|string|min:6|different:old_password',
+            'confirm_password' => 'required|string|same:new_password',
+        ], [
+            'old_password.required' => 'Old password is required',
+            'new_password.required' => 'New password is required',
+            'new_password.min' => 'Password must be at least 6 characters',
+            'new_password.different' => 'New password must be different from old password',
+            'confirm_password.required' => 'Please confirm your new password',
+            'confirm_password.same' => 'Passwords do not match',
+        ]);
+
+        $validator->after(function ($validator) use ($user, $request) {
+            if (!Hash::check($request->old_password, $user->password)) {
+                $validator->errors()->add('old_password', 'Old password is incorrect');
+            }
+        });
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Please fix the errors.');
+        }
+
         $user->update([
-            'full_name' => $request->full_name,
-            'email' => $request->email,
-            'date_of_birth' => $request->date_of_birth,
-            'gender' => $request->gender,
+            'password' => Hash::make($request->new_password),
+        ]);
+
+        return redirect()->route('profile.index', ['tab' => 'privacy'])
+            ->with('success', 'Password updated successfully!');
+    }
+
+    public function updatePreferences(Request $request)
+    {
+        $user = Auth::user();
+
+        $validator = Validator::make($request->all(), [
+            'language' => 'required|string|in:en,id',
+        ], [
+            'language.required' => 'Please select a preferred language',
+            'language.in' => 'Please select a valid language',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Please fix the errors.');
+        }
+
+        $user->update([
             'preferred_language' => $request->language,
         ]);
 
-        // Update password HANYA jika diisi
-        if ($request->filled('password')) {
-            $user->update(['password' => Hash::make($request->password)]);
-        }
+        session()->put('locale', $request->language);
 
-        return redirect()->route('admin.dashboard')->with('success', 'User updated successfully!');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id)
-    {
-        //
-        UserModel::where('id', $id)->delete();
-        return redirect()->route('admin.dashboard')->with('success', 'User deleted successfully.');
+        return redirect()->route('profile.index', ['tab' => 'preferences'])
+            ->with('success', 'Preferences updated successfully!');
     }
 }

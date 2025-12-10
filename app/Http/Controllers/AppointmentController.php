@@ -49,7 +49,7 @@ class AppointmentController extends Controller
             ->orderBy('reschedule_time')
             ->get();
 
-        return view('pages.appointment.appointments', compact('ongoing', 'history', 'rescheduleRequests'));
+        return view('patient.appointment.appointments', compact('ongoing', 'history', 'rescheduleRequests'));
     }
 
     private function autoCompletePastAppointments($userId)
