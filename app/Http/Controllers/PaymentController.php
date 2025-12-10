@@ -13,8 +13,7 @@ class PaymentController extends Controller
     public function process(Payment $payment)
     {
         if (!$payment->payment_url) {
-            return redirect()->route('patient.payment.error')
-                ->with('error', 'Payment URL not found');
+            return redirect()->route('patient.payment.error')->with('error', 'Payment URL not found');
         }
 
         return redirect($payment->payment_url);
@@ -25,19 +24,13 @@ class PaymentController extends Controller
         $orderId = $request->query('order_id');
 
         if (!$orderId) {
-            return view('patient.payment.status', [
-                'status' => 'error',
-                'message' => 'Order ID not found'
-            ]);
+            return view('patient.payment.status', ['status' => 'error', 'message' => 'Order ID not found']);
         }
 
         $payment = Payment::where('order_id', $orderId)->first();
 
         if (!$payment) {
-            return view('patient.payment.status', [
-                'status' => 'error',
-                'message' => 'Payment not found'
-            ]);
+            return view('patient.payment.status', ['status' => 'error', 'message' => 'Payment not found']);
         }
 
         if (config('services.midtrans.is_production') === false && $payment->status === 'pending') {
@@ -51,16 +44,11 @@ class PaymentController extends Controller
                         $appointment->update(['status' => 'confirmed']);
                     }
                 }
-
                 $payment->refresh();
             }
         }
 
-        return view('patient.payment.status', [
-            'status' => $payment->status,
-            'payment' => $payment,
-            'message' => $this->getStatusMessage($payment->status)
-        ]);
+        return view('patient.payment.status', ['status' => $payment->status, 'payment' => $payment, 'message' => $this->getStatusMessage($payment->status)]);
     }
 
     private function verifyWithMidtrans($orderId)

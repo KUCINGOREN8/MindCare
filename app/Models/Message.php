@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Message extends Model
 {
@@ -14,6 +15,8 @@ class Message extends Model
         'sender_id',
         'receiver_id',
         'message',
+        'attachment_path',
+        'attachment_name',
         'is_read',
         'read_at'
     ];
@@ -22,6 +25,8 @@ class Message extends Model
         'is_read' => 'boolean',
         'read_at' => 'datetime'
     ];
+
+    protected $appends = ['attachment_url', 'attachment_type'];
 
     public function sender()
     {
@@ -47,5 +52,71 @@ class Message extends Model
             ]);
         }
         return $this;
+    }
+
+    public function getAttachmentUrlAttribute()
+    {
+        if (!$this->attachment_path) {
+            return null;
+        }
+
+        if (Storage::disk('public')->exists($this->attachment_path)) {
+            return asset('storage/' . $this->attachment_path);
+        }
+        return null;
+    }
+
+    public function getAttachmentTypeAttribute()
+    {
+        if (!$this->attachment_path) {
+            return null;
+        }
+
+        $extension = strtolower(pathinfo($this->attachment_path, PATHINFO_EXTENSION));
+
+        $imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'];
+        $documentExtensions = ['pdf', 'doc', 'docx', 'txt', 'rtf'];
+        $spreadsheetExtensions = ['xls', 'xlsx', 'csv'];
+        $presentationExtensions = ['ppt', 'pptx'];
+        $archiveExtensions = ['zip', 'rar', '7z'];
+
+        if (in_array($extension, $imageExtensions)) {
+            return 'image';
+        } elseif (in_array($extension, $documentExtensions)) {
+            return 'document';
+        } elseif (in_array($extension, $spreadsheetExtensions)) {
+            return 'spreadsheet';
+        } elseif (in_array($extension, $presentationExtensions)) {
+            return 'presentation';
+        } elseif (in_array($extension, $archiveExtensions)) {
+            return 'archive';
+        }
+
+        return 'file';
+    }
+
+    public function hasAttachment()
+    {
+        return !is_null($this->attachment_path);
+    }
+
+    public function getAttachmentIcon()
+    {
+        if (!$this->attachment_path) {
+            return null;
+        }
+
+        $type = $this->attachment_type;
+
+        $icons = [
+            'image' => '🖼️',
+            'document' => '📄',
+            'spreadsheet' => '📊',
+            'presentation' => '🎁',
+            'archive' => '📦',
+            'file' => '📁'
+        ];
+
+        return $icons[$type] ?? '📁';
     }
 }

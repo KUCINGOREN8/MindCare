@@ -67,9 +67,14 @@ Route::middleware(['auth', 'otp', 'role:patient'])
     Route::get('/search', [PsychologistController::class, 'showSearch'])->name('psychologist.search');
     Route::get('psychologist/{id}', [PsychologistController::class, 'showProfile'])->name('psychologist.profile');
     Route::get('psychologist/{id}/review', [PsychologistController::class, 'showReview'])->name('psychologist.review');
+    Route::get('psychologist/{psychologist}/available-dates', [BookAppointmentController::class, 'getAvailableDates'])->name('psychologist.available-dates');
+    Route::get('psychologist/{psychologist}/available-times', [BookAppointmentController::class, 'getAvailableTimes'])->name('psychologist.available-times');
+    Route::get('available-psychologists', [BookAppointmentController::class, 'getAvailablePsychologists'])->name('psychologists.available');
+    Route::get('psychologist/{psychologist}/available-days', [BookAppointmentController::class, 'getAvailableDays'])->name('psychologist.available-days');
+    Route::get('/appointments/{appointment}/payment', [AppointmentController::class, 'showPaymentPage'])->name('appointments.payment');
 
     //Book Appointment
-    Route::get('book_appointment', [BookAppointmentController::class, 'showBook'])->name('book.appointment');
+    Route::get('book-appointment/{psychologist?}', [BookAppointmentController::class, 'showBook'])->name('book.appointment');
     Route::post('/appointments/store', [BookAppointmentController::class, 'store'])->name('appointments.store');
 
     // Appointment History + Actions
