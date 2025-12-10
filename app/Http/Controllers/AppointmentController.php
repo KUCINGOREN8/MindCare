@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Appointment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class AppointmentController extends Controller
 {
@@ -12,6 +13,41 @@ class AppointmentController extends Controller
     {
         $user = Auth::user();
 
+        if (strtolower(trim($user->role)) === 'psychologist') {
+            
+            
+            $ongoing = Appointment::with('user')
+                ->where('psychologist_id', $user->id)
+                ->where('status', 'confirmed') 
+                ->where(function ($query) {
+                    $query->where('date', '>', Carbon::now()->format('Y-m-d'))
+                          ->orWhere(function ($q) {
+                              $q->where('date', '=', Carbon::now()->format('Y-m-d'))
+                                ->where('start_time', '>=', Carbon::now()->format('H:i:s'));
+                          });
+                })
+                ->orderBy('date', 'asc')
+                ->orderBy('start_time', 'asc') 
+                ->first();
+
+            $history = Appointment::with('user')
+                ->where('psychologist_id', $user->id)
+                ->where(function ($query) {
+                    $query->where('status', 'completed')
+                          ->orWhere('status', 'cancelled')
+                          ->orWhere('status', 'canceled')
+                          ->orWhere('date', '<', Carbon::now()->format('Y-m-d'));
+                })
+                ->orderBy('date', 'desc')
+                ->orderBy('start_time', 'desc') 
+                ->get();
+
+            return view('psychologist.appointment.index', compact('ongoing', 'history'));
+        }
+
+
+
+        
         $this->autoCompletePastAppointments($user->id);
 
         $confirmedAppointments = Appointment::with(['psychologist' => function($query) {
@@ -52,15 +88,17 @@ class AppointmentController extends Controller
         return view('patient.appointment.appointments', compact('ongoing', 'history', 'rescheduleRequests'));
     }
 
+    // --- FUNCTION PENDUKUNG ---
+
     private function autoCompletePastAppointments($userId)
     {
        $appointments = Appointment::where('user_id', $userId)->where('status', 'confirmed')->get();
 
        foreach ($appointments as $appointment) {
-        if ($appointment->is_past) {
-            $appointment->update(['status' => 'completed']);
+            if ($appointment->is_past ?? false) { 
+                $appointment->update(['status' => 'completed']);
+            }
         }
-    }
        return $appointments->where('is_past', true)->count();
     }
 
@@ -69,7 +107,6 @@ class AppointmentController extends Controller
         $appointment = Appointment::findOrFail($id);
         $appointment->status = 'confirmed';
         $appointment->save();
-
         return back();
     }
 
@@ -78,21 +115,6 @@ class AppointmentController extends Controller
         $appointment = Appointment::findOrFail($id);
         $appointment->status = 'canceled';
         $appointment->save();
-
         return back();
     }
-
-    // public function reschedule(Request $request, $id)
-    // {
-    //     $appointment = Appointment::findOrFail($id);
-
-    //     $appointment->reschedule_date = $request->reschedule_date;
-    //     $appointment->reschedule_time = $request->reschedule_time;
-    //     $appointment->reschedule_reason = $request->reschedule_reason;
-
-    //     $appointment->save();
-
-    //     return view('profile.appointments', compact('ongoing', 'history'));
-    // }
-
 }

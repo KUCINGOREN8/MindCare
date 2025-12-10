@@ -1,4 +1,4 @@
-rut
+
 <?php
 
 use App\Http\Controllers\AppointmentController;
