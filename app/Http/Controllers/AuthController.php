@@ -62,7 +62,9 @@ class AuthController extends Controller
         ]);
 
         Auth::login($user);
-        return redirect()->route('otp.send')->with('success', 'Registration successful! Please verify your email with OTP.');
+
+        $user->sendOTPNotification();
+        return redirect()->route('otp.verify')->with('success', 'Registration successful! Please verify your email with OTP.');
     }
 
     // Login
@@ -73,6 +75,7 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+        
         $credentials = $request->validate([
         'email' => 'required|email',
         'password' => 'required',
@@ -81,11 +84,13 @@ class AuthController extends Controller
             'email.email' => 'Please enter a valid email address.',
             'password.required' => 'Password is required.',
         ]);
-
+        
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended(route('dashboard.index'));
+            $user = Auth::user();
+            return redirect()->intended(route( $user->role . '.dashboard'));
         }
+        
 
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',

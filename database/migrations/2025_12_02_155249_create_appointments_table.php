@@ -12,13 +12,24 @@ return new class extends Migration
     Schema::create('appointments', function (Blueprint $table) {
         $table->id();
         $table->foreignId('user_id')->constrained()->onDelete('cascade');
-        $table->string('with'); 
+        $table->foreignId('psychologist_id')->constrained()->onDelete('cascade');
+
+        $table->string('with');
         $table->string('job_title')->nullable();
 
         $table->date('date');
-        $table->time('time');
+        $table->time('start_time');
+        $table->time('end_time');
+        $table->decimal('consultation_fee', 10, 2);
 
-        $table->enum('status', ['pending', 'confirmed', 'canceled'])->default('pending');
+        $table->enum('status', [
+            'pending_payment',
+            'pending',
+            'confirmed',
+            'completed',
+            'cancelled',
+            'expired'
+        ])->default('pending_payment');
 
         $table->text('notes')->nullable();
 
@@ -31,14 +42,6 @@ return new class extends Migration
     });
 }
 
-    /**
-     * Run the migrations.
-     */
-    
-
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('appointments');

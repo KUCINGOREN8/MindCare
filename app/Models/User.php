@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use App\Mail\OTPCodeMail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Mail;
 
 class User extends Authenticatable
 {
@@ -55,6 +57,12 @@ class User extends Authenticatable
             now()->lt($this->otp_expires_at);
     }
 
+    public function sendOTPNotification()
+    {
+        $otpCode = $this->generateOTP();
+        Mail::to($this->email)->send(new OTPCodeMail($otpCode));
+    }
+
     public function isAdmin()
     {
         return $this->role === 'admin';
@@ -83,5 +91,35 @@ class User extends Authenticatable
     public function psychologist()
     {
     return $this->hasOne(Psychologist::class);
+    }
+
+    public function conversationsAsPatient()
+    {
+        return $this->hasMany(Conversation::class, 'patient_id');
+    }
+
+    public function conversationsAsPsychologist()
+    {
+        return $this->hasMany(Conversation::class, 'psychologist_id');
+    }
+
+    public function conversations()
+    {
+        if ($this->isPatient()) {
+            return $this->conversationsAsPatient();
+        } elseif ($this->isPsychologist()) {
+            return $this->conversationsAsPsychologist();
+        }
+        return $this->hasMany(Conversation::class, 'id')->whereNull('id');
+    }
+
+    public function sentMessages()
+    {
+        return $this->hasMany(Message::class, 'sender_id');
+    }
+
+    public function receivedMessages()
+    {
+        return $this->hasMany(Message::class, 'receiver_id');
     }
 }
