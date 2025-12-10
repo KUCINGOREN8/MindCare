@@ -42,7 +42,7 @@ class OTPController extends Controller
             ]);
 
             session(['otp_verified' => true]);
-            return redirect()->intended(route('dashboard.index'))
+            return redirect()->intended(route( $user->role . 'dashboard.index'))
                 ->with('success', 'OTP verified successfully!');
         }
 

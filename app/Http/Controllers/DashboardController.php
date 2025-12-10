@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Appointment;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Testimonial;
 use App\Models\Mood;
+use App\Models\Psychologist;
 use Illuminate\Validation\Rule;
 
 class DashboardController extends Controller
@@ -17,11 +20,38 @@ class DashboardController extends Controller
         return view('index', compact('testimonials'));
     }
 
-    public function showDashboard() {
+    public function showPatientDashboard() {
         $user = Auth::user();
 
-        // $upcomingAppointments
-        return view('pages.dashboard.index', compact('user'));
+        $upcomingAppointments = Appointment::with(['psychologist' => function($query) {
+                $query->with('user');
+            }])
+            ->where('user_id', $user->id)
+            ->where('status', 'confirmed')
+            ->get()
+            ->filter(function($appointment) {
+                return $appointment->is_upcoming;
+            })
+            ->sortBy('start_date_time')
+            ->take(3);
+
+        return view('dashboard.patient.index', compact('user', 'upcomingAppointments'));
+    }
+    
+    public function showPsychologistDashboard() {
+        $user = Auth::user();
+        
+        $upcomingAppointments = Appointment::with(['user'])
+            ->where('psychologist_id', $user->id)
+            ->where('status', 'confirmed')
+            ->get()
+            ->filter(function ($appointment) {
+                return $appointment->is_upcoming;
+            })
+            ->sortBy('start_date_time')
+            ->take(3);
+
+        return view('dashboard.psychologist.index', compact('user', 'upcomingAppointments'));
     }
 
     public function moodStore(Request $request)
@@ -36,7 +66,7 @@ class DashboardController extends Controller
         ]);
 
         return back()->with('success', 'Mood berhasil disimpan!')
-                     ->with('undo_id', $mood->id);
+            ->with('undo_id', $mood->id);
     }
 
     public function undo(Request $request)

@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Appointment extends Model
 {
 
-     protected $fillable = [
+    protected $fillable = [
         'user_id',
         'psychologist_id',
         'with',
@@ -33,9 +34,9 @@ class Appointment extends Model
         return $this->belongsTo(Psychologist::class);
     }
 
-    public function patient()
+    public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class);
     }
 
     public function payment()
@@ -51,5 +52,44 @@ class Appointment extends Model
     public function getIsPaidAttribute()
     {
         return $this->payment?->status === 'success';
+    }
+
+    public function getStartDateTimeAttribute()
+    {
+        return Carbon::createFromFormat(
+            'Y-m-d H:i:s',
+            $this->date->format('Y-m-d') . ' ' . $this->start_time
+        );
+    }
+
+    public function getEndDateTimeAttribute()
+    {
+        return Carbon::createFromFormat(
+            'Y-m-d H:i:s',
+            $this->date->format('Y-m-d') . ' ' . $this->end_time
+        );
+    }
+
+    public function getIsUpcomingAttribute()
+    {
+        return $this->start_date_time > now();
+    }
+
+    public function getIsPastAttribute()
+    {
+        return $this->end_date_time < now();
+    }
+
+    public function getIsSessionAvailableAttribute()
+    {
+        if ($this->status !== 'confirmed') {
+            return false;
+        }
+
+        $sessionStart = $this->start_date_time;
+        $now = now();
+
+        return $now->diffInMinutes($sessionStart, false) >= -30 &&
+            $now->diffInMinutes($sessionStart, false) <= 30;
     }
 }

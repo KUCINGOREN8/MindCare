@@ -4,36 +4,65 @@ namespace App\Http\Controllers;
 
 use App\Models\Appointment;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
 
 class AppointmentController extends Controller
 {
-    //
-      public function index()
+    public function index()
     {
-        $ongoing = Appointment::whereIn('status', ['pending', 'confirmed'])
-            ->orderBy('date')
-            ->first();
+        $user = Auth::user();
 
-        $history = Appointment::orderBy('date', 'desc')
-            ->skip(0)
-            ->take(5)
+        $this->autoCompletePastAppointments($user->id);
+
+        $confirmedAppointments = Appointment::with(['psychologist' => function($query) {
+            $query->with('user');
+        }])
+        ->where('user_id', $user->id)
+        ->where('status', 'confirmed')
+        ->get();
+
+        $ongoing = $confirmedAppointments
+            ->filter(function($appointment) {
+                return $appointment->is_upcoming;
+            })
+            ->sortBy('start_date_time')
+            ->take(3);
+
+        $ongoingIds = $ongoing->pluck('id')->toArray();
+
+        $history = Appointment::with(['psychologist' => function($query) {
+                $query->with('user');
+            }])
+            ->where('user_id', $user->id)
+            ->whereNotIn('id', $ongoingIds)
+            ->orderBy('date', 'desc')
+            ->orderBy('start_time', 'desc')
             ->get();
 
-        return view('pages.appointment.appointments', compact('ongoing', 'history'));
+        $rescheduleRequests = Appointment::with(['psychologist' => function($query) {
+                $query->with('user');
+            }])
+            ->where('user_id', $user->id)
+            ->whereNotNull('reschedule_date')
+            ->where('status', '!=', 'cancelled')
+            ->orderBy('reschedule_date')
+            ->orderBy('reschedule_time')
+            ->get();
+
+        return view('patient.appointment.appointments', compact('ongoing', 'history', 'rescheduleRequests'));
     }
 
-    // public function loadMore(Request $request)
-    // {
-    //     $offset = $request->offset;
+    private function autoCompletePastAppointments($userId)
+    {
+       $appointments = Appointment::where('user_id', $userId)->where('status', 'confirmed')->get();
 
-    //     $items = Appointment::orderBy('date', 'desc')
-    //         ->skip($offset)
-    //         ->take(5)
-    //         ->get();
-
-    //     return response()->json($items);
-    // }
+       foreach ($appointments as $appointment) {
+        if ($appointment->is_past) {
+            $appointment->update(['status' => 'completed']);
+        }
+    }
+       return $appointments->where('is_past', true)->count();
+    }
 
     public function confirm($id)
     {
