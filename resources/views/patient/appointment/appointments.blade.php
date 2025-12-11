@@ -52,23 +52,56 @@
                         $canMakePayment = $isPendingPayment && $payment && $payment->status === 'pending';
                     @endphp
 
-                    <div
-                        class="bg-white p-4 rounded-xl border border-gray-100 hover:shadow-md transition flex items-center justify-between group {{ $isPendingPayment ? 'cursor-pointer' : '' }}"
+                    <div class="bg-white p-4 rounded-xl border border-gray-100 hover:shadow-md transition flex items-center justify-between group {{ $isPendingPayment ? 'cursor-pointer' : '' }}"
                         @if($isPendingPayment)
                             onclick="window.location.href='{{ route('patient.appointments.payment', $item->id) }}'"
                         @elseif($isPaymentExpired)
                             onclick="showExpiredMessage()"
                         @endif
                     >
+                        @php
+                            $iconBgColor = 'bg-gray-50';
+                            $iconTextColor = 'text-gray-500';
+                            
+                            $badgeBgColor = 'bg-gray-100';
+                            $badgeTextColor = 'text-gray-700';
+                            
+                            if($item->status === 'completed') {
+                                $iconBgColor = 'bg-green-50';
+                                $iconTextColor = 'text-green-500';
+                                $badgeBgColor = 'bg-green-100';
+                                $badgeTextColor = 'text-green-700';
+                            } elseif($item->status === 'confirmed') {
+                                $iconBgColor = 'bg-blue-50';
+                                $iconTextColor = 'text-blue-500';
+                                $badgeBgColor = 'bg-blue-100';
+                                $badgeTextColor = 'text-blue-700';
+                            } elseif($item->status === 'pending') {
+                                $iconBgColor = 'bg-yellow-50';
+                                $iconTextColor = 'text-yellow-500';
+                                $badgeBgColor = 'bg-yellow-100';
+                                $badgeTextColor = 'text-yellow-700';
+                            } elseif($item->status === 'cancelled') {
+                                $iconBgColor = 'bg-red-50';
+                                $iconTextColor = 'text-red-500';
+                                $badgeBgColor = 'bg-red-100';
+                                $badgeTextColor = 'text-red-700';
+                            } elseif($isPendingPayment) {
+                                $iconBgColor = 'bg-purple-50';
+                                $iconTextColor = 'text-purple-500';
+                            }
+                            
+                            if($isPaymentExpired) {
+                                $badgeBgColor = 'bg-gray-100';
+                                $badgeTextColor = 'text-gray-700';
+                            } elseif($canMakePayment) {
+                                $badgeBgColor = 'bg-purple-100';
+                                $badgeTextColor = 'text-purple-700';
+                            }
+                        @endphp
+
                         <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 rounded-full
-                                @if($item->status === 'completed') bg-green-50 text-green-500
-                                @elseif($item->status === 'confirmed') bg-blue-50 text-blue-500
-                                @elseif($item->status === 'pending') bg-yellow-50 text-yellow-500
-                                @elseif($item->status === 'cancelled') bg-red-50 text-red-500
-                                @elseif($isPendingPayment) bg-purple-50 text-purple-500
-                                @else bg-gray-50 text-gray-500 @endif
-                                flex items-center justify-center group-hover:bg-green-500 group-hover:text-white transition">
+                            <div class="w-10 h-10 rounded-full {{ $iconBgColor }} {{ $iconTextColor }} flex items-center justify-center group-hover:bg-green-500 group-hover:text-white transition">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                 </svg>
@@ -86,15 +119,7 @@
                                 </p>
                             </div>
                         </div>
-                        <span class="px-3 py-1 rounded-full text-[10px] font-bold
-                            @if($item->status === 'completed') bg-green-100 text-green-700
-                            @elseif($item->status === 'confirmed') bg-blue-100 text-blue-700
-                            @elseif($item->status === 'pending') bg-yellow-100 text-yellow-700
-                            @elseif($item->status === 'cancelled') bg-red-100 text-red-700
-                            @elseif($isPaymentExpired) bg-gray-100 text-gray-700 cursor-not-allowed
-                            @elseif($canMakePayment) bg-purple-100 text-purple-700 hover:bg-purple-200
-                            @else bg-gray-100 text-gray-700 @endif
-                            uppercase tracking-wide">
+                        <span class="px-3 py-1 rounded-full text-[10px] font-bold {{ $badgeBgColor }} {{ $badgeTextColor }} uppercase tracking-wide">
                             @if($isPaymentExpired)
                                 Payment Expired
                             @elseif($canMakePayment)
