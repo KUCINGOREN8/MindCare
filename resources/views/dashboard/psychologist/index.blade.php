@@ -17,32 +17,32 @@ Dashboard
             <x-stats-grid>
                 <x-stat-card
                     title="Total Patients"
-                    value="247"
-                    subtitle="18 new this month"
+                    value="{{ $stats['total_patients'] }}"
+                    subtitle="{{ $stats['new_patients_month'] }} new this month"
                     icon="assets/icons/users.svg"
                     icon-background="#DBEAFE"
                     icon-color="#2563EB"
-                    :trend="12"
+                    trend="{{ $stats['total_patients_trend'] }}"
                 />
                 
                 <x-stat-card
-                    title="Session This Week"
-                    value="42"
-                    subtitle="6 today, 8 tomorrow"
-                    icon="assets/icons/users.svg"
+                    title="Sessions This Week"
+                    value="{{ $stats['sessions_this_week'] }}"
+                    subtitle="{{ $stats['today_appointments'] }} today, {{ $stats['completed_sessions_week'] }} completed"
+                    icon="assets/icons/calendar.svg"
                     icon-background="#F3E8FF"
                     icon-color="#9333EA"
-                    :trend="8"
+                    trend="{{ $stats['sessions_trend'] }}"
                 />
                 
                 <x-stat-card
                     title="Monthly Revenue"
-                    value="RP 8.4 M"
-                    subtitle="Keep it up"
-                    icon="assets/icons/users.svg"
+                    value="Rp {{ number_format($stats['monthly_revenue'], 0, ',', '.') }}"
+                    subtitle="{{ now()->format('F') }} revenue"
+                    icon="assets/icons/dollar.svg"
                     icon-background="#DCFCE7"
                     icon-color="#16A34A"
-                    :trend="22"
+                    trend="{{ $stats['revenue_trend'] }}"
                 />
             </x-stats-grid>
 

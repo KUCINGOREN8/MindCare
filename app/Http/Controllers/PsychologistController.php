@@ -69,4 +69,5 @@ class PsychologistController extends Controller
 
         return view('psychologist.clients.index', compact('clients'));
     }
+
 }
