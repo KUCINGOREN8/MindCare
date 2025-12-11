@@ -105,7 +105,7 @@ class UserController extends Controller
         $psychologist = $user->psychologist;
 
         $validator = Validator::make($request->all(), [
-            'schedules.*.day_of_week' => 'required|string|in:mon,tue,wed,thu,fri,sat,sun',
+            'schedules.*.day_of_week' => 'required|string|in:monday,tuesday,wednesday,thursday,friday,saturday,sunday',
             'schedules.*.is_available' => 'nullable|in:1,0',
             'schedules.*.start_time' => 'required_if:schedules.*.is_available,1|nullable|date_format:H:i',
             'schedules.*.end_time' => 'required_if:schedules.*.is_available,1|nullable|date_format:H:i|after:schedules.*.start_time',

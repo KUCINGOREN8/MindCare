@@ -4,13 +4,13 @@
     
     @php
         $days = [
-            'mon' => ['day' => 'Monday', 'abbr' => 'Mon'],
-            'tue' => ['day' => 'Tuesday', 'abbr' => 'Tue'],
-            'wed' => ['day' => 'Wednesday', 'abbr' => 'Wed'],
-            'thu' => ['day' => 'Thursday', 'abbr' => 'Thu'],
-            'fri' => ['day' => 'Friday', 'abbr' => 'Fri'],
-            'sat' => ['day' => 'Saturday', 'abbr' => 'Sat'],
-            'sun' => ['day' => 'Sunday', 'abbr' => 'Sun']
+            'monday' => ['day' => 'Monday', 'abbr' => 'Mon'],
+            'tuesday' => ['day' => 'Tuesday', 'abbr' => 'Tue'],
+            'wednesday' => ['day' => 'Wednesday', 'abbr' => 'Wed'],
+            'thursday' => ['day' => 'Thursday', 'abbr' => 'Thu'],
+            'friday' => ['day' => 'Friday', 'abbr' => 'Fri'],
+            'saturday' => ['day' => 'Saturday', 'abbr' => 'Sat'],
+            'sunday' => ['day' => 'Sunday', 'abbr' => 'Sun']
         ];
         
         $existingSchedules = $psychologist->schedules->keyBy('day_of_week');
