@@ -24,10 +24,6 @@ class MidtransService
                 'gross_amount' => (int) $amount,
             ],
             'customer_details' => $customerDetails,
-            'enabled_payments' => [
-                'gopay', 'shopeepay', 'bank_transfer',
-                'qris', 'credit_card', 'bca_klikbca'
-            ],
             'callbacks' => [
                 'finish' => route('patient.payment.finish'),
                 'error' => route('patient.payment.error'),
@@ -51,5 +47,21 @@ class MidtransService
     public function generateOrderId()
     {
         return 'APP-' . date('YmdHis') . '-' . strtoupper(uniqid());
+    }
+
+    public function createPaymentWithExpiry($orderId, $amount, $expiryDuration)
+    {
+        $params = [
+            'transaction_details' => [
+                'order_id' => $orderId,
+                'gross_amount' => (int) $amount,
+            ],
+            'expiry' => [
+                'duration' => (int) $expiryDuration,
+                'unit' => 'minute'
+            ],
+        ];
+
+        return Snap::getSnapToken($params);
     }
 }

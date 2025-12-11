@@ -17,7 +17,6 @@ class DashboardController extends Controller
     public function index()
     {
         $testimonials = Testimonial::inRandomOrder()->take(3)->get();
-
         return view('index', compact('testimonials'));
     }
 
@@ -31,12 +30,15 @@ class DashboardController extends Controller
             }])
             ->where('user_id', $user->id)
             ->where('status', 'confirmed')
-            ->get()
-            ->filter(function($appointment) {
-                return $appointment->is_upcoming;
+            ->where(function($query) {
+                $query->where('date', '>', now()->format('Y-m-d'))->orWhere(function($q) {
+                        $q->where('date', '=', now()->format('Y-m-d'))->whereTime('end_time', '>', now()->format('H:i:s'));
+                    });
             })
-            ->sortBy('start_date_time')
-            ->take(3);
+            ->orderBy('date')
+            ->orderBy('start_time')
+            ->take(3)
+            ->get();
 
         return view('dashboard.patient.index', compact('user', 'upcomingAppointments'));
     }

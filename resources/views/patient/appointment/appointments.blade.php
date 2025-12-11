@@ -16,7 +16,7 @@
             <div class="bg-white p-6 rounded-xl border-grey-border border">
                 <div class="flex items-center gap-2 mb-4">
                     <h3 class="font-bold text-lg text-gray-800">Upcoming Sessions</h3>
-                    @if($ongoing->count() > 0)
+                    @if($upcoming->count() > 0)
                         <span class="relative flex h-3 w-3">
                             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"></span>
                             <span class="relative inline-flex rounded-full h-3 w-3 bg-teal-500"></span>
@@ -24,9 +24,9 @@
                     @endif
                 </div>
 
-                @if($ongoing->count() > 0)
+                @if($upcoming->count() > 0)
                     <div class="space-y-4">
-                        @foreach($ongoing as $appointment)
+                        @foreach($upcoming as $appointment)
                             <x-appointment-card :appointment="$appointment" />
                         @endforeach
                     </div>
@@ -43,14 +43,30 @@
             <h3 class="font-bold text-l mb-4">History</h3>
             <div class="space-y-3">
                 @forelse($history ?? [] as $item)
+                    @php
+                        $isPendingPayment = $item->status === 'pending_payment';
+                        $payment = \App\Models\Payment::where('paymentable_id', $item->id)
+                            ->where('paymentable_type', \App\Models\Appointment::class)
+                            ->first();
+                        $isPaymentExpired = $payment && $payment->status === 'expired';
+                        $canMakePayment = $isPendingPayment && $payment && $payment->status === 'pending';
+                    @endphp
+
                     <div
-                        class="bg-white p-4 rounded-xl border border-gray-100 hover:shadow-md transition flex items-center justify-between group cursor-pointer">
+                        class="bg-white p-4 rounded-xl border border-gray-100 hover:shadow-md transition flex items-center justify-between group {{ $isPendingPayment ? 'cursor-pointer' : '' }}"
+                        @if($isPendingPayment)
+                            onclick="window.location.href='{{ route('patient.appointments.payment', $item->id) }}'"
+                        @elseif($isPaymentExpired)
+                            onclick="showExpiredMessage()"
+                        @endif
+                    >
                         <div class="flex items-center gap-4">
                             <div class="w-10 h-10 rounded-full
                                 @if($item->status === 'completed') bg-green-50 text-green-500
                                 @elseif($item->status === 'confirmed') bg-blue-50 text-blue-500
                                 @elseif($item->status === 'pending') bg-yellow-50 text-yellow-500
                                 @elseif($item->status === 'cancelled') bg-red-50 text-red-500
+                                @elseif($isPendingPayment) bg-purple-50 text-purple-500
                                 @else bg-gray-50 text-gray-500 @endif
                                 flex items-center justify-center group-hover:bg-green-500 group-hover:text-white transition">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -58,7 +74,6 @@
                                 </svg>
                             </div>
                             <div>
-                                {{-- TAMPILKAN NAMA PSIKOLOG DARI DATABASE --}}
                                 <p class="font-bold text-gray-800 text-sm">
                                     {{ $item->psychologist->user->full_name ?? $item->with ?? 'Psychologist' }}
                                 </p>
@@ -76,11 +91,16 @@
                             @elseif($item->status === 'confirmed') bg-blue-100 text-blue-700
                             @elseif($item->status === 'pending') bg-yellow-100 text-yellow-700
                             @elseif($item->status === 'cancelled') bg-red-100 text-red-700
-                            @elseif($item->status === 'pending_payment') bg-purple-100 text-purple-700
+                            @elseif($isPaymentExpired) bg-gray-100 text-gray-700 cursor-not-allowed
+                            @elseif($canMakePayment) bg-purple-100 text-purple-700 hover:bg-purple-200
                             @else bg-gray-100 text-gray-700 @endif
                             uppercase tracking-wide">
-                            @if($item->status === 'pending_payment')
+                            @if($isPaymentExpired)
+                                Payment Expired
+                            @elseif($canMakePayment)
                                 Awaiting Payment
+                            @elseif($isPendingPayment)
+                                Payment Expired
                             @else
                                 {{ ucfirst(str_replace('_', ' ', $item->status)) }}
                             @endif
