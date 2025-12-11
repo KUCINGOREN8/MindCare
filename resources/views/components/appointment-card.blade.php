@@ -5,7 +5,7 @@
     'time' => '',
     'joinRoute' => '#',
     'rescheduleRoute' => '#',
-    'isSessionAvailable' => false
+    'isSessionAvailable' => false,
 ])
 
 @if($appointment)
