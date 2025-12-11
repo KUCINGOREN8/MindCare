@@ -45,7 +45,7 @@
                 </div>
 
                 <div class="flex gap-4 flex-col lg:flex-row">
-                    <x-rounded-button text="Book" active="true" route="#"></x-rounded-button>
+                    <x-rounded-button text="Book" active="true" route="{{ route('patient.book.appointment', $psychologist->id) }}"></x-rounded-button>
                 </div>
             </div>
 
