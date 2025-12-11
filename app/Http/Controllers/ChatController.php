@@ -8,11 +8,11 @@ use App\Models\Conversation;
 use App\Models\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class ChatController extends Controller
 {
-  public function index()
+    public function index()
     {
         $user = Auth::user();
 
@@ -28,8 +28,8 @@ class ChatController extends Controller
                 'isPatient' => true,
                 'isPsychologist' => false
             ];
-
-        } elseif ($user->isPsychologist()) {
+        }
+        elseif ($user->isPsychologist()) {
             $conversations = Conversation::where('psychologist_id', $user->id)
                 ->with(['patient', 'latestMessage'])
                 ->orderBy('last_message_at', 'desc')
@@ -41,11 +41,12 @@ class ChatController extends Controller
                 'isPatient' => false,
                 'isPsychologist' => true
             ];
-
-        } else {
+        }
+        else {
             return redirect()->route('admin.dashboard')->with('info', 'Chat feature is not available for admin role');
         }
-            return view('pages.chat.index', array_merge($viewData, ['user' => $user]));
+
+        return view('chat.index', array_merge($viewData, ['user' => $user]));
     }
 
     public function startChat(User $psychologist)
@@ -86,7 +87,20 @@ class ChatController extends Controller
         $messages = Message::where('conversation_id', $conversation->id)
             ->with(['sender', 'receiver'])
             ->orderBy('created_at', 'asc')
-            ->get();
+            ->get()
+            ->map(function ($message) {
+                return [
+                    'id' => $message->id,
+                    'message' => $message->message,
+                    'attachment_path' => $message->attachment_path,
+                    'attachment_name' => $message->attachment_name,
+                    'attachment_url' => $message->attachment_path ? asset('storage/' . $message->attachment_path) : null,
+                    'sender' => $message->sender,
+                    'sender_id' => $message->sender_id,
+                    'created_at' => $message->created_at,
+                    'is_read' => $message->is_read,
+                ];
+            });
 
         Message::where('conversation_id', $conversation->id)
             ->where('receiver_id', $user->id)
@@ -101,8 +115,8 @@ class ChatController extends Controller
 
             $otherUser = $conversation->psychologist;
             $userType = 'patient';
-
-        } elseif ($user->isPsychologist()) {
+        }
+        elseif ($user->isPsychologist()) {
             $conversations = Conversation::where('psychologist_id', $user->id)
                 ->with(['patient', 'latestMessage'])
                 ->orderBy('last_message_at', 'desc')
@@ -110,27 +124,21 @@ class ChatController extends Controller
 
             $otherUser = $conversation->patient;
             $userType = 'psychologist';
-
-        } else {
+        }
+        else {
             $conversations = collect();
             $otherUser = null;
             $userType = 'admin';
         }
 
-        return view('pages.chat.show', [
-            'conversation' => $conversation,
-            'messages' => $messages,
-            'conversations' => $conversations,
-            'user' => $user,
-            'otherUser' => $otherUser,
-            'userType' => $userType
-        ]);
+        return view('chat.show', ['conversation' => $conversation, 'messages' => $messages, 'conversations' => $conversations, 'user' => $user, 'otherUser' => $otherUser, 'userType' => $userType]);
     }
 
     public function sendMessage(Request $request, Conversation $conversation)
     {
         $request->validate([
-            'message' => 'required|string|max:1000'
+            'message' => 'required_without:attachment|string|max:1000',
+            'attachment' => 'nullable|file|max:10240|mimes:jpg,jpeg,png,gif,webp,bmp,svg,pdf,doc,docx,txt,rtf',
         ]);
 
         $user = Auth::user();
@@ -139,46 +147,88 @@ class ChatController extends Controller
             abort(403, 'Unauthorized');
         }
 
-        $receiverId = ($conversation->patient_id == $user->id)
-            ? $conversation->psychologist_id
-            : $conversation->patient_id;
+        $receiverId = ($conversation->patient_id == $user->id) ? $conversation->psychologist_id : $conversation->patient_id;
+
+        $attachmentPath = null;
+        $attachmentName = null;
+
+        if ($request->hasFile('attachment')) {
+            $file = $request->file('attachment');
+            $attachmentName = $file->getClientOriginalName();
+            $safeName = preg_replace('/[^a-zA-Z0-9._-]/', '_', $attachmentName);
+            $fileName = time() . '_' . Str::random(10) . '_' . $safeName;
+            $attachmentPath = $file->storeAs('chat-attachments', $fileName, 'public');
+        }
 
         $message = Message::create([
             'conversation_id' => $conversation->id,
             'sender_id' => $user->id,
             'receiver_id' => $receiverId,
-            'message' => $request->message
+            'message' => $request->message ?? ($attachmentPath ? '📁 Attachment' : ''),
+            'attachment_path' => $attachmentPath,
+            'attachment_name' => $attachmentName,
         ]);
 
         $conversation->update(['last_message_at' => now()]);
 
+        if ($user->id == $conversation->patient_id) {
+            $conversation->increment('unread_psychologist');
+        } else {
+            $conversation->increment('unread_patient');
+        }
+
         if ($request->ajax()) {
             return response()->json([
                 'success' => true,
-                'message' => $message->load('sender')
+                'message' => [
+                    'id' => $message->id,
+                    'message' => $message->message,
+                    'attachment_path' => $message->attachment_path,
+                    'attachment_name' => $message->attachment_name,
+                    'attachment_url' => $message->attachment_path ? asset('storage/' . $message->attachment_path) : null,
+                    'sender' => [
+                        'id' => $user->id,
+                        'full_name' => $user->full_name,
+                        'photo_url' => $user->photo_url,
+                        'gender' => $user->gender,
+                    ],
+                    'sender_id' => $user->id,
+                    'created_at' => $message->created_at,
+                    'is_read' => false,
+                ]
             ]);
         }
-
         return redirect()->route('chat.show', $conversation)->with('success', 'Message sent!');
     }
 
     public function getMessages(Conversation $conversation)
     {
-        $user = Auth::user();
-
-        if (!$conversation->isParticipant($user->id)) {
-            abort(403, 'Unauthorized');
-        }
-
-        $messages = Message::where('conversation_id', $conversation->id)
-            ->with(['sender', 'receiver'])
-            ->orderBy('created_at', 'asc')
-            ->get();
-
+        $messages = $conversation->messages()
+            ->with(['sender'])
+            ->orderBy('created_at')
+            ->get()
+            ->map(function ($message) {
+                return [
+                    'id' => $message->id,
+                    'message' => $message->message,
+                    'attachment_path' => $message->attachment_path,
+                    'attachment_name' => $message->attachment_name,
+                    'attachment_url' => $message->attachment_path ? asset('storage/' . $message->attachment_path) : null,
+                    'sender' => [
+                        'id' => $message->sender->id,
+                        'full_name' => $message->sender->full_name,
+                        'photo_url' => $message->sender->photo_url,
+                        'gender' => $message->sender->gender,
+                    ],
+                    'sender_id' => $message->sender_id,
+                    'created_at' => $message->created_at,
+                    'is_read' => $message->is_read,
+                ];
+            });
         return response()->json($messages);
     }
 
-     public function psychologistIndex()
+    public function psychologistIndex()
     {
         $user = Auth::user();
 
@@ -191,7 +241,7 @@ class ChatController extends Controller
             ->orderBy('last_message_at', 'desc')
             ->get();
 
-        return view('pages.chat.psychologist-index', [
+        return view('chat.index', [
             'conversations' => $conversations,
             'user' => $user
         ]);
@@ -205,7 +255,6 @@ class ChatController extends Controller
     public function startSession(Appointment $appointment)
     {
         $user = Auth::user();
-
         if ($appointment->user_id !== $user->id) {
             abort(403);
         }

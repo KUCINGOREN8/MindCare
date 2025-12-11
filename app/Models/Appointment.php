@@ -8,7 +8,7 @@ use Carbon\Carbon;
 class Appointment extends Model
 {
 
-     protected $fillable = [
+    protected $fillable = [
         'user_id',
         'psychologist_id',
         'with',
@@ -58,7 +58,8 @@ class Appointment extends Model
     {
         return Carbon::createFromFormat(
             'Y-m-d H:i:s',
-            $this->date->format('Y-m-d') . ' ' . $this->start_time
+            $this->date->format('Y-m-d') . ' ' . $this->start_time,
+            config('app.timezone')
         );
     }
 
@@ -66,18 +67,25 @@ class Appointment extends Model
     {
         return Carbon::createFromFormat(
             'Y-m-d H:i:s',
-            $this->date->format('Y-m-d') . ' ' . $this->end_time
+            $this->date->format('Y-m-d') . ' ' . $this->end_time,
+            config('app.timezone', 'Asia/Jakarta')
         );
     }
 
     public function getIsUpcomingAttribute()
     {
-        return $this->start_date_time > now();
+        return $this->end_date_time > now();
     }
 
     public function getIsPastAttribute()
     {
         return $this->end_date_time < now();
+    }
+
+    public function getIsOngoingAttribute()
+    {
+        $now = now();
+        return $now >= $this->start_date_time && $now <= $this->end_date_time;
     }
 
     public function getIsSessionAvailableAttribute()
@@ -87,9 +95,10 @@ class Appointment extends Model
         }
 
         $sessionStart = $this->start_date_time;
-        $now = now();
+        $sessionEnd = $this->end_date_time;
+        $now = now()->timezone(config('app.timezone'));
+        $availableFrom = $sessionStart->copy()->subMinutes(30);
 
-        return $now->diffInMinutes($sessionStart, false) >= -30 &&
-            $now->diffInMinutes($sessionStart, false) <= 30;
+        return $now >= $availableFrom && $now <= $sessionEnd;
     }
 }

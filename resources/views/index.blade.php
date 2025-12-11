@@ -13,7 +13,7 @@
             </div>
             <div class="flex pt-7 space-x-6">
                 @auth
-                    <a href="{{ route('dashboard.index') }}"
+                    <a href="{{ route('patient.dashboard') }}"
                         class="bg-[#00C3B3] hover:bg-[#33D1C2] active:bg-[#66DED0] text-white font-semibold w-40 py-3 rounded-[1vw] transition flex items-center justify-center">
                         {{ __('messages.button1') }}
                     </a>

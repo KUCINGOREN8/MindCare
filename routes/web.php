@@ -1,3 +1,4 @@
+
 <?php
 
 use App\Http\Controllers\AppointmentController;
@@ -11,10 +12,22 @@ use App\Http\Controllers\PsychologistController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\MoodController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\AdminController;
 use App\Http\Middleware\OTPMiddleware;
+use App\Http\Middleware\CheckRole;
 use Illuminate\Support\Facades\Route;
 
 app('router')->aliasMiddleware('otp', OTPMiddleware::class);
+app('router')->aliasMiddleware('role', CheckRole::class);
+
+// Redirect root "/" → landing page
+Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
+// Language switcher
+Route::get('/lang/{lang}', function ($lang) {
+    session(['locale' => $lang]);
+    return back();
+})->name('switch.lang');
 
 // Public guest-only routes
 Route::middleware('guest')->group(function () {
@@ -28,6 +41,9 @@ Route::middleware('guest')->group(function () {
     Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
     Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
     Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
+
+    Route::get('/signup/psychologist', [AuthController::class, 'showSignupPsychologist'])->name('signup.psychologist');
+    Route::post('/signup/psychologist', [AuthController::class, 'registerPsychologist'])->name('register.psychologist');
 });
 
 // OTP Routes
@@ -38,11 +54,15 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/otp/resend', [OTPController::class, 'resendOTP'])->name('otp.resend');
 });
 
-// Auth + OTP protected
-Route::middleware(['auth', 'otp'])->group(function () {
-
+// PATIENT ROUTES => Auth + OTP + Role protected
+Route::middleware(['auth', 'otp', 'role:patient'])
+->prefix('patient')
+->name('patient.')
+->group(function () {
     // Dashboard
-    Route::get('/dashboard', [DashboardController::class, 'showDashboard'])->name('dashboard.index');
+    Route::get('/dashboard' , [DashboardController::class, 'showPatientDashboard'])->name('dashboard');
+
+    // Patient Mood
     Route::post('/mood', [DashboardController::class, 'moodStore'])->name('mood.store');
     Route::post('/mood/undo', [MoodController::class, 'undo'])->name('mood.undo');
 
@@ -51,9 +71,14 @@ Route::middleware(['auth', 'otp'])->group(function () {
     Route::get('/search', [PsychologistController::class, 'showSearch'])->name('psychologist.search');
     Route::get('psychologist/{id}', [PsychologistController::class, 'showProfile'])->name('psychologist.profile');
     Route::get('psychologist/{id}/review', [PsychologistController::class, 'showReview'])->name('psychologist.review');
+    Route::get('psychologist/{psychologist}/available-dates', [BookAppointmentController::class, 'getAvailableDates'])->name('psychologist.available-dates');
+    Route::get('psychologist/{psychologist}/available-times', [BookAppointmentController::class, 'getAvailableTimes'])->name('psychologist.available-times');
+    Route::get('available-psychologists', [BookAppointmentController::class, 'getAvailablePsychologists'])->name('psychologists.available');
+    Route::get('psychologist/{psychologist}/available-days', [BookAppointmentController::class, 'getAvailableDays'])->name('psychologist.available-days');
+    Route::get('/appointments/{appointment}/payment', [AppointmentController::class, 'showPaymentPage'])->name('appointments.payment');
 
     //Book Appointment
-    Route::get('book_appointment', [BookAppointmentController::class, 'showBook'])->name('book.appointment');
+    Route::get('book-appointment/{psychologist?}', [BookAppointmentController::class, 'showBook'])->name('book.appointment');
     Route::post('/appointments/store', [BookAppointmentController::class, 'store'])->name('appointments.store');
 
     // Appointment History + Actions
@@ -76,6 +101,56 @@ Route::middleware(['auth', 'otp'])->group(function () {
         Route::get('/pending', [PaymentController::class, 'pending'])->name('pending');
         Route::post('/webhook', [PaymentController::class, 'webhook'])->name('webhook');
     });
+});
+
+// PSYCHOLOGIST ROUTES => Auth + OTP + Role protected
+Route::middleware(['auth', 'otp', 'role:psychologist'])
+->prefix('psychologist')
+->name('psychologist.')
+->group(function () {
+    // Dashboard
+    Route::get('/dashboard' , [DashboardController::class, 'showPsychologistDashboard'])->name('dashboard');
+
+    // My Clients
+    Route::get('/clients' , [PsychologistController::class, 'showClients'])->name('clients');
+
+    // Appointments
+        Route::prefix('appointments')
+        ->name('appointments.')
+        ->controller(AppointmentController::class)
+        ->group(function () {
+            // TO-DO: GANTI ROUTE DISINI KALAU PAGE NYA UDH
+            Route::get('/', 'index')->name('index');
+    });
+});
+
+// ADMIN ROUTES => Auth + OTP + Role protected
+Route::middleware(['auth', 'otp', 'role:admin'])
+->prefix('admin')
+->name('admin.')
+->group(function () {
+    // Dashboard
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
+
+    // Manage User (CRUD)
+    Route::resource('users', AdminController::class);
+});
+
+// SHARED ROUTES -> Auth + OTP Protected
+Route::middleware(['auth', 'otp'])->group(function () {
+    // Settings Profile
+    Route::prefix('profile')->name('profile.')->controller(UserController::class)->group(function () {
+        Route::get('/', 'showProfile')->name('index');
+        Route::put('/update','updateProfile')->name('update');
+        Route::put('/profile/password', 'updatePrivacy')->name('privacy.update');
+        Route::put('/profile/preferences', 'updatePreferences')->name('preferences.update');
+
+        // Accessible for psychologist only
+        Route::middleware('role:psychologist')->group(function () {
+            Route::put('/professional', 'updateProfessional')->name('professional.update');
+            Route::put('/schedule', 'updateSchedule')->name('schedule.update');
+        });
+    });
 
     // Messages
     Route::get('/messages', [ChatController::class, 'index'])->name('messages');
@@ -84,32 +159,7 @@ Route::middleware(['auth', 'otp'])->group(function () {
     Route::post('/chat/conversation/{conversation}/send', [ChatController::class, 'sendMessage'])->name('chat.send');
     Route::get('/chat/conversation/{conversation}/messages', [ChatController::class, 'getMessages'])->name('chat.messages');
 
-    // User Profile
-    Route::get('/profile', [UserController::class, 'settings'])->name('profile.edit');
-
     // Logout
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
-// Redirect root "/" → landing page
-Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-
-// Language switcher
-Route::get('/lang/{lang}', function ($lang) {
-    session(['locale' => $lang]);
-    return back();
-})->name('switch.lang');
-
-Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')                    // Nama route diawali admin....
-    ->group(function () {
-
-        // 1. Dashboard Admin
-        // URL: /admin/dashboard
-        // Route Name: admin.dashboard
-        Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard');
-
-        // 2. User Management (CRUD Lengkap)
-        // URL: /admin/users, /admin/users/create, /admin/users/{id}/edit, dll
-        // Route Name: admin.users.index, admin.users.store, dll
-        Route::resource('users', UserController::class);
-    });

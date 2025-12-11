@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Testimonial;
 use App\Models\Mood;
+use App\Models\Psychologist;
 use Illuminate\Validation\Rule;
 
 class DashboardController extends Controller
@@ -15,28 +16,46 @@ class DashboardController extends Controller
     public function index()
     {
         $testimonials = Testimonial::inRandomOrder()->take(3)->get();
-
         return view('index', compact('testimonials'));
     }
 
-    public function showDashboard()
+    public function showPatientDashboard()
     {
         $user = Auth::user();
 
-        // $upcomingAppointments
         $upcomingAppointments = Appointment::with(['psychologist' => function($query) {
                 $query->with('user');
             }])
             ->where('user_id', $user->id)
             ->where('status', 'confirmed')
+            ->where(function($query) {
+                $query->where('date', '>', now()->format('Y-m-d'))->orWhere(function($q) {
+                        $q->where('date', '=', now()->format('Y-m-d'))->whereTime('end_time', '>', now()->format('H:i:s'));
+                    });
+            })
+            ->orderBy('date')
+            ->orderBy('start_time')
+            ->take(3)
+            ->get();
+
+        return view('dashboard.patient.index', compact('user', 'upcomingAppointments'));
+    }
+
+    public function showPsychologistDashboard()
+    {
+        $user = Auth::user();
+
+        $upcomingAppointments = Appointment::with(['user'])
+            ->where('psychologist_id', $user->id)
+            ->where('status', 'confirmed')
             ->get()
-            ->filter(function($appointment) {
+            ->filter(function ($appointment) {
                 return $appointment->is_upcoming;
             })
             ->sortBy('start_date_time')
             ->take(3);
 
-        return view('pages.dashboard.index', compact('user', 'upcomingAppointments'));
+        return view('dashboard.psychologist.index', compact('user', 'upcomingAppointments'));
     }
 
     public function moodStore(Request $request)
