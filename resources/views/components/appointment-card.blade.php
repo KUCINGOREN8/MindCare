@@ -5,7 +5,7 @@
     'time' => '',
     'joinRoute' => '#',
     'rescheduleRoute' => '#',
-    'isSessionAvailable' => false,
+    'isSessionAvailable' => false
 ])
 
 @if($appointment)
@@ -23,9 +23,18 @@
             onclick="window.location.href='{{ route('patient.appointments.payment', $appointment->id) }}'"
         @endif
     >
-        <div class="flex flex-col gap-0">
-            <h4 class="font-bold text-gray-900">{{ $appointment->psychologist->user->full_name ?? $appointment->with ?? 'Psychologist' }}</h4>
-            <p class="text-gray-600 text-sm">{{ $appointment->psychologist->specialization ?? $appointment->psychologist->title ?? 'Specialization' }}</p>
+        <div class="flex items-center justify-between gap-3">
+            <div class="flex flex-col gap-0">
+                <h4 class="font-bold text-gray-900">{{ $appointment->psychologist->user->full_name ?? $appointment->with ?? 'Psychologist' }}</h4>
+                <p class="text-gray-600 text-sm">{{ $appointment->psychologist->specialization ?? $appointment->psychologist->title ?? 'Specialization' }}</p>
+            </div>
+            <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide 
+            {{ $appointment->status === 'confirmed' ? 'bg-blue-100 text-blue-700'
+            : ($appointment->status === 'completed' ? 'bg-green-100 text-green-700' 
+            : ($appointment->status === 'pending' ? 'bg-yellow-100 text-yellow-700' 
+            : 'bg-gray-100 text-gray-700')) }}">
+                {{ ucfirst(str_replace('_', ' ', $appointment->status)) }}
+            </span>
         </div>
 
         <div class="flex items-center gap-2">

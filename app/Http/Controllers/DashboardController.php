@@ -76,16 +76,21 @@ class DashboardController extends Controller
         $user = Auth::user();
     
         $stats = $this->getPsychologistStats($user->psychologist);
-        
-        $upcomingAppointments = Appointment::with(['user'])
-            ->where('psychologist_id', $user->id)
+
+        $upcomingAppointments = Appointment::with(['user' => function($query) {
+                $query->with('psychologist');
+            }])
+            ->where('psychologist_id', $user->psychologist->id)
             ->where('status', 'confirmed')
-            ->get()
-            ->filter(function ($appointment) {
-                return $appointment->is_upcoming;
+            ->where(function($query) {
+                $query->where('date', '>', now()->format('Y-m-d'))->orWhere(function($q) {
+                        $q->where('date', '=', now()->format('Y-m-d'))->whereTime('end_time', '>', now()->format('H:i:s'));
+                    });
             })
-            ->sortBy('start_date_time')
-            ->take(3);
+            ->orderBy('date')
+            ->orderBy('start_time')
+            ->take(3)
+            ->get();
     
         return view('dashboard.psychologist.index', compact('user', 'upcomingAppointments', 'stats'));
     }
