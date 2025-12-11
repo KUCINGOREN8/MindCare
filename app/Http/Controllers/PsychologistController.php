@@ -27,7 +27,7 @@ class PsychologistController extends Controller
             },
             'schedules',
             'reviews' => function ($query) {
-                $query->latest()->take(2);
+                $query->latest();
             }])
             ->findOrFail($id);
 
