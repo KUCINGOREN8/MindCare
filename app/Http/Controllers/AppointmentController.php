@@ -4,10 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Appointment;
 use App\Models\Payment;
+use App\Services\MidtransService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Midtrans\Config;
-use Midtrans\Snap;
 use Exception;
 
 class AppointmentController extends Controller
@@ -16,6 +15,7 @@ class AppointmentController extends Controller
     {
         $user = Auth::user();
         $this->autoCompletePastAppointments($user->id);
+        $this->autoUpdateExpiredPayments($user->id);
 
         $upcoming = Appointment::with(['psychologist' => function($query) {
                 $query->with('user');
@@ -66,8 +66,32 @@ class AppointmentController extends Controller
         if ($appointment->is_past) {
             $appointment->update(['status' => 'completed']);
         }
-    }
+        }
        return $appointments->where('is_past', true)->count();
+    }
+
+    private function autoUpdateExpiredPayments($userId)
+    {
+        $appointments = Appointment::where('user_id', $userId)
+            ->where('status', 'pending_payment')
+            ->get();
+
+        foreach ($appointments as $appointment) {
+            $payment = Payment::where('paymentable_id', $appointment->id)
+                ->where('paymentable_type', Appointment::class)
+                ->where('status', 'pending')
+                ->first();
+
+            if (!$payment) {
+                continue;
+            }
+
+            $expiryTime = $payment->expiry_at ?? $payment->created_at->addMinutes(15);
+
+            if (now()->greaterThan($expiryTime)) {
+                $payment->update(['status' => 'expired']);
+            }
+        }
     }
 
     public function confirm($id)
@@ -120,6 +144,10 @@ class AppointmentController extends Controller
             return redirect()->route('patient.appointments.index')->with('error', 'Payment session expired. Please book a new appointment.');
         }
 
+        if ($payment->status === 'expired') {
+            return redirect()->route('patient.appointments.index')->with('error', 'Payment time has expired. Please book a new appointment.');
+        }
+
         $expiryTime = $payment->expiry_at ?? $payment->created_at->addMinutes(15);
 
         if (now()->greaterThan($expiryTime)) {
@@ -135,8 +163,7 @@ class AppointmentController extends Controller
 
     private function redirectToMidtrans(Payment $payment, $remainingMinutes)
     {
-        Config::$serverKey = config('services.midtrans.server_key');
-        Config::$isProduction = config('services.midtrans.is_production', false);
+        $midtransService = new MidtransService();
 
         $expiryDuration = (int) max(1, ceil($remainingMinutes));
 
@@ -156,7 +183,12 @@ class AppointmentController extends Controller
         ];
 
         try {
-            $snapToken = Snap::getSnapToken($params);
+            $snapToken = $midtransService->createPaymentWithExpiry(
+                $payment->order_id,
+                (int) $payment->amount,
+                $expiryDuration
+            );
+
             return view('patient.payment.redirect', [
                 'snapToken' => $snapToken,
                 'finishUrl' => route('patient.payment.finish'),
