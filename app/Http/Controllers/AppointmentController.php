@@ -14,6 +14,39 @@ class AppointmentController extends Controller
     public function index()
     {
         $user = Auth::user();
+
+        if (strtolower(trim($user->role)) === 'psychologist') {
+            
+            // Ambil Data Next Client
+            $upcoming = Appointment::with('user')
+                ->where('psychologist_id', $user->id) 
+                ->where('status', 'confirmed')
+                ->where(function($query) {
+                    $query->whereDate('date', '>', now())
+                          ->orWhere(function($q) {
+                              $q->whereDate('date', '=', now())
+                                ->whereTime('start_time', '>', now()->format('H:i:s')); 
+                          });
+                })
+                ->orderBy('date', 'asc')
+                ->orderBy('start_time', 'asc') 
+                ->get(); 
+
+            // Ambil Data History
+            $history = Appointment::with('user')
+                ->where('psychologist_id', $user->id)
+                ->where(function($query) {
+                    $query->whereIn('status', ['completed', 'cancelled', 'canceled']) 
+                          ->orWhereDate('date', '<', now());
+                })
+                ->orderBy('date', 'desc')
+                ->orderBy('start_time', 'desc') 
+                ->get();
+
+            // RETURN DI SINI (Agar berhenti dan tidak baca kode Pasien di bawah)
+            return view('psychologist.appointment.index', compact('upcoming', 'history'));
+        }
+
         $this->autoCompletePastAppointments($user->id);
         $this->autoUpdateExpiredPayments($user->id);
 
@@ -55,6 +88,10 @@ class AppointmentController extends Controller
             ->get();
 
         return view('patient.appointment.appointments', compact('upcoming', 'history', 'rescheduleRequests'));
+        
+        
+        
+        
     }
 
 
