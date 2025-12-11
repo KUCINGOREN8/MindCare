@@ -99,7 +99,6 @@ class AppointmentController extends Controller
         $appointment = Appointment::findOrFail($id);
         $appointment->status = 'confirmed';
         $appointment->save();
-
         return back();
     }
 
@@ -108,7 +107,6 @@ class AppointmentController extends Controller
         $appointment = Appointment::findOrFail($id);
         $appointment->status = 'canceled';
         $appointment->save();
-
         return back();
     }
 
