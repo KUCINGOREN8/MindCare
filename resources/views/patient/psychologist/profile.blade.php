@@ -45,7 +45,7 @@
                 </div>
 
                 <div class="flex gap-4 flex-col lg:flex-row">
-                    <x-rounded-button text="Book" active="true" route="#"></x-rounded-button>
+                        <x-rounded-button text="Book" active="true" route="{{ route('patient.book.appointment', $psychologist->id) }}"></x-rounded-button>
                 </div>
             </div>
 
@@ -84,7 +84,7 @@
                     <h1 class="font-semibold text-lg mb-[10px]">Available Schedule</h1>
 
                     @php
-                        $allDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+                        $allDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
                         $schedules = $psychologist->schedules;
                     @endphp
 
@@ -116,15 +116,24 @@
                         </div>
                         <a class="text-caption underline" href="{{ route('patient.psychologist.review', $psychologist->id) }}">See All</a>
                     </div>
-                    <div class="flex">
-                        <p class="text-caption"></p>
-                    </div>
-                    @foreach ($psychologist->reviews as $review)
-                        <div class="flex flex-1 p-[10px] rounded-md bg-primary/10 gap-3 items-center">
-                            <img src="{{ $review->user->photo_url ? asset($review->user->photo_url) : ($review->user->gender=="female" ? asset('assets/icons/user_female.svg') : asset('assets/icons/user_male.svg')) }}" alt="" class="w-[35px] h-[35px] rounded-full">
-                            <p class="text-sm wrap-break-word whitespace-normal">
-                                {{ $review->review }}
-                            </p>
+                    @foreach ($psychologist->reviews->take(2) as $review)
+                        <div class="flex flex-1 p-[16px] rounded-md border border-1 border-grey-border gap-3 items-center">
+                            <img src="{{ $review->user->photo_url ? asset($review->user->photo_url) : ($review->user->gender=="female" ? asset('assets/icons/user_female.svg') : asset('assets/icons/user_male.svg')) }}" 
+                                alt="" 
+                                class="w-[35px] h-[35px] rounded-full object-cover">
+                            <div class="flex flex-col gap-2 flex-1">
+                                <p class="text-sm wrap-break-word whitespace-normal">
+                                    {{ $review->review }}
+                                </p>
+                                <div class="inline-flex  tracking-wide w-fit">
+                                    @for ($i = 0; $i < $review->rating; $i++)
+                                        <img src="{{ asset('assets/icons/star.png') }}" alt="" class="w-3 h-3">
+                                    @endfor
+                                </div>
+                            </div>
+                            <div>
+                                <p class="text-caption">{{ $review->created_at->format('d M Y H:i') }}</p>
+                            </div>
                         </div>
                     @endforeach
                 </div>

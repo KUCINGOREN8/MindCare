@@ -17,7 +17,7 @@ class AppointmentController extends Controller
         $this->autoCompletePastAppointments($user->id);
         $this->autoUpdateExpiredPayments($user->id);
 
-        $upcoming = Appointment::with(['psychologist' => function($query) {
+        $upcomingAppointments = Appointment::with(['psychologist' => function($query) {
                 $query->with('user');
             }])
             ->where('user_id', $user->id)
@@ -33,7 +33,7 @@ class AppointmentController extends Controller
             ->orderBy('start_time')
             ->get();
 
-        $upcomingIds = $upcoming->pluck('id')->toArray();
+        $upcomingIds = $upcomingAppointments->pluck('id')->toArray();
 
         $history = Appointment::with(['psychologist' => function($query) {
                 $query->with('user');
@@ -54,7 +54,7 @@ class AppointmentController extends Controller
             ->orderBy('reschedule_time')
             ->get();
 
-        return view('patient.appointment.appointments', compact('upcoming', 'history', 'rescheduleRequests'));
+        return view('patient.appointment.appointments', compact('upcomingAppointments', 'history', 'rescheduleRequests', 'user'));
     }
 
 

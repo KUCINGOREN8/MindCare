@@ -37,19 +37,19 @@
                         <div class="flex justify-center gap-3 mb-4">
                             <input type="text"
                                 maxlength="1"
-                                class="otp-input w-14 h-14 text-center text-2xl font-bold border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-[#00C3B3]/20 focus:border-[#00C3B3] transition-all duration-200 @error('otp_code') border-red-300 @enderror"
+                                class="otp-input w-14 h-14 text-center text-2xl font-bold border-2 {{ $errors->has('otp_code') ? 'border-red-300' : 'border-gray-300' }} rounded-xl focus:outline-none focus:ring-4 focus:ring-[#00C3B3]/20 focus:border-[#00C3B3] transition-all duration-200"
                                 inputmode="numeric"
                                 pattern="[0-9]"
                                 autofocus>
                             <input type="text"
                                 maxlength="1"
-                                class="otp-input w-14 h-14 text-center text-2xl font-bold border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-[#00C3B3]/20 focus:border-[#00C3B3] transition-all duration-200 @error('otp_code') border-red-300 @enderror"
+                                class="otp-input w-14 h-14 text-center text-2xl font-bold border-2 {{ $errors->has('otp_code') ? 'border-red-300' : 'border-gray-300' }} rounded-xl focus:outline-none focus:ring-4 focus:ring-[#00C3B3]/20 focus:border-[#00C3B3] transition-all duration-200"
                                 inputmode="numeric"
                                 pattern="[0-9]"
                                >
                             <input type="text"
                                 maxlength="1"
-                                class="otp-input w-14 h-14 text-center text-2xl font-bold border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-[#00C3B3]/20 focus:border-[#00C3B3] transition-all duration-200 @error('otp_code') border-red-300 @enderror"
+                                class="otp-input w-14 h-14 text-center text-2xl font-bold border-2 {{ $errors->has('otp_code') ? 'border-red-300' : 'border-gray-300' }} rounded-xl focus:outline-none focus:ring-4 focus:ring-[#00C3B3]/20 focus:border-[#00C3B3] transition-all duration-200"
                                 inputmode="numeric"
                                 pattern="[0-9]"
                                >
@@ -60,19 +60,19 @@
 
                             <input type="text"
                                 maxlength="1"
-                                class="otp-input w-14 h-14 text-center text-2xl font-bold border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-[#00C3B3]/20 focus:border-[#00C3B3] transition-all duration-200 @error('otp_code') border-red-300 @enderror"
+                                class="otp-input w-14 h-14 text-center text-2xl font-bold border-2 {{ $errors->has('otp_code') ? 'border-red-300' : 'border-gray-300' }} rounded-xl focus:outline-none focus:ring-4 focus:ring-[#00C3B3]/20 focus:border-[#00C3B3] transition-all duration-200"
                                 inputmode="numeric"
                                 pattern="[0-9]"
                                >
                             <input type="text"
                                 maxlength="1"
-                                class="otp-input w-14 h-14 text-center text-2xl font-bold border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-[#00C3B3]/20 focus:border-[#00C3B3] transition-all duration-200 @error('otp_code') border-red-300 @enderror"
+                                class="otp-input w-14 h-14 text-center text-2xl font-bold border-2 {{ $errors->has('otp_code') ? 'border-red-300' : 'border-gray-300' }} rounded-xl focus:outline-none focus:ring-4 focus:ring-[#00C3B3]/20 focus:border-[#00C3B3] transition-all duration-200"
                                 inputmode="numeric"
                                 pattern="[0-9]"
                                >
                             <input type="text"
                                 maxlength="1"
-                                class="otp-input w-14 h-14 text-center text-2xl font-bold border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-[#00C3B3]/20 focus:border-[#00C3B3] transition-all duration-200 @error('otp_code') border-red-300 @enderror"
+                                class="otp-input w-14 h-14 text-center text-2xl font-bold border-2 {{ $errors->has('otp_code') ? 'border-red-300' : 'border-gray-300' }} rounded-xl focus:outline-none focus:ring-4 focus:ring-[#00C3B3]/20 focus:border-[#00C3B3] transition-all duration-200"
                                 inputmode="numeric"
                                 pattern="[0-9]"
                                >
