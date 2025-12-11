@@ -35,7 +35,7 @@
             @endphp
             <p class="text-gray-600 text-sm">
                 {{ \Carbon\Carbon::parse($appointment->date)->format('d M Y') }} •
-                {{ $appointment->start_time }} - {{ $appointment->end_time }}
+                {{ \Carbon\Carbon::parse($appointment->start_time)->format('H:i') }} - {{ \Carbon\Carbon::parse($appointment->end_time)->format('H:i') }}
             </p>
         </div>
 
