@@ -131,17 +131,5 @@
             </div>
         </div>
     </div>
-
-   {{-- BLM DIINTEGRATE HANYA BUAT TESITNG KE CHAT --}}
-    @auth
-    @if(auth()->user()->isPatient())
-        <a
-            href="{{ route('chat.start', $psychologist->user_id) }}"
-            class="bg-secondary text-white px-6 py-3 rounded-lg hover:bg-secondary-dark flex items-center gap-2"
-        >
-            Start Chat
-        </a>
-    @endif
-@endauth
 </div>
 @endsection
