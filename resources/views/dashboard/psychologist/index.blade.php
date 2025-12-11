@@ -14,71 +14,37 @@ Dashboard
                 </div>
             </div>
 
-            <div class="flex flex-col md:flex-row gap-6">
-                <div class="flex flex-1 flex-col bg-white p-6 gap-6 rounded-md border-grey-border border">
-                    <div class="flex gap-4 justify-between items-start">
-                        <div class="bg-[#DBEAFE] p-[10px] rounded-md">
-                            {!! str_replace(
-                                '<svg ',
-                                '<svg class="text-[#2563EB]" fill="currentColor" ',
-                                file_get_contents(public_path( 'assets/icons/users.svg' ))
-                                ) !!}
-                        </div>
-
-                        <div class="flex flex-row gap-1 items-center">
-                            <img src="{{ asset('assets/icons/arrow-up.svg') }}" class="mt-[3px]" alt="">
-                            <p class="text-[#16A34A]">12%</p>
-                        </div>
-                    </div>
-                    <div class="flex flex-col">
-                        <p class="text-caption">Total Patients</p>
-                        <h1 class='font-bold text-2xl'>247</h1>
-                        <p class="text-caption">18 new this month</p>
-                    </div>
-                </div>
-                <div class="bg-white p-6 flex flex-1 flex-col gap-6 rounded-md border-grey-border border">
-                    <div class="flex gap-4 justify-between items-start">
-                        <div class="bg-[#F3E8FF] p-[10px] rounded-md">
-                            {!! str_replace(
-                                '<svg ',
-                                '<svg class="text-[#9333EA]" fill="currentColor" ',
-                                file_get_contents(public_path( 'assets/icons/users.svg' ))
-                                ) !!}
-                        </div>
-
-                        <div class="flex flex-row gap-1 items-center">
-                            <img src="{{ asset('assets/icons/arrow-up.svg') }}" class="mt-[3px]" alt="">
-                            <p class="text-[#16A34A]">8%</p>
-                        </div>
-                    </div>
-                    <div class="flex flex-col">
-                        <p class="text-caption">Session This Week</p>
-                        <h1 class='font-bold text-2xl'>42</h1>
-                        <p class="text-caption">6 today, 8 tomorrow</p>
-                    </div>
-                </div>
-                <div class="bg-white p-6 flex flex-1 flex-col gap-6 rounded-md border-grey-border border">
-                    <div class="flex gap-4 justify-between items-start">
-                        <div class="bg-[#DCFCE7] p-[10px] rounded-md">
-                            {!! str_replace(
-                                '<svg ',
-                                '<svg class="text-[#16A34A]" fill="currentColor" ',
-                                file_get_contents(public_path( 'assets/icons/users.svg' ))
-                                ) !!}
-                        </div>
-
-                        <div class="flex flex-row gap-1 items-center">
-                            <img src="{{ asset('assets/icons/arrow-up.svg') }}" class="mt-[3px]" alt="">
-                            <p class="text-[#16A34A]">22%</p>
-                        </div>
-                    </div>
-                    <div class="flex flex-col">
-                        <p class="text-caption">Monthly Revenue</p>
-                        <h1 class='font-bold text-2xl'>RP 8.4 M</h1>
-                        <p class="text-caption">Keep it up</p>
-                    </div>
-                </div>
-            </div>
+            <x-stats-grid>
+                <x-stat-card
+                    title="Total Patients"
+                    value="247"
+                    subtitle="18 new this month"
+                    icon="assets/icons/users.svg"
+                    icon-background="#DBEAFE"
+                    icon-color="#2563EB"
+                    :trend="12"
+                />
+                
+                <x-stat-card
+                    title="Session This Week"
+                    value="42"
+                    subtitle="6 today, 8 tomorrow"
+                    icon="assets/icons/users.svg"
+                    icon-background="#F3E8FF"
+                    icon-color="#9333EA"
+                    :trend="8"
+                />
+                
+                <x-stat-card
+                    title="Monthly Revenue"
+                    value="RP 8.4 M"
+                    subtitle="Keep it up"
+                    icon="assets/icons/users.svg"
+                    icon-background="#DCFCE7"
+                    icon-color="#16A34A"
+                    :trend="22"
+                />
+            </x-stats-grid>
 
             @include('components.upcoming-appointment')
 
