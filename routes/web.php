@@ -40,6 +40,9 @@ Route::middleware('guest')->group(function () {
     Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
     Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
     Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
+
+    Route::get('/signup/psychologist', [AuthController::class, 'showSignupPsychologist'])->name('signup.psychologist');
+    Route::post('/signup/psychologist', [AuthController::class, 'registerPsychologist'])->name('register.psychologist');
 });
 
 // OTP Routes
