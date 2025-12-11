@@ -10,16 +10,20 @@ return new class extends Migration
     {
         Schema::create('messages', function (Blueprint $table) {
             $table->id();
-
             $table->foreignId('conversation_id')->constrained('conversations')->onDelete('cascade');
             $table->foreignId('sender_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('receiver_id')->constrained('users') ->onDelete('cascade');
             $table->text('message');
+            $table->string('attachment_path')->nullable();
+            $table->string('attachment_name')->nullable();
             $table->boolean('is_read')->default(false);
             $table->timestamp('read_at')->nullable();
             $table->timestamps();
+
             $table->index(['conversation_id', 'created_at']);
             $table->index(['receiver_id', 'is_read']);
+            $table->index(['sender_id', 'created_at']);
+            $table->index(['attachment_path']);
         });
     }
 

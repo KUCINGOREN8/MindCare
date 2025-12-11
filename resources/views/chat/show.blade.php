@@ -15,7 +15,6 @@
     <div class="flex-1 flex flex-col h-full">
         <div class="bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between flex-shrink-0">
             <div class="flex items-center">
-                {{-- Responsive - Mobile --}}
                 <a href="{{ route('messages') }}" class="md:hidden mr-4 text-gray-500 hover:text-gray-700">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -46,23 +45,6 @@
                     </div>
                 </div>
             </div>
-
-            {{-- Buttons Header --}}
-            <div class="flex items-center gap-4">
-                <!-- Search -->
-                <button class="text-gray-500 hover:text-gray-700 p-1.5 rounded-lg hover:bg-gray-100 transition">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                </button>
-
-                <!-- More  -->
-                <button class="text-gray-500 hover:text-gray-700 p-1.5 rounded-lg hover:bg-gray-100 transition">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
-                    </svg>
-                </button>
-            </div>
         </div>
 
         <!-- Messages -->
@@ -73,34 +55,120 @@
         >
             <div class="max-w-3xl mx-auto">
                 @foreach($messages as $message)
-                    <div class="flex {{ $message->sender_id == auth()->id() ? 'justify-end' : 'justify-start' }} mb-4 last:mb-0">
+                    <div class="flex {{ $message['sender_id'] == auth()->id() ? 'justify-end' : 'justify-start' }} mb-4 last:mb-0">
                         <div class="max-w-[70%] lg:max-w-[60%]">
-                            @if($message->sender_id != auth()->id())
+                            @if($message['sender_id'] != auth()->id())
                                 <p class="text-xs text-gray-500 mb-1 ml-3 font-medium">
-                                    {{ $message->sender->full_name }}
+                                    {{ $message['sender']['full_name'] }}
                                 </p>
                             @endif
 
                             <div class="flex items-start gap-2">
-                                @if($message->sender_id != auth()->id())
+                                @if($message['sender_id'] != auth()->id())
                                     <img
-                                        src="{{ $message->sender->photo_url ? asset($message->sender->photo_url) : ($message->sender->gender == 'female' ? asset('assets/icons/user_female.svg') : asset('assets/icons/user_male.svg')) }}"
+                                        src="{{ $message['sender']['photo_url'] ? asset($message['sender']['photo_url']) : ($message['sender']['gender'] == 'female' ? asset('assets/icons/user_female.svg') : asset('assets/icons/user_male.svg')) }}"
                                         class="w-8 h-8 rounded-full flex-shrink-0 border border-gray-200 mt-1"
                                     />
                                 @endif
 
                                 <div class="flex-1">
-                                    <div class="{{ $message->sender_id == auth()->id() ? 'bg-primary text-white' : 'bg-white text-gray-900' }} rounded-2xl px-4 py-3 shadow-sm border border-gray-100">
-                                        <p class="text-sm break-words leading-relaxed">{{ $message->message }}</p>
+                                    <div class="{{ $message['sender_id'] == auth()->id() ? 'bg-primary text-white' : 'bg-white text-gray-900' }} rounded-2xl px-4 py-3 shadow-sm border border-gray-100">
+                                        @if($message['attachment_url'] ?? false)
+                                            @php
+                                                $fileName = $message['attachment_name'] ?? 'Attachment';
+                                                $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+                                                $imageExts = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'];
+                                                $docExts = ['pdf', 'doc', 'docx', 'txt', 'rtf'];
+                                            @endphp
+
+                                            @if(in_array($fileExt, $imageExts))
+                                                <div class="mb-2">
+                                                    <img src="{{ $message['attachment_url'] }}"
+                                                        class="max-w-full max-h-64 rounded-lg cursor-pointer hover:opacity-90 transition"
+                                                        onclick="window.open('{{ $message['attachment_url'] }}', '_blank')"
+                                                        alt="{{ $fileName }}"
+                                                        onerror="this.onerror=null; this.src='/assets/icons/image-error.svg';">
+                                                    <p class="text-xs {{ $message['sender_id'] == auth()->id() ? 'text-white/80' : 'text-gray-500' }} mt-1">
+                                                        {{ $fileName }}
+                                                    </p>
+                                                </div>
+                                                @if($message['message'] && !in_array($message['message'], ['🖼️ Image', '📄 Document', '📎 Attachment']))
+                                                    <p class="text-sm break-words leading-relaxed {{ $message['sender_id'] == auth()->id() ? 'text-white' : 'text-gray-900' }} mt-2">
+                                                        {{ $message['message'] }}
+                                                    </p>
+                                                @endif
+                                            @elseif(in_array($fileExt, $docExts))
+                                                @php
+                                                    $icon = $fileExt === 'pdf' ? '📄' :
+                                                            (in_array($fileExt, ['doc', 'docx']) ? '📝' : '📄');
+                                                @endphp
+                                                <div class="mb-2 p-3 {{ $message['sender_id'] == auth()->id() ? 'bg-white/20' : 'bg-gray-50' }} rounded-lg border {{ $message['sender_id'] == auth()->id() ? 'border-white/30' : 'border-gray-200' }} hover:opacity-90 transition">
+                                                    <div class="flex items-center gap-3">
+                                                        <div class="text-2xl">{{ $icon }}</div>
+                                                        <div class="flex-1 min-w-0">
+                                                            <p class="text-sm font-medium {{ $message['sender_id'] == auth()->id() ? 'text-white' : 'text-gray-900' }} truncate">
+                                                                {{ $fileName }}
+                                                            </p>
+                                                            <div class="flex items-center gap-2 mt-1">
+                                                                <a href="{{ $message['attachment_url'] }}"
+                                                                class="text-xs {{ $message['sender_id'] == auth()->id() ? 'text-white hover:text-white/80' : 'text-primary hover:underline' }} font-medium"
+                                                                target="_blank"
+                                                                download="{{ $fileName }}">
+                                                                    Download
+                                                                </a>
+                                                                <span class="text-xs {{ $message['sender_id'] == auth()->id() ? 'text-white/60' : 'text-gray-500' }}">•</span>
+                                                                <span class="text-xs {{ $message['sender_id'] == auth()->id() ? 'text-white/60' : 'text-gray-500' }} uppercase">
+                                                                    {{ $fileExt }}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                @if($message['message'] && !in_array($message['message'], ['🖼️ Image', '📄 Document', '📎 Attachment']))
+                                                    <p class="text-sm break-words leading-relaxed {{ $message['sender_id'] == auth()->id() ? 'text-white' : 'text-gray-900' }} mt-2">
+                                                        {{ $message['message'] }}
+                                                    </p>
+                                                @endif
+                                            @else
+                                                <div class="mb-2 p-3 {{ $message['sender_id'] == auth()->id() ? 'bg-white/20' : 'bg-gray-50' }} rounded-lg border {{ $message['sender_id'] == auth()->id() ? 'border-white/30' : 'border-gray-200' }}">
+                                                    <div class="flex items-center gap-3">
+                                                        <div class="text-xl">📁</div>
+                                                        <div class="flex-1">
+                                                            <p class="text-sm font-medium {{ $message['sender_id'] == auth()->id() ? 'text-white' : 'text-gray-900' }}">
+                                                                {{ $fileName }}
+                                                            </p>
+                                                            <a href="{{ $message['attachment_url'] }}"
+                                                            class="text-xs {{ $message['sender_id'] == auth()->id() ? 'text-white hover:text-white/80' : 'text-primary hover:underline' }}"
+                                                            target="_blank"
+                                                            download="{{ $fileName }}">
+                                                                Download File
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                @if($message['message'] && !in_array($message['message'], ['🖼️ Image', '📄 Document', '📎 Attachment']))
+                                                    <p class="text-sm break-words leading-relaxed {{ $message['sender_id'] == auth()->id() ? 'text-white' : 'text-gray-900' }} mt-2">
+                                                        {{ $message['message'] }}
+                                                    </p>
+                                                @endif
+                                            @endif
+                                        @else
+                                            <p class="text-sm break-words leading-relaxed">{{ $message['message'] }}</p>
+                                        @endif
                                     </div>
 
-                                    <div class="flex items-center gap-2 mt-1 {{ $message->sender_id == auth()->id() ? 'justify-end' : 'justify-start' }}">
-                                        <span class="text-xs {{ $message->sender_id == auth()->id() ? 'text-gray-400' : 'text-gray-500' }}">
-                                            {{ $message->created_at->format('H:i') }}
+                                    <div class="flex items-center gap-2 mt-1 {{ $message['sender_id'] == auth()->id() ? 'justify-end' : 'justify-start' }}">
+                                        @php
+                                            $createdAt = is_array($message['created_at'])
+                                                ? \Carbon\Carbon::parse($message['created_at']['date'] ?? $message['created_at'])
+                                                : \Carbon\Carbon::parse($message['created_at']);
+                                        @endphp
+                                        <span class="text-xs {{ $message['sender_id'] == auth()->id() ? 'text-gray-400' : 'text-gray-500' }}">
+                                            {{ $createdAt->format('H:i') }}
                                         </span>
 
-                                        @if($message->sender_id == auth()->id())
-                                            @if($message->is_read)
+                                        @if($message['sender_id'] == auth()->id())
+                                            @if($message['is_read'])
                                                 <span class="text-xs text-primary font-medium flex items-center gap-1">
                                                     <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                                                         <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
@@ -116,7 +184,7 @@
                                     </div>
                                 </div>
 
-                                @if($message->sender_id == auth()->id())
+                                @if($message['sender_id'] == auth()->id())
                                     <div class="w-8 flex-shrink-0"></div>
                                 @endif
                             </div>
@@ -128,34 +196,85 @@
 
         <!-- Footer -->
         <div class="bg-white border-t border-gray-100 p-4 flex-shrink-0">
-            <form id="message-form" method="POST" action="{{ route('chat.send', $conversation) }}" class="max-w-3xl mx-auto">
+            <form id="message-form" method="POST" action="{{ route('chat.send', $conversation) }}" enctype="multipart/form-data" class="max-w-3xl mx-auto">
                 @csrf
+                <input type="file" id="file-input" name="attachment" class="hidden" accept="image/*,.pdf,.doc,.docx,.txt">
+
                 <div class="flex items-center gap-3">
-                    <!-- Attachment Button -->
-                    <button type="button" class="text-gray-500 hover:text-gray-700 p-2.5 rounded-xl hover:bg-gray-100 transition">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
-                        </svg>
-                    </button>
+                    <div class="relative">
+                        <button type="button" id="attachment-btn" class="text-gray-500 hover:text-gray-700 p-2.5 rounded-xl hover:bg-gray-100 transition">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                            </svg>
+                        </button>
 
-                    <!-- Message Input -->
-                    <div class="flex-1 relative">
-                        <input
-                            type="text"
-                            name="message"
-                            id="message-input"
-                            placeholder="Type your message..."
-                            class="w-full border border-gray-200 bg-gray-50 rounded-xl px-4 py-3.5 pr-12 focus:ring-2 focus:ring-primary focus:border-transparent focus:bg-white transition placeholder-gray-500 text-sm"
-                            autocomplete="off"
-                            autofocus
-                        >
+                        <div id="attachment-dropdown" class="absolute bottom-full left-0 mb-2 hidden bg-white rounded-xl shadow-lg border border-gray-200 p-2 w-48 z-50">
+                            <button type="button" onclick="document.getElementById('file-input').click()" class="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                                Photo/Image
+                            </button>
+                            <button type="button" onclick="document.getElementById('file-input').click()" class="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                Document
+                            </button>
+                        </div>
+                    </div>
 
-                        <!-- Emoji Button -->
-                        <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 p-1">
+                    {{-- Emoji --}}
+                    <div class="relative">
+                        <button type="button" id="emoji-btn" class="text-gray-500 hover:text-gray-700 p-2.5 rounded-xl hover:bg-gray-100 transition">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                         </button>
+
+                        <!-- Emoji picker -->
+                        <div id="emoji-picker" class="absolute bottom-full left-0 mb-2 hidden bg-white rounded-xl shadow-lg border border-gray-200 p-3 w-64 z-50">
+                            <div class="grid grid-cols-8 gap-1 mb-2">
+                                @php
+                                    $emojis = ['😀', '😂', '🥰', '😎', '😢', '😡', '👍', '👏', '❤️', '🔥', '🎉', '🤔', '👀', '💯', '🙏', '😴'];
+                                @endphp
+                                @foreach($emojis as $emoji)
+                                    <button type="button" class="emoji-btn text-lg hover:bg-gray-100 rounded p-1" data-emoji="{{ $emoji }}">
+                                        {{ $emoji }}
+                                    </button>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Message Input -->
+                    <div class="flex-1 relative">
+                        <textarea
+                            name="message"
+                            id="message-input"
+                            placeholder="Type your message..."
+                            class="w-full border border-gray-200 bg-gray-50 rounded-xl px-4 py-3 pr-12 focus:ring-2 focus:ring-primary focus:border-transparent focus:bg-white transition placeholder-gray-500 text-sm resize-none min-h-[44px] max-h-32"
+                            autocomplete="off"
+                            autofocus
+                            rows="1"
+                            oninput="autoResize(this)"
+                        ></textarea>
+
+                        <div id="file-preview" class="hidden mt-2 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                    <span id="file-name" class="text-sm text-gray-700 truncate max-w-xs"></span>
+                                </div>
+                                <button type="button" onclick="removeFile()" class="text-gray-500 hover:text-red-500">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Send Button -->
@@ -171,6 +290,7 @@
                 </div>
             </form>
         </div>
+
     </div>
 </div>
 
@@ -180,32 +300,25 @@
         padding: 0 !important;
         position: relative;
     }
-
     #messages-container::-webkit-scrollbar {
         width: 6px;
     }
-
     #messages-container::-webkit-scrollbar-track {
         background: transparent;
     }
-
     #messages-container::-webkit-scrollbar-thumb {
         background: #cbd5e1;
         border-radius: 20px;
     }
-
     #messages-container::-webkit-scrollbar-thumb:hover {
         background: #94a3b8;
     }
-
     #messages-container {
         scroll-behavior: smooth;
     }
-
     .message-bubble-sent {
         border-bottom-right-radius: 0.5rem !important;
     }
-
     .message-bubble-received {
         border-bottom-left-radius: 0.5rem !important;
     }
@@ -214,38 +327,113 @@
 
 @push('scripts')
 <script>
+function autoResize(textarea) {
+    textarea.style.height = 'auto';
+    textarea.style.height = Math.min(textarea.scrollHeight, 128) + 'px';
+}
 
-// Blm Implement Attachment Button + Icons
+function scrollToBottom() {
+    const messagesContainer = document.getElementById('messages-container');
+    if (messagesContainer) {
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+}
+
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('#attachment-btn') && !e.target.closest('#attachment-dropdown')) {
+        document.getElementById('attachment-dropdown').classList.add('hidden');
+    }
+    if (!e.target.closest('#emoji-btn') && !e.target.closest('#emoji-picker')) {
+        document.getElementById('emoji-picker').classList.add('hidden');
+    }
+});
+
 document.addEventListener('DOMContentLoaded', function() {
     const messageForm = document.getElementById('message-form');
     const messageInput = document.getElementById('message-input');
     const sendButton = document.getElementById('send-button');
     const messagesContainer = document.getElementById('messages-container');
-
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-    function scrollToBottom() {
-        if (messagesContainer) {
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        }
-    }
 
     scrollToBottom();
 
     if (messageInput) {
         messageInput.focus();
+        messageInput.addEventListener('input', function() {
+            autoResize(this);
+        });
     }
+
+    const attachmentBtn = document.getElementById('attachment-btn');
+    if (attachmentBtn) {
+        attachmentBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const dropdown = document.getElementById('attachment-dropdown');
+            const emojiPicker = document.getElementById('emoji-picker');
+
+            dropdown.classList.toggle('hidden');
+            if (emojiPicker) emojiPicker.classList.add('hidden');
+        });
+    }
+
+    const emojiBtn = document.getElementById('emoji-btn');
+    if (emojiBtn) {
+        emojiBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const picker = document.getElementById('emoji-picker');
+            const dropdown = document.getElementById('attachment-dropdown');
+
+            picker.classList.toggle('hidden');
+            if (dropdown) dropdown.classList.add('hidden');
+        });
+    }
+
+    document.querySelectorAll('.emoji-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const textarea = document.getElementById('message-input');
+            const emoji = this.getAttribute('data-emoji');
+            const cursorPos = textarea.selectionStart;
+
+            textarea.value = textarea.value.substring(0, cursorPos) + emoji + textarea.value.substring(cursorPos);
+            textarea.focus();
+            textarea.selectionStart = textarea.selectionEnd = cursorPos + emoji.length;
+
+            autoResize(textarea);
+            document.getElementById('emoji-picker').classList.add('hidden');
+        });
+    });
+
+    const fileInput = document.getElementById('file-input');
+    if (fileInput) {
+        fileInput.addEventListener('change', function(e) {
+            if (this.files && this.files[0]) {
+                const file = this.files[0];
+                document.getElementById('file-name').textContent = file.name;
+                document.getElementById('file-preview').classList.remove('hidden');
+            }
+        });
+    }
+
+    window.removeFile = function() {
+        document.getElementById('file-input').value = '';
+        document.getElementById('file-preview').classList.add('hidden');
+    };
+
     if (messageForm) {
         messageForm.addEventListener('submit', async function(e) {
             e.preventDefault();
 
+            const messageInput = document.getElementById('message-input');
+            const fileInput = document.getElementById('file-input');
             const message = messageInput.value.trim();
+            const file = fileInput.files[0];
 
-            if (!message) {
-                alert('Please type a message');
+            if (!message && !file) {
+                alert('Please type a message or attach a file');
                 return;
             }
 
+            const sendButton = document.getElementById('send-button');
             sendButton.disabled = true;
             const originalHTML = sendButton.innerHTML;
             sendButton.innerHTML = `
@@ -256,6 +444,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
             try {
                 const formData = new FormData(this);
+
+                if (!message && file) {
+                    const fileExt = file.name.split('.').pop().toLowerCase();
+                    const isImage = ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(fileExt);
+                    const isDoc = ['pdf', 'doc', 'docx'].includes(fileExt);
+
+                    if (isImage) {
+                        formData.set('message', '🖼️ Image');
+                    } else if (isDoc) {
+                        formData.set('message', '📄 Document');
+                    } else {
+                        formData.set('message', '📎 Attachment');
+                    }
+                }
 
                 const response = await fetch(this.action, {
                     method: 'POST',
@@ -270,34 +472,39 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 if (response.ok && data.success) {
                     messageInput.value = '';
-                    addNewMessageToUI(data.message);
+                    messageInput.style.height = 'auto';
+                    removeFile();
 
-                    updateSidebarConversation(data.message);
-
+                    if (data.message) {
+                        addNewMessageToUI(data.message);
+                        updateSidebarConversation(data.message);
+                    }
                 } else {
                     throw new Error(data.message || 'Failed to send message');
                 }
 
-            } catch (error) {
-                console.error('Error:', error);
-                alert(error.message || 'Failed to send message. Please try again.');
+            } catch (err) {
+                console.error('Error:', err);
+                alert('Failed to send message. Please try again.');
             } finally {
                 sendButton.disabled = false;
                 sendButton.innerHTML = originalHTML;
             }
         });
     }
+
     if (messageInput) {
         messageInput.addEventListener('keydown', function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
-                messageForm.dispatchEvent(new Event('submit'));
+                if (messageForm) {
+                    messageForm.dispatchEvent(new Event('submit'));
+                }
             }
         });
     }
 
-    // Waktu
-    function addNewMessageToUI(messageData) {
+    window.addNewMessageToUI = function(messageData) {
         const isSent = {{ auth()->id() }} === messageData.sender_id;
         const time = new Date(messageData.created_at).toLocaleTimeString('en-US', {
             hour: '2-digit',
@@ -305,44 +512,126 @@ document.addEventListener('DOMContentLoaded', function() {
             hour12: false
         });
 
+        let messageContent = '';
+
+        if (messageData.attachment_url) {
+            const url = messageData.attachment_url;
+            const fileName = messageData.attachment_name || 'Attachment';
+            const fileExt = fileName.split('.').pop().toLowerCase();
+
+            const imageExts = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'];
+            const docExts = ['pdf', 'doc', 'docx', 'txt', 'rtf'];
+
+            if (imageExts.includes(fileExt)) {
+                messageContent = `
+                    <div class="mb-2">
+                        <img src="${url}"
+                             class="max-w-full max-h-64 rounded-lg cursor-pointer hover:opacity-90 transition"
+                             onclick="window.open('${url}', '_blank')"
+                             alt="${fileName}"
+                             onerror="this.onerror=null; this.src='/assets/icons/image-error.svg';">
+                        <p class="text-xs text-gray-500 mt-1">${fileName}</p>
+                    </div>
+                    ${messageData.message && !['🖼️ Image', '📄 Document', '📎 Attachment'].includes(messageData.message) ?
+                        `<p class="text-sm break-words leading-relaxed mt-2">${messageData.message}</p>` : ''}
+                `;
+            } else if (docExts.includes(fileExt)) {
+                const icon = fileExt === 'pdf' ? '📄' :
+                            ['doc', 'docx'].includes(fileExt) ? '📝' :
+                            '📄';
+
+                messageContent = `
+                    <div class="mb-2 p-3 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition">
+                        <div class="flex items-center gap-3">
+                            <div class="text-2xl">${icon}</div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-medium text-gray-900 truncate">${fileName}</p>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <a href="${url}"
+                                       class="text-xs text-primary hover:underline font-medium"
+                                       target="_blank"
+                                       download="${fileName}">
+                                        Download
+                                    </a>
+                                    <span class="text-xs text-gray-500">•</span>
+                                    <span class="text-xs text-gray-500 uppercase">${fileExt}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    ${messageData.message && !['🖼️ Image', '📄 Document', '📎 Attachment'].includes(messageData.message) ?
+                        `<p class="text-sm break-words leading-relaxed mt-2">${messageData.message}</p>` : ''}
+                `;
+            } else {
+                messageContent = `
+                    <div class="mb-2 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                        <div class="flex items-center gap-3">
+                            <div class="text-xl">📎</div>
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-gray-900">${fileName}</p>
+                                <a href="${url}"
+                                   class="text-xs text-primary hover:underline"
+                                   target="_blank"
+                                   download="${fileName}">
+                                    Download File
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    ${messageData.message && !['🖼️ Image', '📄 Document', '📎 Attachment'].includes(messageData.message) ?
+                        `<p class="text-sm break-words leading-relaxed mt-2">${messageData.message}</p>` : ''}
+                `;
+            }
+        } else {
+            messageContent = `<p class="text-sm break-words leading-relaxed">${messageData.message}</p>`;
+        }
+
         const messageHtml = `
-            <div class="flex ${isSent ? 'justify-end' : 'justify-start'}">
-                <div class="flex items-end gap-2 max-w-[70%] lg:max-w-[60%]">
+            <div class="flex ${isSent ? 'justify-end' : 'justify-start'} mb-4 last:mb-0">
+                <div class="max-w-[70%] lg:max-w-[60%]">
                     ${!isSent ? `
-                        <img src="${messageData.sender.photo_url ? messageData.sender.photo_url : (messageData.sender.gender == 'female' ? '/assets/icons/user_female.svg' : '/assets/icons/user_male.svg')}"
-                            class="w-8 h-8 rounded-full flex-shrink-0 border border-gray-200" />
+                        <p class="text-xs text-gray-500 mb-1 ml-3 font-medium">
+                            ${messageData.sender.full_name}
+                        </p>
                     ` : ''}
 
-                    <div class="flex flex-col ${isSent ? 'items-end' : 'items-start'}">
+                    <div class="flex items-start gap-2">
                         ${!isSent ? `
-                            <p class="text-xs text-gray-500 mb-1 font-medium">
-                                ${messageData.sender.full_name}
-                            </p>
+                            <img src="${messageData.sender.photo_url || (messageData.sender.gender == 'female' ? '/assets/icons/user_female.svg' : '/assets/icons/user_male.svg')}"
+                                class="w-8 h-8 rounded-full flex-shrink-0 border border-gray-200 mt-1"
+                                onerror="this.onerror=null; this.src='/assets/icons/user_${messageData.sender.gender == 'female' ? 'female' : 'male'}.svg';" />
                         ` : ''}
 
-                        <div class="${isSent ? 'bg-primary text-white' : 'bg-white text-gray-900'} rounded-2xl px-4 py-3 shadow-sm border border-gray-100">
-                            <p class="text-sm break-words leading-relaxed">${messageData.message}</p>
-                        </div>
+                        <div class="flex-1">
+                            <div class="${isSent ? 'bg-primary text-white' : 'bg-white text-gray-900'} rounded-2xl px-4 py-3 shadow-sm border border-gray-100">
+                                ${messageContent}
+                            </div>
 
-                        <div class="flex items-center gap-2 mt-1.5">
-                            <span class="text-xs ${isSent ? 'text-gray-400' : 'text-gray-500'}">
-                                ${time}
-                            </span>
-
-                            ${isSent ? `
-                                <span class="text-xs text-gray-400">
-                                    Sent
+                            <div class="flex items-center gap-2 mt-1 ${isSent ? 'justify-end' : 'justify-start'}">
+                                <span class="text-xs ${isSent ? 'text-gray-400' : 'text-gray-500'}">
+                                    ${time}
                                 </span>
-                            ` : ''}
+                                ${isSent ? `
+                                    <span class="text-xs ${messageData.is_read ? 'text-primary' : 'text-gray-400'}">
+                                        ${messageData.is_read ? '✓ Read' : '✓ Sent'}
+                                    </span>
+                                ` : ''}
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         `;
 
-        messagesContainer.insertAdjacentHTML('beforeend', messageHtml);
-        scrollToBottom();
-    }
+        if (messagesContainer) {
+            messagesContainer.insertAdjacentHTML('beforeend', messageHtml);
+
+            const isNearBottom = messagesContainer.scrollHeight - messagesContainer.scrollTop - messagesContainer.clientHeight < 200;
+            if (isNearBottom) {
+                scrollToBottom();
+            }
+        }
+    };
 
     function updateSidebarConversation(messageData) {
         const conversationItem = document.querySelector(`a[href*="{{ route('chat.show', $conversation) }}"]`);
@@ -351,9 +640,20 @@ document.addEventListener('DOMContentLoaded', function() {
             const timeEl = conversationItem.querySelector('.text-gray-400');
 
             if (lastMessageEl) {
-                lastMessageEl.textContent = messageData.message.length > 25
-                    ? messageData.message.substring(0, 25) + '...'
-                    : messageData.message;
+                let preview = messageData.message;
+                if (messageData.attachment_url) {
+                    const fileExt = (messageData.attachment_name || '').split('.').pop().toLowerCase();
+                    if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(fileExt)) {
+                        preview = '🖼️ Image';
+                    } else if (['pdf', 'doc', 'docx'].includes(fileExt)) {
+                        preview = '📄 Document';
+                    } else {
+                        preview = '📎 Attachment';
+                    }
+                }
+                lastMessageEl.textContent = preview.length > 25
+                    ? preview.substring(0, 25) + '...'
+                    : preview;
             }
 
             if (timeEl) {
@@ -364,10 +664,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    let lastMessageId = {{ $messages->last() ? $messages->last()->id : 0 }};
+    let lastMessageId = {{ !empty($messages) && end($messages) ? end($messages)['id'] : 0 }};
+    let isPolling = false;
+    let pollingTimeout = null;
 
     function pollForNewMessages() {
-        setTimeout(async () => {
+        if (isPolling) return;
+
+        isPolling = true;
+
+        clearTimeout(pollingTimeout);
+
+        pollingTimeout = setTimeout(async () => {
             try {
                 const response = await fetch('{{ route("chat.messages", $conversation) }}', {
                     headers: {
@@ -378,7 +686,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (response.ok) {
                     const messages = await response.json();
 
-                    const newMessages = messages.filter(msg => msg.id > lastMessageId && msg.sender_id !== {{ auth()->id() }});
+                    const newMessages = messages.filter(msg =>
+                        msg.id > lastMessageId &&
+                        msg.sender_id !== {{ auth()->id() }}
+                    );
 
                     if (newMessages.length > 0) {
                         newMessages.forEach(msg => {
@@ -387,17 +698,21 @@ document.addEventListener('DOMContentLoaded', function() {
                         lastMessageId = Math.max(...messages.map(msg => msg.id));
                     }
                 }
-            } catch (error) {
-                console.error('Polling error:', error);
+            } catch (err) {
+                console.error('Polling error:', err);
+            } finally {
+                isPolling = false;
+                pollForNewMessages();
             }
-
-            pollForNewMessages();
-        }, 1000);
+        }, 3000);
     }
 
-    @if($messages->isNotEmpty() && $messages->last()->sender_id != auth()->id())
-        pollForNewMessages();
-    @endif
+    @if(!empty($messages) && is_array($lastMessage = end($messages)) && isset($lastMessage['sender_id']) && $lastMessage['sender_id'] != auth()->id())
+    @php
+        $messages = array_values($messages);
+    @endphp
+    pollForNewMessages();
+@endif
 });
 </script>
 @endpush
