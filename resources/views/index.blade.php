@@ -24,10 +24,10 @@
                     </a>
                 @endauth
 
-                <button
-                    class="bg-white hover:bg-[#f9f9f9] active:bg-[#66DED0] text-[#2E6F6D] font-semibold w-40 py-3 rounded-[1vw] transition border border-[#2E6F6D]">
+                <a href="{{ route('psychologist.signup.step1') }}"
+                    class="inline-block text-center bg-white hover:bg-[#f9f9f9] active:bg-[#66DED0] text-[#2E6F6D] font-semibold w-40 py-3 rounded-[1vw] transition border border-[#2E6F6D]">
                     {{ __('messages.button2') }}
-                </button>
+                </a>
             </div>
             <div class="flex space-x-9 pt-2">
                 <div class="flex items-center justify-center">

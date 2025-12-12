@@ -23,18 +23,18 @@ class UserSeeder extends Seeder
             'otp_verified' => true,
         ]);
 
-        // Psychologist User
-        User::create([
-            'full_name' => 'Dr. Emily Chen',
-            'email' => 'doctor@gmail.com',
-            'password' => Hash::make('123456'),
-            'date_of_birth' => '2005-01-01',
-            'gender' => 'female',
-            'preferred_language' => 'en',
-            'agree_to_terms' => true,
-            'role' => 'psychologist',
-            'otp_verified' => true,
-        ]);
+            // Psychologist User
+            User::create([
+                'full_name' => 'Dr. Emily Chen',
+                'email' => 'doctor@gmail.com',
+                'password' => Hash::make('123456'),
+                'date_of_birth' => '2005-01-01',
+                'gender' => 'female',
+                'preferred_language' => 'en',
+                'agree_to_terms' => true,
+                'role' => 'psychologist',
+                'otp_verified' => true,
+            ]);
 
         User::create([
             'full_name' => 'Tester Pasien',
