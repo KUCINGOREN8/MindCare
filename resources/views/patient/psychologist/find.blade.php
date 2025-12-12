@@ -65,8 +65,8 @@ Find Psychologist
                         </div>
 
                         <div class="flex gap-4 flex-col lg:flex-row">
-                            <a :href="`${'{{ url('patient/book-appointment') }}'}/${item.id}`" class="bg-primary hover:bg-primary/90 text-white flex rounded-md px-2 md:px-4 py-2 md:py-2 text-center flex-1 items-center justify-center text-xs sm:text-sm lg:text-base">Book</a>
-                            <a :href="`${'{{ url('patient/psychologist') }}'}/${item.id}`" class="bg-white hover:bg-caption/2 text-caption-dark border border-grey-border flex rounded-md px-2 md:px-4 py-2 md:py-2 text-center flex-1 items-center justify-center text-xs sm:text-sm lg:text-base">Details</a>
+                            <x-rounded-button text="Book" active="true" route="{{ route('patient.book.appointment', $psychologist->id) }}"></x-rounded-button>
+                            <x-rounded-button text="Details" secondary="true" route="{{ Route('patient.psychologist.profile', $psychologist->id) }}"></x-rounded-button>
                         </div>
                     </div>
                 </template>

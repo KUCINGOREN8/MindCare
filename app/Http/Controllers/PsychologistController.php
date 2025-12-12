@@ -27,7 +27,7 @@ class PsychologistController extends Controller
             },
             'schedules',
             'reviews' => function ($query) {
-                $query->latest()->take(2);
+                $query->latest();
             }])
             ->findOrFail($id);
 
@@ -69,4 +69,5 @@ class PsychologistController extends Controller
 
         return view('psychologist.clients.index', compact('clients'));
     }
+
 }

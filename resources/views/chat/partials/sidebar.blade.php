@@ -14,12 +14,6 @@
             id="sidebar-search"
         >
     </div>
-
-    <div class="flex space-x-6 border-b border-gray-200">
-        <button class="pb-3 px-1 font-semibold text-primary border-b-2 border-primary text-sm">
-            All
-        </button>
-    </div>
 </div>
 
 <!-- Chat List -->

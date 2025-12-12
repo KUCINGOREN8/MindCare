@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use App\Models\PsychologistEducation;
+use App\Models\PsychologistExperience;
 
 class UserController extends Controller
 {
@@ -94,6 +96,85 @@ class UserController extends Controller
             ->with('success', 'Professional information updated successfully!');
     }
 
+    public function storeEducation(Request $request)
+    {
+        $request->validate([
+            'educations.*.degree' => 'required|string|max:255',
+            'educations.*.institution' => 'required|string|max:255',
+            'educations.*.year' => 'nullable|string|max:10',
+        ]);
+        
+        $psychologist = auth()->user()->psychologist;
+        
+        foreach ($request->educations as $educationData) {
+            if (isset($educationData['id'])) {
+                // Update existing
+                $education = PsychologistEducation::find($educationData['id']);
+                if ($education && $education->psychologist_id === $psychologist->id) {
+                    $education->update($educationData);
+                }
+            } else {
+                // Create new
+                $psychologist->educations()->create($educationData);
+            }
+        }
+        
+        return redirect()->route('profile.index', ['tab' => 'professional'])->with('success', 'Education updated successfully.');
+    }
+
+    public function destroyEducation($id)
+    {
+        $education = PsychologistEducation::findOrFail($id);
+        
+        if ($education->psychologist_id !== auth()->user()->psychologist->id) {
+            abort(403);
+        }
+        
+        $education->delete();
+        
+        return response()->json(['success' => true]);
+    }
+
+    public function storeExperience(Request $request)
+    {
+        $request->validate([
+            'experiences.*.position' => 'required|string|max:255',
+            'experiences.*.organization' => 'required|string|max:255',
+            'experiences.*.start_year' => 'nullable|string|max:10',
+            'experiences.*.end_year' => 'nullable|string|max:10',
+        ]);
+        
+        $psychologist = auth()->user()->psychologist;
+        
+        foreach ($request->experiences as $experienceData) {
+            if (isset($experienceData['id'])) {
+                // Update existing
+                $experience = PsychologistExperience::find($experienceData['id']);
+                if ($experience && $experience->psychologist_id === $psychologist->id) {
+                    $experience->update($experienceData);
+                }
+            } else {
+                // Create new
+                $psychologist->experiences()->create($experienceData);
+            }
+        }
+        
+        return redirect()->route('profile.index', ['tab' => 'professional'])->with('success', 'Experience updated successfully.');
+    }
+
+    public function destroyExperience($id)
+    {
+        $experience = PsychologistExperience::findOrFail($id);
+        
+        if ($experience->psychologist_id !== auth()->user()->psychologist->id) {
+            abort(403);
+        }
+        
+        $experience->delete();
+        
+        return response()->json(['success' => true]);
+    }
+
     public function updateSchedule(Request $request)
     {
         $user = Auth::user();
@@ -105,7 +186,7 @@ class UserController extends Controller
         $psychologist = $user->psychologist;
 
         $validator = Validator::make($request->all(), [
-            'schedules.*.day_of_week' => 'required|string|in:mon,tue,wed,thu,fri,sat,sun',
+            'schedules.*.day_of_week' => 'required|string|in:monday,tuesday,wednesday,thursday,friday,saturday,sunday',
             'schedules.*.is_available' => 'nullable|in:1,0',
             'schedules.*.start_time' => 'required_if:schedules.*.is_available,1|nullable|date_format:H:i',
             'schedules.*.end_time' => 'required_if:schedules.*.is_available,1|nullable|date_format:H:i|after:schedules.*.start_time',

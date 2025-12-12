@@ -55,7 +55,7 @@
                     @endif
 
                     @if($showLogout)
-                        <form action="{{ route('logout') }}" method="POST">
+                        <form action="{{ route('logout') }}" method="POST" class="flex flex-1">
                             @csrf
                             <button type="submit" class="rounded-button secondary bg-white hover:bg-gray-100 text-caption-dark border border-grey-border rounded-md px-2 md:px-4 py-2 md:py-2 text-center flex flex-1 items-center justify-center text-xs sm:text-sm lg:text-base">
                                 Logout
