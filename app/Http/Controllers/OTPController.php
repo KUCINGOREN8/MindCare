@@ -38,11 +38,29 @@ class OTPController extends Controller
             $user->update([
                 'otp_verified' => true,
                 'otp_code' => null,
-                'otp_expires_at' => null
+                'otp_expires_at' => null,
             ]);
 
+            if ($user->role === 'psychologist' && $user->status === 'pending') {
+                Auth::logout();
+
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+
+                return redirect()->route('login')
+                    ->with('success', 'Email verified! Your account is waiting for Admin approval.');
+            }
+            // ==========================================================
+
+            $redirectRoutes = [
+                'patient' => 'patient.dashboard',
+                'psychologist' => 'psychologist.dashboard',
+                'admin' => 'admin.dashboard',
+            ];
+
             session(['otp_verified' => true]);
-            return redirect()->intended(route( $user->role . 'dashboard.index'))
+
+            return redirect()->intended(route($redirectRoutes[$user->role]))
                 ->with('success', 'OTP verified successfully!');
         }
 
