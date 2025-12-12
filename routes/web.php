@@ -160,8 +160,20 @@ Route::middleware(['auth', 'otp'])->group(function () {
 
         // Accessible for psychologist only
         Route::middleware('role:psychologist')->group(function () {
+            // Professional Info
             Route::put('/professional', 'updateProfessional')->name('professional.update');
+
+            // Education
+            Route::post('/education', [UserController::class, 'storeEducation'])->name('education.store');
+            Route::delete('education/{id}', [UserController::class, 'destroyEducation'])->name('education.destroy');
+            
+            // Experience
+            Route::post('/experience', [UserController::class, 'storeExperience'])->name('experience.store');
+            Route::delete('/experience/{id}', [UserController::class, 'destroyExperience'])->name('experience.destroy');
+            
+            // Schedule
             Route::put('/schedule', 'updateSchedule')->name('schedule.update');
+
         });
     });
 

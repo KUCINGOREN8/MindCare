@@ -84,7 +84,7 @@
                     <h1 class="font-semibold text-lg mb-[10px]">Available Schedule</h1>
 
                     @php
-                        $allDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+                        $allDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
                         $schedules = $psychologist->schedules;
                     @endphp
 
