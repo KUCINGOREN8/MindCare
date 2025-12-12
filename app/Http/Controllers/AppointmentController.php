@@ -7,6 +7,7 @@ use App\Models\Payment;
 use App\Services\MidtransService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 use Exception;
 
 class AppointmentController extends Controller
@@ -233,4 +234,69 @@ class AppointmentController extends Controller
             return redirect()->route('patient.appointments.index')->with('error', 'Payment failed: ' . $e->getMessage());
         }
     }
+
+
+    public function reschedule(Request $request, $id)
+{
+    $user = Auth::user();
+
+    //hanya bs ganti tanggal dan waktu
+    $request->validate([
+        'reschedule_date' => 'required|date',
+        'reschedule_time' => 'required',
+    ]);
+    $appointment = Appointment::where('id', $id)
+        ->where('user_id', $user->id)
+        ->firstOrFail();
+
+
+
+    // status
+    if (in_array($appointment->status, ['completed', 'cancelled', 'canceled'])) {
+        return back()->with('error', 'Gagal. Sesi yang sudah selesai atau dibatalkan tidak dapat diubah.');
+    }
+
+    
+    $currentSessionTime = Carbon::parse($appointment->date . ' ' . $appointment->start_time);
+
+    //cek sesi uda mulai apa belum
+    if (now()->greaterThanOrEqualTo($currentSessionTime)) {
+        return back()->with('error', 'This session has started/finished.');
+    }
+
+    //validasi tanggal
+
+    $targetSessionTime = Carbon::parse($request->reschedule_date . ' ' . $request->reschedule_time);
+
+    if ($targetSessionTime->isPast()) {
+        return back()->with('error', 'Invalid');
+    }
+
+    
+    //Cek jadwal	
+    
+    $isSlotTaken = Appointment::where('psychologist_id', $appointment->psychologist_id)
+        ->where('date', $request->reschedule_date)
+        ->where('start_time', $request->reschedule_time)
+        ->where('status', 'confirmed') 
+        ->where('id', '!=', $id)       
+        ->exists();
+
+    if ($isSlotTaken) {
+
+    }        return back()->with('error', 'This time slot is no longer available.');
+
+  
+
+    $appointment->update([
+        'date' => $request->reschedule_date,      
+        'start_time' => $request->reschedule_time, 
+      
+        'reschedule_date' => null,
+        'reschedule_time' => null,
+        'reschedule_reason' => null,
+    ]);
+
+    return back()->with('success', 'Jadwal berhasil diubah ke tanggal ' . $targetSessionTime->format('d M Y H:i'));
+}
 }
