@@ -9,7 +9,7 @@ return [
                     towards
                     better mental well-being today.',
     'button1' => 'Start Now',
-    'button2' => 'Book a Session',
+    'button2' => 'Join Psychologist',
     'reason' => 'Why Choose',
     'answer' => 'We provide comprehensive mental health support with qualified professionals',
     'title1' => 'Licensed Professionals',

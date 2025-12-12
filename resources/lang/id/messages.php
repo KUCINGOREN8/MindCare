@@ -4,7 +4,7 @@ return [
     'welcome' => 'Selamat Datang',
     'description' => 'Terhubung dengan profesional kesehatan mental berlisensi dari kenyamanan rumah Anda. Ambil langkah pertama menuju kesejahteraan mental yang lebih baik mulai hari ini.',
     'button1' => 'Mulai Sekarang',
-    'button2' => 'Pesan Sesi',
+    'button2' => 'Registrasi Psikolog',
     'reason' => 'Mengapa Memilih',
     'answer' => 'Kami menyediakan dukungan kesehatan mental yang komprehensif dengan profesional yang berkualifikasi.',
     'title1' => 'Profesional Berlisensi',
