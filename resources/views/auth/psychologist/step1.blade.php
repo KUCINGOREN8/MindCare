@@ -14,7 +14,7 @@
                 @csrf
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Full Name -->
+                    <!-- Name -->
                     <div class="col-span-2">
                         <label class="block text-gray-700 mb-2">Full Name</label>
                         <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
@@ -34,17 +34,16 @@
                         @error('email')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
                     </div>
 
-                    <!-- Password -->
+                   <!-- Password -->
                     <div>
                         <label class="block text-gray-700 mb-2">Password</label>
                         <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
                             {!! str_replace('<svg ', '<svg class="w-6 h-6 text-[#A1AAB2] opacity-50 mr-4" fill="currentColor" ', file_get_contents(public_path('assets/signup/password.svg'))) !!}
                             <input type="password" name="password" required id="password" class="w-full outline-none text-black placeholder-gray-400 bg-transparent" placeholder="Password">
-                            <button type="button" onclick="togglePassword('password')">
-                                <img src="{{ asset('assets/signup/eye-closed.svg') }}" alt="Show" class="w-5 h-5 opacity-50 eye-icon" data-field="password">
+                            <button type="button" class="password-toggle" onclick="togglePassword('password')">
+                                <img src="{{ asset('assets/signup/eye-closed.svg') }}" alt="Show password" class="w-5 h-5 opacity-50 eye-icon" data-field="password">
                             </button>
                         </div>
-                        @error('password')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
                     </div>
 
                     <!-- Confirm Password -->
@@ -53,8 +52,8 @@
                         <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
                             {!! str_replace('<svg ', '<svg class="w-6 h-6 text-[#A1AAB2] opacity-50 mr-4" fill="currentColor" ', file_get_contents(public_path('assets/signup/password.svg'))) !!}
                             <input type="password" name="password_confirmation" required id="confirm-password" class="w-full outline-none text-black placeholder-gray-400 bg-transparent" placeholder="Confirm Password">
-                            <button type="button" onclick="togglePassword('confirm-password')">
-                                <img src="{{ asset('assets/signup/eye-closed.svg') }}" alt="Show" class="w-5 h-5 opacity-50 eye-icon" data-field="confirm-password">
+                            <button type="button" class="password-toggle" onclick="togglePassword('confirm-password')">
+                                <img src="{{ asset('assets/signup/eye-closed.svg') }}" alt="Show password" class="w-5 h-5 opacity-50 eye-icon" data-field="confirm-password">
                             </button>
                         </div>
                     </div>
@@ -109,32 +108,19 @@
                 </div>
 
                 <div class="mt-8 flex justify-between">
-                    <a href="{{ route('signup') }}" class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition">
-                        ← Back to Patient Signup
+                    <a href="{{ route('dashboard') }}" class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition">
+                        ← Back
                     </a>
                     <button type="submit" class="px-8 py-3 bg-[#009C8F] text-white rounded-lg font-medium hover:opacity-90 transition shadow-md">
-                        Next: Professional Info →
+                        Next →
                     </button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+@endsection
 
-@push('scripts')
-<script>
-function togglePassword(fieldId) {
-    const field = document.getElementById(fieldId);
-    const eyeIcon = field.parentElement.querySelector('.eye-icon');
-
-    if (field.type === 'password') {
-        field.type = 'text';
-        eyeIcon.src = eyeIcon.src.replace('eye-closed.svg', 'eye-open.svg');
-    } else {
-        field.type = 'password';
-        eyeIcon.src = eyeIcon.src.replace('eye-open.svg', 'eye-closed.svg');
-    }
-}
-</script>
-@endpush
+@section('scripts')
+    <script src="{{ asset('js/auth-psycho.js') }}"></script>
 @endsection
