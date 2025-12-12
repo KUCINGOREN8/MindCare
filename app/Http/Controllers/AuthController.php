@@ -14,7 +14,7 @@ use Illuminate\Validation\Rules\Password as RulesPassword;
 
 class AuthController extends Controller
 {
-        
+
     public function showSignup()
     {
         return view('auth.signup');
@@ -49,6 +49,7 @@ class AuthController extends Controller
             'preferred_language' => $request->language,
             'agree_to_terms' => true,
             'role' => 'user',
+            'status' => 'active',
         ]);
 
         Auth::login($user);
@@ -65,25 +66,50 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
-        
+
+        // 1. Cek Kredensial (Email & Password)
         if (Auth::attempt($credentials)) {
+
+            $user = Auth::user(); // Ambil data user
+
+            // 2. CEK STATUS (Logika Baru)
+            if ($user->status !== 'active') {
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+
+                $message = 'Your account is currently ' . $user->status . '.';
+                if ($user->status === 'pending') {
+                    $message .= ' Please wait for Admin approval.';
+                }
+
+                return back()->withErrors(['email' => $message])->onlyInput('email');
+            }
+
+            // 3. Jika Active, Lanjut Masuk
             $request->session()->regenerate();
-            $user = Auth::user();
-            return redirect()->intended(route( $user->role . '.dashboard'));
+
+            // Redirect sesuai role
+            // Pastikan route ini ada di web.php (admin.dashboard / user.dashboard / psychologist.dashboard)
+            if ($user->role === 'admin') {
+                return redirect()->route('admin.dashboard');
+            } elseif ($user->role === 'psychologist') {
+                return redirect()->route('psychologist.dashboard');
+            }
+
+            return redirect()->route('patient.dashboard');
         }
-        
 
         return back()->withErrors([
             'email' => 'Invalid email or password.',
         ])->onlyInput('email');
     }
 
-    
+
     public function showForgotPassword()
     {
         return view('auth.forgot-password');
@@ -133,7 +159,7 @@ class AuthController extends Controller
             : back()->withErrors(['email' => [__($status)]]);
     }
 
- 
+
     public function logout(Request $request)
     {
         Auth::logout();
@@ -142,7 +168,7 @@ class AuthController extends Controller
         return redirect('/')->with('success', 'You have been logged out successfully.');
     }
 
-    
+
     public function showSignupPsychologist()
     {
         return view('auth.signup-psychologist');
@@ -151,7 +177,7 @@ class AuthController extends Controller
     public function registerPsychologist(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            
+
             'full_name' => 'required|string|min:3|max:255',
             'email' => 'required|email|unique:users,email|max:255',
             'password' => [
@@ -164,7 +190,7 @@ class AuthController extends Controller
             'language' => 'required|in:en,id',
             'terms' => 'required|accepted',
 
-            
+
             'title' => 'required|string|max:255',
             'specialization' => 'required|string|max:255',
             'license_number' => 'required|string|unique:psychologists,license_number',
@@ -180,7 +206,7 @@ class AuthController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
-       
+
         $user = User::create([
             'full_name' => $request->full_name,
             'email' => $request->email,
@@ -190,9 +216,10 @@ class AuthController extends Controller
             'preferred_language' => $request->language,
             'agree_to_terms' => true,
             'role' => 'psychologist',
+            'status' => 'pending',
         ]);
 
-       
+
         $user->psychologist()->create([
             'title' => $request->title,
             'specialization' => $request->specialization,
@@ -202,11 +229,10 @@ class AuthController extends Controller
             'short_bio' => $request->short_bio,
             'about_me' => $request->about_me,
             'languages' => $request->input('languages'),
-
         ]);
 
-        Auth::login($user);
-        $user->sendOTPNotification();
+        // Auth::login($user);
+        // $user->sendOTPNotification();
 
         return redirect()->route('otp.verify')
             ->with('success', 'Registration successful! Please verify your email with OTP.');
