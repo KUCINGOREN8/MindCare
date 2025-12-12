@@ -14,7 +14,7 @@ use Illuminate\Validation\Rules\Password as RulesPassword;
 
 class AuthController extends Controller
 {
-        
+
     public function showSignup()
     {
         return view('auth.signup');
@@ -48,7 +48,7 @@ class AuthController extends Controller
             'gender' => $request->gender,
             'preferred_language' => $request->language,
             'agree_to_terms' => true,
-            'role' => 'user',
+            'role' => 'patient',
         ]);
 
         Auth::login($user);
@@ -65,25 +65,25 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        
+
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
-        
+
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             $user = Auth::user();
             return redirect()->intended(route( $user->role . '.dashboard'));
         }
-        
+
 
         return back()->withErrors([
             'email' => 'Invalid email or password.',
         ])->onlyInput('email');
     }
 
-    
+
     public function showForgotPassword()
     {
         return view('auth.forgot-password');
@@ -133,7 +133,7 @@ class AuthController extends Controller
             : back()->withErrors(['email' => [__($status)]]);
     }
 
- 
+
     public function logout(Request $request)
     {
         Auth::logout();
@@ -142,7 +142,7 @@ class AuthController extends Controller
         return redirect('/')->with('success', 'You have been logged out successfully.');
     }
 
-    
+
     public function showSignupPsychologist()
     {
         return view('auth.signup-psychologist');
@@ -151,7 +151,7 @@ class AuthController extends Controller
     public function registerPsychologist(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            
+
             'full_name' => 'required|string|min:3|max:255',
             'email' => 'required|email|unique:users,email|max:255',
             'password' => [
@@ -164,7 +164,7 @@ class AuthController extends Controller
             'language' => 'required|in:en,id',
             'terms' => 'required|accepted',
 
-            
+
             'title' => 'required|string|max:255',
             'specialization' => 'required|string|max:255',
             'license_number' => 'required|string|unique:psychologists,license_number',
@@ -180,7 +180,7 @@ class AuthController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
-       
+
         $user = User::create([
             'full_name' => $request->full_name,
             'email' => $request->email,
@@ -192,7 +192,7 @@ class AuthController extends Controller
             'role' => 'psychologist',
         ]);
 
-       
+
         $user->psychologist()->create([
             'title' => $request->title,
             'specialization' => $request->specialization,
