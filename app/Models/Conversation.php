@@ -13,11 +13,15 @@ class Conversation extends Model
         'patient_id',
         'psychologist_id',
         'status',
-        'last_message_at'
+        'last_message_at',
+        'unread_patient',
+        'unread_psychologist'
     ];
 
     protected $casts = [
-        'last_message_at' => 'datetime'
+        'last_message_at' => 'datetime',
+        'unread_patient' => 'integer',
+        'unread_psychologist' => 'integer'
     ];
 
     public function patient()
@@ -48,5 +52,40 @@ class Conversation extends Model
     public function updateLastMessageTime()
     {
         $this->update(['last_message_at' => now()]);
+    }
+
+    public function markAsReadForPatient()
+    {
+        $this->update(['unread_patient' => 0]);
+    }
+
+    public function markAsReadForPsychologist()
+    {
+        $this->update(['unread_psychologist' => 0]);
+    }
+
+    public function incrementUnreadForPatient()
+    {
+        $this->increment('unread_patient');
+    }
+
+    public function incrementUnreadForPsychologist()
+    {
+        $this->increment('unread_psychologist');
+    }
+
+    public function getUnreadCountForUser($userId)
+    {
+        if ($this->patient_id == $userId) {
+            return $this->unread_patient;
+        } elseif ($this->psychologist_id == $userId) {
+            return $this->unread_psychologist;
+        }
+        return 0;
+    }
+
+    public function hasUnreadMessagesFor($userId)
+    {
+        return $this->getUnreadCountForUser($userId) > 0;
     }
 }

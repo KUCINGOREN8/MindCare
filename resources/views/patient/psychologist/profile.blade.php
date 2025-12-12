@@ -39,13 +39,13 @@
                         </div>
                         <div>
                             <h5 class="text-captiondark text-sm font-semibold">Consultation Fee:</h5>
-                            <p class="text-captiondark text-sm">Rp. {{ $psychologist->consultation_fee }} / 60 minutes</p>
+                            <p class="text-captiondark text-sm">Rp. {{ $psychologist->consultation_fee }} / 90 minutes</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="flex gap-4 flex-col lg:flex-row">
-                    <x-rounded-button text="Book" active="true" route="#"></x-rounded-button>
+                    <x-rounded-button text="Book" active="true" route="{{ route('patient.book.appointment', $psychologist->id) }}"></x-rounded-button>
                 </div>
             </div>
 
@@ -84,7 +84,7 @@
                     <h1 class="font-semibold text-lg mb-[10px]">Available Schedule</h1>
 
                     @php
-                        $allDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+                        $allDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
                         $schedules = $psychologist->schedules;
                     @endphp
 
@@ -131,17 +131,5 @@
             </div>
         </div>
     </div>
-
-   {{-- BLM DIINTEGRATE HANYA BUAT TESITNG KE CHAT --}}
-    @auth
-    @if(auth()->user()->isPatient())
-        <a
-            href="{{ route('chat.start', $psychologist->user_id) }}"
-            class="bg-secondary text-white px-6 py-3 rounded-lg hover:bg-secondary-dark flex items-center gap-2"
-        >
-            Start Chat
-        </a>
-    @endif
-@endauth
 </div>
 @endsection

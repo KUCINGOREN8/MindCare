@@ -34,6 +34,12 @@ class OTPController extends Controller
 
         $user = Auth::user();
 
+        $redirectRoutes = [
+            'patient' => 'patient.dashboard',
+            'psychologist' => 'psychologist.dashboard',
+            'admin' => 'admin.dashboard',
+        ];
+
         if ($user->isOTPValid($request->otp_code)) {
             $user->update([
                 'otp_verified' => true,
@@ -42,8 +48,7 @@ class OTPController extends Controller
             ]);
 
             session(['otp_verified' => true]);
-            return redirect()->intended(route( $user->role . 'dashboard.index'))
-                ->with('success', 'OTP verified successfully!');
+            return redirect()->intended(route($redirectRoutes[$user->role]))->with('success', 'OTP verified successfully!');
         }
 
         return back()->withErrors(['otp_code' => 'Invalid or expired OTP code.']);

@@ -27,6 +27,7 @@ namespace App\Models {
      * @property-read mixed $end_date_time
      * @property-read mixed $is_upcoming
      * @property-read mixed $is_past
+     * @property-read mixed $is_ongoing
      * @property-read mixed $is_session_available
      * @property-read \App\Models\Psychologist $psychologist
      * @property-read \App\Models\User $user
@@ -353,6 +354,8 @@ namespace App\Models {
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
      * @property \Illuminate\Support\Carbon|null $last_message_at
+     * @property integer $unread_psychologist
+     * @property integer $unread_patient
      * @property mixed $status
      * @property mixed $psychologist_id
      * @property mixed $patient_id
@@ -366,6 +369,8 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<Conversation>|Conversation wherePatientId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Conversation>|Conversation wherePsychologistId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Conversation>|Conversation whereStatus($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Conversation>|Conversation whereUnreadPatient($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Conversation>|Conversation whereUnreadPsychologist($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Conversation>|Conversation whereLastMessageAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Conversation>|Conversation whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Conversation>|Conversation whereUpdatedAt($value)
@@ -676,11 +681,15 @@ namespace App\Models {
      * @property \Illuminate\Support\Carbon|null $created_at
      * @property \Illuminate\Support\Carbon|null $read_at
      * @property boolean $is_read
+     * @property string|null $attachment_name
+     * @property string|null $attachment_path
      * @property string $message
      * @property mixed $receiver_id
      * @property mixed $sender_id
      * @property mixed $conversation_id
      * @property int $id
+     * @property-read mixed $attachment_url
+     * @property-read mixed $attachment_type
      * @property-read \App\Models\User $sender
      * @property-read \App\Models\User $receiver
      * @property-read \App\Models\Conversation $conversation
@@ -689,6 +698,8 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<Message>|Message whereSenderId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Message>|Message whereReceiverId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Message>|Message whereMessage($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Message>|Message whereAttachmentPath($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Message>|Message whereAttachmentName($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Message>|Message whereIsRead($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Message>|Message whereReadAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Message>|Message whereCreatedAt($value)

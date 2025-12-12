@@ -35,7 +35,10 @@
             <p class="text-[#9CA3AF] font-semibold pt-2">Session Booking</p>
             <p class="text-[#9CA3AF] font-semibold">Real-time Counseling</p>
             <p class="text-[#9CA3AF] font-semibold">Progress Reports</p>
-            <p class="text-[#9CA3AF] font-semibold">Join Psychiatrist</p>
+            <a href="{{ route('psychologist.signup.step1') }}"
+                class="text-[#9CA3AF] font-semibold hover:text-white transition-colors">
+                Join Psychiatrist
+            </a>
         </div>
 
         {{-- Support --}}

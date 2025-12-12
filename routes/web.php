@@ -1,6 +1,8 @@
+
 <?php
 
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\AuthPsychologistController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookAppointmentController;
@@ -33,6 +35,21 @@ Route::middleware('guest')->group(function () {
     Route::get('/signup', [AuthController::class, 'showSignup'])->name('signup');
     Route::post('/signup', [AuthController::class, 'register'])->name('register');
 
+    // Psychologist multi-step signup
+    Route::prefix('signup/psychologist')->name('psychologist.signup.')->group(function () {
+        Route::get('/', [AuthPsychologistController::class, 'showStep1'])->name('step1');
+        Route::post('/step1', [AuthPsychologistController::class, 'storeStep1'])->name('storeStep1');
+        Route::get('/step2/{user}', [AuthPsychologistController::class, 'showStep2'])->name('step2');
+        Route::post('/step2/{user}', [AuthPsychologistController::class, 'storeStep2'])->name('storeStep2');
+        Route::get('/step3/{user}', [AuthPsychologistController::class, 'showStep3'])->name('step3');
+        Route::post('/step3/{user}', [AuthPsychologistController::class, 'storeStep3'])->name('storeStep3');
+        Route::get('/step4/{user}', [AuthPsychologistController::class, 'showStep4'])->name('step4');
+        Route::post('/step4/{user}', [AuthPsychologistController::class, 'storeStep4'])->name('storeStep4');
+        Route::get('/step5/{user}', [AuthPsychologistController::class, 'showStep5'])->name('step5');
+        Route::post('/step5/{user}', [AuthPsychologistController::class, 'storeStep5'])->name('storeStep5');
+        Route::get('/complete', [AuthPsychologistController::class, 'complete'])->name('complete');
+    });
+
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 
@@ -40,9 +57,6 @@ Route::middleware('guest')->group(function () {
     Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
     Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
     Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
-
-    Route::get('/signup/psychologist', [AuthController::class, 'showSignupPsychologist'])->name('signup.psychologist');
-    Route::post('/signup/psychologist', [AuthController::class, 'registerPsychologist'])->name('register.psychologist');
 });
 
 // OTP Routes
@@ -70,9 +84,14 @@ Route::middleware(['auth', 'otp', 'role:patient'])
     Route::get('/search', [PsychologistController::class, 'showSearch'])->name('psychologist.search');
     Route::get('psychologist/{id}', [PsychologistController::class, 'showProfile'])->name('psychologist.profile');
     Route::get('psychologist/{id}/review', [PsychologistController::class, 'showReview'])->name('psychologist.review');
+    Route::get('psychologist/{psychologist}/available-dates', [BookAppointmentController::class, 'getAvailableDates'])->name('psychologist.available-dates');
+    Route::get('psychologist/{psychologist}/available-times', [BookAppointmentController::class, 'getAvailableTimes'])->name('psychologist.available-times');
+    Route::get('available-psychologists', [BookAppointmentController::class, 'getAvailablePsychologists'])->name('psychologists.available');
+    Route::get('psychologist/{psychologist}/available-days', [BookAppointmentController::class, 'getAvailableDays'])->name('psychologist.available-days');
+    Route::get('/appointments/{appointment}/payment', [AppointmentController::class, 'showPaymentPage'])->name('appointments.payment');
 
     //Book Appointment
-    Route::get('book_appointment', [BookAppointmentController::class, 'showBook'])->name('book.appointment');
+    Route::get('book-appointment/{psychologist?}', [BookAppointmentController::class, 'showBook'])->name('book.appointment');
     Route::post('/appointments/store', [BookAppointmentController::class, 'store'])->name('appointments.store');
 
     // Appointment History + Actions
@@ -141,8 +160,20 @@ Route::middleware(['auth', 'otp'])->group(function () {
 
         // Accessible for psychologist only
         Route::middleware('role:psychologist')->group(function () {
+            // Professional Info
             Route::put('/professional', 'updateProfessional')->name('professional.update');
+
+            // Education
+            Route::post('/education', [UserController::class, 'storeEducation'])->name('education.store');
+            Route::delete('education/{id}', [UserController::class, 'destroyEducation'])->name('education.destroy');
+            
+            // Experience
+            Route::post('/experience', [UserController::class, 'storeExperience'])->name('experience.store');
+            Route::delete('/experience/{id}', [UserController::class, 'destroyExperience'])->name('experience.destroy');
+            
+            // Schedule
             Route::put('/schedule', 'updateSchedule')->name('schedule.update');
+
         });
     });
 

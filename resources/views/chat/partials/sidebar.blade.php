@@ -14,18 +14,6 @@
             id="sidebar-search"
         >
     </div>
-
-    <div class="flex space-x-6 border-b border-gray-200">
-        <button class="pb-3 px-1 font-semibold text-primary border-b-2 border-primary text-sm">
-            All
-        </button>
-        <button class="pb-3 px-1 font-medium text-gray-500 hover:text-gray-700 text-sm transition">
-            Unread
-        </button>
-        <button class="pb-3 px-1 font-medium text-gray-500 hover:text-gray-700 text-sm transition">
-            Archived
-        </button>
-    </div>
 </div>
 
 <!-- Chat List -->
