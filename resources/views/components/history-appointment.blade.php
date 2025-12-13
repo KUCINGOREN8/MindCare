@@ -23,7 +23,6 @@
             @php
                 $iconBgColor = 'bg-gray-50';
                 $iconTextColor = 'text-gray-500';
-                
                 $badgeBgColor = 'bg-gray-100';
                 $badgeTextColor = 'text-gray-700';
                 
@@ -80,17 +79,33 @@
                     </p>
                 </div>
             </div>
-            <span class="px-3 py-1 rounded-full text-[10px] font-bold {{ $badgeBgColor }} {{ $badgeTextColor }} uppercase tracking-wide">
-                @if($isPaymentExpired)
-                    Payment Expired
-                @elseif($canMakePayment)
-                    Awaiting Payment
-                @elseif($isPendingPayment)
-                    Payment Expired
-                @else
-                    {{ ucfirst(str_replace('_', ' ', $item->status)) }}
+
+            <div class="flex items-center gap-3">
+                <span class="px-3 py-1 rounded-full text-[10px] font-bold {{ $badgeBgColor }} {{ $badgeTextColor }} uppercase tracking-wide">
+                    @if($isPaymentExpired)
+                        Payment Expired
+                    @elseif($canMakePayment)
+                        Awaiting Payment
+                    @elseif($isPendingPayment)
+                        Payment Expired
+                    @else
+                        {{ ucfirst(str_replace('_', ' ', $item->status)) }}
+                    @endif
+                </span>
+
+                @if($item->status === 'confirmed')
+                    <button 
+                        onclick="event.stopPropagation(); openRescheduleModal(
+                            '{{ $item->id }}',
+                            '{{ $item->date }}',
+                            '{{ $item->start_time }}'
+                        )"
+                        class="px-3 py-1 text-xs rounded bg-yellow-500 text-white hover:bg-yellow-600 transition">
+                        Reschedule
+                    </button>
                 @endif
-            </span>
+            </div>
+
         </div>
     @empty
         <div class="bg-white p-6 text-center rounded-md border-grey-border border flex flex-col gap-6">

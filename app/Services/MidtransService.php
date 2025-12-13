@@ -4,64 +4,40 @@ namespace App\Services;
 
 use Midtrans\Config;
 use Midtrans\Snap;
-use Exception;
 
 class MidtransService
 {
     public function __construct()
     {
+        // KONFIGURASI MIDTRANS
         Config::$serverKey = config('services.midtrans.server_key');
         Config::$isProduction = config('services.midtrans.is_production');
-        Config::$isSanitized = true;
-        Config::$is3ds = true;
+        Config::$clientKey = config('services.midtrans.client_key');
+
+        // FIX SSL certificate error (WAJIB DI XAMPP WINDOWS)
+        Config::$curlOptions = [
+            CURLOPT_CAINFO => base_path('cacert.pem'),
+            CURLOPT_CAPATH => base_path('cacert.pem'),
+        ];
     }
 
+    // Generate Order ID unik untuk setiap transaksi
+    public function generateOrderId()
+    {
+        return 'ORDER-' . time() . '-' . rand(1000, 9999);
+    }
+
+    // Membuat transaksi Midtrans (Snap)
     public function createTransaction($orderId, $amount, $customerDetails)
     {
         $params = [
             'transaction_details' => [
                 'order_id' => $orderId,
-                'gross_amount' => (int) $amount,
+                'gross_amount' => $amount,
             ],
-            'customer_details' => $customerDetails,
-            'callbacks' => [
-                'finish' => route('patient.payment.finish'),
-                'error' => route('patient.payment.error'),
-                'pending' => route('patient.payment.pending'),
-            ],
+            'customer_details' => $customerDetails
         ];
 
-        try {
-            $snapToken = Snap::getSnapToken($params);
-            $snapUrl = Snap::getSnapUrl($params);
-
-            return [
-                'token' => $snapToken,
-                'redirect_url' => $snapUrl
-            ];
-        } catch (Exception $e) {
-            throw new Exception('Midtrans Error: ' . $e->getMessage());
-        }
-    }
-
-    public function generateOrderId()
-    {
-        return 'APP-' . date('YmdHis') . '-' . strtoupper(uniqid());
-    }
-
-    public function createPaymentWithExpiry($orderId, $amount, $expiryDuration)
-    {
-        $params = [
-            'transaction_details' => [
-                'order_id' => $orderId,
-                'gross_amount' => (int) $amount,
-            ],
-            'expiry' => [
-                'duration' => (int) $expiryDuration,
-                'unit' => 'minute'
-            ],
-        ];
-
-        return Snap::getSnapToken($params);
+        return Snap::createTransaction($params);
     }
 }

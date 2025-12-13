@@ -25,7 +25,7 @@
         </div>
 
         {{-- A. UPCOMING SESSION --}}
-        <section class="mb-10">
+ <section class="mb-10">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="font-bold text-xl text-gray-800 flex items-center gap-2">
                     Next Client
@@ -166,5 +166,107 @@
         </section>
 
     </div>
+
+    {{-- REQUEST RESCHEDULE --}}
+<section class="mb-10">
+    <h3 class="font-bold text-xl text-gray-800 mb-5 pl-1">Reschedule Requests</h3>
+
+    @forelse($reschedules ?? [] as $item)
+        <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm hover:shadow-md transition flex items-center justify-between">
+            
+            <div>
+                <h4 class="font-bold text-gray-800 text-base">{{ $item->user->name }}</h4>
+                <p class="text-sm text-gray-500">
+                    Requested:
+                    {{ \Carbon\Carbon::parse($item->new_date)->format('d M Y') }},
+                    {{ \Carbon\Carbon::parse($item->new_time)->format('H:i') }}
+                </p>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <button 
+                    onclick="openAcceptModal('{{ $item->id }}')"
+                    class="px-4 py-2 bg-teal-600 text-white rounded-xl text-sm hover:bg-teal-700 transition">
+                    Accept
+                </button>
+
+                <button 
+                    onclick="openDeclineModal('{{ $item->id }}')"
+                    class="px-4 py-2 bg-rose-600 text-white rounded-xl text-sm hover:bg-rose-700 transition">
+                    Decline
+                </button>
+            </div>
+
+        </div>
+    @empty
+        <div class="bg-white p-6 rounded-2xl border border-dashed border-gray-300 text-center">
+            <p class="text-gray-400 text-sm">No reschedule requests.</p>
+        </div>
+    @endforelse
+</section>
+
+{{-- ACCEPT MODAL --}}
+<div id="acceptModal" class="hidden fixed inset-0 bg-black/40 flex items-center justify-center">
+    <div class="bg-white p-6 rounded-xl w-80">
+        <h3 class="font-bold text-lg mb-4">Accept Reschedule?</h3>
+
+        <form id="acceptForm" method="POST">
+            @csrf
+            @method('PUT')
+
+            <button type="submit" class="w-full bg-teal-600 text-white py-2 rounded-lg mb-2">
+                Confirm Accept
+            </button>
+
+            <button type="button" onclick="closeAcceptModal()"
+                class="w-full bg-gray-300 py-2 rounded-lg">
+                Cancel
+            </button>
+        </form>
+    </div>
+</div>
+
+{{-- DECLINE MODAL --}}
+<div id="declineModal" class="hidden fixed inset-0 bg-black/40 flex items-center justify-center">
+    <div class="bg-white p-6 rounded-xl w-80">
+        <h3 class="font-bold text-lg mb-4">Decline Reschedule?</h3>
+
+        <form id="declineForm" method="POST">
+            @csrf
+            @method('PUT')
+
+            <textarea name="reason" class="border p-2 w-full rounded mb-2" placeholder="Reason (optional)"></textarea>
+
+            <button type="submit" class="w-full bg-rose-600 text-white py-2 rounded-lg mb-2">
+                Confirm Decline
+            </button>
+
+            <button type="button" onclick="closeDeclineModal()"
+                class="w-full bg-gray-300 py-2 rounded-lg">
+                Cancel
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openAcceptModal(id) {
+        document.getElementById('acceptModal').classList.remove('hidden');
+        document.getElementById('acceptForm').action = `/psychologist/appointments/${id}/reschedule/accept`;
+    }
+    function closeAcceptModal() {
+        document.getElementById('acceptModal').classList.add('hidden');
+    }
+
+    function openDeclineModal(id) {
+        document.getElementById('declineModal').classList.remove('hidden');
+        document.getElementById('declineForm').action = `/psychologist/appointments/${id}/reschedule/decline`;
+    }
+    function closeDeclineModal() {
+        document.getElementById('declineModal').classList.add('hidden');
+    }
+</script>
+
+
 
 @endsection

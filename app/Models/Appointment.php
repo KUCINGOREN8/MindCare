@@ -21,7 +21,7 @@ class Appointment extends Model
         'notes',
         'reschedule_date',
         'reschedule_time',
-        'reschedule_reason',
+        'is_reschedule_pending',
     ];
 
     protected $casts = [

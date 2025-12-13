@@ -72,48 +72,55 @@ Route::middleware(['auth', 'otp', 'role:patient'])
 ->prefix('patient')
 ->name('patient.')
 ->group(function () {
-    // Dashboard
-    Route::get('/dashboard' , [DashboardController::class, 'showPatientDashboard'])->name('dashboard');
 
-    // Patient Mood
+    // Dashboard
+    Route::get('/dashboard', [DashboardController::class, 'showPatientDashboard'])->name('dashboard');
+
+    // Mood
     Route::post('/mood', [DashboardController::class, 'moodStore'])->name('mood.store');
     Route::post('/mood/undo', [MoodController::class, 'undo'])->name('mood.undo');
 
     // Psychologist
-    Route::get('find-psychologist', [PsychologistController::class, 'showFindPsychologist'])->name('find.psychologist');
+    Route::get('/find-psychologist', [PsychologistController::class, 'showFindPsychologist'])->name('find.psychologist');
     Route::get('/search', [PsychologistController::class, 'showSearch'])->name('psychologist.search');
-    Route::get('psychologist/{id}', [PsychologistController::class, 'showProfile'])->name('psychologist.profile');
-    Route::get('psychologist/{id}/review', [PsychologistController::class, 'showReview'])->name('psychologist.review');
-    Route::get('psychologist/{psychologist}/available-dates', [BookAppointmentController::class, 'getAvailableDates'])->name('psychologist.available-dates');
-    Route::get('psychologist/{psychologist}/available-times', [BookAppointmentController::class, 'getAvailableTimes'])->name('psychologist.available-times');
-    Route::get('available-psychologists', [BookAppointmentController::class, 'getAvailablePsychologists'])->name('psychologists.available');
-    Route::get('psychologist/{psychologist}/available-days', [BookAppointmentController::class, 'getAvailableDays'])->name('psychologist.available-days');
-    Route::get('/appointments/{appointment}/payment', [AppointmentController::class, 'showPaymentPage'])->name('appointments.payment');
+    Route::get('/psychologist/{id}', [PsychologistController::class, 'showProfile'])->name('psychologist.profile');
+    Route::get('/psychologist/{id}/review', [PsychologistController::class, 'showReview'])->name('psychologist.review');
 
-    //Book Appointment
-    Route::get('book-appointment/{psychologist?}', [BookAppointmentController::class, 'showBook'])->name('book.appointment');
+    // Availability
+    Route::get('/psychologist/{psychologist}/available-dates', [BookAppointmentController::class, 'getAvailableDates'])->name('psychologist.available-dates');
+    Route::get('/psychologist/{psychologist}/available-times', [BookAppointmentController::class, 'getAvailableTimes'])->name('psychologist.available-times');
+    Route::get('/psychologist/{psychologist}/available-days', [BookAppointmentController::class, 'getAvailableDays'])->name('psychologist.available-days');
+
+    // Book Appointment
+    Route::get('/book-appointment/{psychologist?}', [BookAppointmentController::class, 'showBook'])->name('book.appointment');
     Route::post('/appointments/store', [BookAppointmentController::class, 'store'])->name('appointments.store');
 
-    // Appointment History + Actions
+    
     Route::prefix('appointments')
         ->name('appointments.')
         ->controller(AppointmentController::class)
         ->group(function () {
+
             Route::get('/', 'index')->name('index');
-            Route::post('/{id}/confirm', 'confirm')->name('confirm');
-            Route::post('/{id}/cancel', 'cancel')->name('cancel');
-            Route::post('/{id}/reschedule', 'reschedule')->name('reschedule');
+            Route::get('/{appointment}/payment', 'showPaymentPage')->name('payment');
+
+            Route::put('/{appointment}/reschedule', 'reschedule')->name('reschedule');
+            Route::post('/{appointment}/confirm', 'confirm')->name('confirm');
+            Route::post('/{appointment}/cancel', 'cancel')->name('cancel');
+
             Route::get('/chat/session/{appointment}', [ChatController::class, 'startSession'])->name('chat.session');
-    });
+        });
 
     // Payment
-    Route::prefix('payment')->name('payment.')->group(function () {
-        Route::get('/process/{payment}', [PaymentController::class, 'process'])->name('process');
-        Route::get('/finish', [PaymentController::class, 'finish'])->name('finish');
-        Route::get('/error', [PaymentController::class, 'error'])->name('error');
-        Route::get('/pending', [PaymentController::class, 'pending'])->name('pending');
-        Route::post('/webhook', [PaymentController::class, 'webhook'])->name('webhook');
-    });
+    Route::prefix('payment')
+        ->name('payment.')
+        ->controller(PaymentController::class)
+        ->group(function () {
+            Route::get('/process/{payment}', 'process')->name('process');
+            Route::get('/finish', 'finish')->name('finish');
+            Route::get('/pending', 'pending')->name('pending');
+            Route::post('/webhook', 'webhook')->name('webhook');
+        });
 });
 
 // PSYCHOLOGIST ROUTES => Auth + OTP + Role protected
@@ -134,6 +141,9 @@ Route::middleware(['auth', 'otp', 'role:psychologist'])
         ->group(function () {
             // TO-DO: GANTI ROUTE DISINI KALAU PAGE NYA UDH
             Route::get('/', 'index')->name('index');
+
+            Route::put('/{id}/reschedule/accept', 'acceptReschedule')->name('reschedule.accept');
+            Route::put('/{id}/reschedule/decline', 'declineReschedule')->name('reschedule.decline');
     });
 });
 
