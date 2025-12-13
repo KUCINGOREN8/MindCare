@@ -29,7 +29,7 @@ class NavigationHelper
                     'icon' => 'assets/icons/book.svg',
                     'text' => 'Book Appointment',
                     'route' => 'patient.book.appointment',
-                    'patterns' => ['patient.book.appointment']
+                    'patterns' => ['patient.book.appointment', 'patient.payment.*']
                 ],
                 [
                     'icon' => 'assets/icons/calendar.svg',
