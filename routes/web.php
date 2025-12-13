@@ -14,12 +14,15 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\MoodController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Middleware\OTPMiddleware;
+use App\Http\Middleware\CheckAppointmentReview;
 use App\Http\Middleware\CheckRole;
 use Illuminate\Support\Facades\Route;
 
 app('router')->aliasMiddleware('otp', OTPMiddleware::class);
 app('router')->aliasMiddleware('role', CheckRole::class);
+app('router')->aliasMiddleware('appointment.review', CheckAppointmentReview::class);
 
 // Redirect root "/" → landing page
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
@@ -104,7 +107,21 @@ Route::middleware(['auth', 'otp', 'role:patient'])
             Route::post('/{id}/cancel', 'cancel')->name('cancel');
             Route::post('/{id}/reschedule', 'reschedule')->name('reschedule');
             Route::get('/chat/session/{appointment}', [ChatController::class, 'startSession'])->name('chat.session');
-    });
+
+            // Appointment Review
+            Route::middleware(['appointment.review:create'])->group(function () {
+                Route::get('/{id}/review', [ReviewController::class, 'create'])->name('review.create');
+                Route::post('/{id}/review', [ReviewController::class, 'store'])->name('review.store');                
+            });
+            Route::middleware(['appointment.review:edit'])->group(function () {          
+                Route::get('/{id}/review/edit', [ReviewController::class, 'edit'])->name('review.edit');
+                Route::put('/{id}/review', [ReviewController::class, 'update'])->name('review.update');
+            });
+            Route::middleware(['appointment.review:delete'])->group(function () {
+                Route::delete('/{id}/review', [ReviewController::class, 'destroy'])->name('review.destroy');
+            });
+            
+        }); 
 
     // Payment
     Route::prefix('payment')->name('payment.')->group(function () {
