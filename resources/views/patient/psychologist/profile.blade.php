@@ -45,6 +45,7 @@
                 </div>
 
                 <div class="flex gap-4 flex-col lg:flex-row">
+                    <a href="{{ route('patient.find.psychologist') }}" class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition">Back</a>
                     <x-rounded-button text="Book" active="true" route="{{ route('patient.book.appointment', $psychologist->id) }}"></x-rounded-button>
                 </div>
             </div>
