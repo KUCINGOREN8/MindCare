@@ -44,6 +44,11 @@ class Appointment extends Model
         return $this->morphOne(Payment::class, 'paymentable');
     }
 
+    public function isRescheduled()
+    {
+        return $this->reschedule_date && $this->reschedule_time;
+    }
+
     public function getPaymentStatusAttribute()
     {
         return $this->payment?->status ?? 'unpaid';

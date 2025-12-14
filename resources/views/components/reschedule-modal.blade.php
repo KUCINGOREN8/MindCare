@@ -34,8 +34,9 @@ function openRescheduleModal(id, date, time) {
     const form = document.getElementById('rescheduleForm');
 
     form.action = `/patient/appointments/${id}/reschedule`;
-    form.reschedule_date.value = date;
-    form.reschedule_time.value = time;
+
+    form.querySelector('input[name="reschedule_date"]').value = date;
+    form.querySelector('input[name="reschedule_time"]').value = time;
 
     modal.classList.remove('hidden');
 }

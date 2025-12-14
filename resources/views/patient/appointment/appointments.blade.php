@@ -22,5 +22,8 @@
     {{-- Reschedule --}}
     @include('components.reschedule-appointment')
 
+    @include('components.reschedule-modal')
+
+
 </div>
 @endsection

@@ -13,81 +13,43 @@
     class AppointmentController extends Controller
     {
         public function index()
-        {
-            $user = Auth::user();
+{
+    $user = Auth::user();
 
-            if (strtolower(trim($user->role)) === 'psychologist') {
-                
-                // Ambil Data Next Client
-                $upcoming = Appointment::with('user')
-                    ->where('psychologist_id', $user->id) 
-                    ->where('status', 'confirmed')
-                    ->where(function($query) {
-                        $query->whereDate('date', '>', now())
-                            ->orWhere(function($q) {
-                                $q->whereDate('date', '=', now())
-                                    ->whereTime('start_time', '>', now()->format('H:i:s')); 
-                            });
-                    })
-                    ->orderBy('date', 'asc')
-                    ->orderBy('start_time', 'asc') 
-                    ->get(); 
+    $this->autoCompletePastAppointments($user->id);
+    $this->autoUpdateExpiredPayments($user->id);
 
-                // Ambil Data History
-                $history = Appointment::with('user')
-                    ->where('psychologist_id', $user->id)
-                    ->where(function($query) {
-                        $query->whereIn('status', ['completed', 'cancelled', 'canceled']) 
-                            ->orWhereDate('date', '<', now());
-                    })
-                    ->orderBy('date', 'desc')
-                    ->orderBy('start_time', 'desc') 
-                    ->get();
+    // UPCOMING
+    $upcomingAppointments = Appointment::with('psychologist.user')
+        ->where('user_id', $user->id)
+        ->whereNotIn('status', ['completed', 'canceled', 'cancelled'])
+        ->where(function ($query) {
+            $query->whereDate('date', '>', now())
+                ->orWhere(function ($q) {
+                    $q->whereDate('date', now())
+                        ->whereTime('end_time', '>', now());
+                });
+        })
+        ->orderBy('date')
+        ->orderBy('start_time')
+        ->get();
 
-                
-                return view('psychologist.appointment.index', compact('upcoming', 'history'));
-            }
+    $upcomingIds = $upcomingAppointments->pluck('id')->toArray();
 
-            $this->autoCompletePastAppointments($user->id);
-            $this->autoUpdateExpiredPayments($user->id);
+    // HISTORY
+    $history = Appointment::with('psychologist.user')
+        ->where('user_id', $user->id)
+        ->whereNotIn('id', $upcomingIds)
+        ->orderBy('date', 'desc')
+        ->orderBy('start_time', 'desc')
+        ->get();
 
-            $upcomingAppointments = Appointment::with(['psychologist.user'])
-                ->where('user_id', $user->id)
-                ->whereNotIn('status', ['completed', 'canceled', 'cancelled'])
-                ->where(function ($query) {
-                    $query->whereDate('date', '>', now())
-                        ->orWhere(function ($q) {
-                            $q->whereDate('date', now())
-                            ->whereTime('end_time', '>', now());
-                        });
-                })
-                ->orderBy('date')
-                ->orderBy('start_time')
-                ->get();
+    return view(
+        'patient.appointment.appointments',
+        compact('upcomingAppointments', 'history', 'user')
+    );
+}
 
-            $upcomingIds = $upcomingAppointments->pluck('id')->toArray();
-
-            $history = Appointment::with(['psychologist' => function($query) {
-                    $query->with('user');
-                }])
-                ->where('user_id', $user->id)
-                ->whereNotIn('id', $upcomingIds)
-                ->orderBy('date', 'desc')
-                ->orderBy('start_time', 'desc')
-                ->get();
-
-            $rescheduleRequests = Appointment::with(['psychologist' => function($query) {
-                    $query->with('user');
-                }])
-                ->where('user_id', $user->id)
-                ->whereNotNull('reschedule_date')
-                ->where('status', '!=', 'cancelled')
-                ->orderBy('reschedule_date')
-                ->orderBy('reschedule_time')
-                ->get();
-
-            return view('patient.appointment.appointments', compact('upcomingAppointments', 'history', 'rescheduleRequests', 'user'));
-        }
 
 
         private function autoCompletePastAppointments($userId)
@@ -235,71 +197,64 @@
 
 
         public function reschedule(Request $request, $id)
-    {
-        $request->validate([
-            'reschedule_date' => 'required|date',
-            'reschedule_time' => 'required',
-        ]);
+        {
+            $request->validate([
+                'reschedule_date' => 'required|date',
+                'reschedule_time' => 'required',
+            ]);
 
-        $appointment = Appointment::where('id', $id)
-            ->where('user_id', auth()->id())
-            ->firstOrFail();
+            $appointment = Appointment::where('id', $id)
+                ->where('user_id', auth()->id())
+                ->firstOrFail();
 
-        // Cegah reschedule ganda
-        if ($appointment->is_reschedule_pending) {
-            return back()->with('error', 'Reschedule already pending.');
+            // OPTIONAL: cegah reschedule appointment yang sudah lewat
+            if ($appointment->status === 'completed') {
+                return back()->with('error', 'Appointment already completed.');
+            }
+
+            // UPDATE LANGSUNG
+            $appointment->update([
+                'date'       => $request->reschedule_date,
+                'start_time' => $request->reschedule_time,
+                'status'     => 'confirmed',
+            ]);
+
+            return redirect()
+                ->route('patient.appointments.index')
+                ->with('success', 'Appointment successfully rescheduled.');
         }
 
-        $appointment->update([
-            'reschedule_date' => $request->reschedule_date,
-            'reschedule_time' => $request->reschedule_time,
-            'is_reschedule_pending' => true,
-        ]);
-
-       return redirect()->route('patient.appointments.index')->with('success', 'Reschedule request sent successfully');
-
-    }
-
-    public function rescheduleIndex()
-    {
-        $rescheduleRequests = Appointment::where('user_id', auth()->id())
-            ->where('is_reschedule_pending', true)
-            ->latest()
-            ->get();
-
-        return view('patient.reschedule-appointments', compact('rescheduleRequests'));
-    }
 
 
-    public function acceptReschedule($id)
-    {
-        $appointment = Appointment::findOrFail($id);
+    // public function acceptReschedule($id)
+    // {
+    //     $appointment = Appointment::findOrFail($id);
 
-        $appointment->update([
-            'date' => $appointment->reschedule_date,
-            'start_time' => $appointment->reschedule_time,
-            'reschedule_date' => null,
-            'reschedule_time' => null,
-            'is_reschedule_pending' => false,
-            'status' => 'confirmed',
-        ]);
+    //     $appointment->update([
+    //         'date' => $appointment->reschedule_date,
+    //         'start_time' => $appointment->reschedule_time,
+    //         'reschedule_date' => null,
+    //         'reschedule_time' => null,
+    //         'is_reschedule_pending' => false,
+    //         'status' => 'confirmed',
+    //     ]);
 
-        return back()->with('success', 'Reschedule disetujui.');
-    }
+    //     return back()->with('success', 'Reschedule disetujui.');
+    // }
 
-    public function declineReschedule($id)
-    {
-        $appointment = Appointment::findOrFail($id);
+    // public function declineReschedule($id)
+    // {
+    //     $appointment = Appointment::findOrFail($id);
 
-        $appointment->update([
-            'reschedule_date' => null,
-            'reschedule_time' => null,
-            'is_reschedule_pending' => false,
-            'status' => 'confirmed',
-        ]);
+    //     $appointment->update([
+    //         'reschedule_date' => null,
+    //         'reschedule_time' => null,
+    //         'is_reschedule_pending' => false,
+    //         'status' => 'confirmed',
+    //     ]);
 
-        return back()->with('info', 'Reschedule ditolak.');
-    }
+    //     return back()->with('info', 'Reschedule ditolak.');
+    // }
 
 
     }
