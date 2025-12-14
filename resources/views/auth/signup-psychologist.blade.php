@@ -18,7 +18,7 @@
                     <div class="flex items-center rounded-lg px-4 py-3 shadow-sm bg-[#FAFAFA]">
                         <img src="{{ asset('assets/signup/user.svg') }}" class="w-5 h-5 opacity-50 mr-3">
                         <input type="text" name="full_name" placeholder="Full Name"
-                            class="w-full bg-transparent outline-none text-black placeholder-gray-400" 
+                            class="w-full bg-transparent outline-none text-black placeholder-gray-400"
                             value="{{ old('full_name') }}">
                     </div>
                     @error('full_name') <p class="text-red-500 text-sm mt-1 ml-1">{{ $message }}</p> @enderror
@@ -28,7 +28,7 @@
                 <div>
                     <div class="flex items-center rounded-lg px-4 py-3 shadow-sm bg-[#FAFAFA]">
                         <img src="{{ asset('assets/signup/email.svg') }}" class="w-5 h-5 opacity-50 mr-3">
-                        <input type="email" name="email" placeholder="Email" 
+                        <input type="email" name="email" placeholder="Email"
                                 class="w-full bg-transparent outline-none text-black placeholder-gray-400"
                                 value="{{ old('email') }}">
                     </div>
@@ -39,7 +39,7 @@
                 <div>
                     <div class="flex items-center rounded-lg px-4 py-3 shadow-sm bg-[#FAFAFA]">
                         <img src="{{ asset('assets/signup/password.svg') }}" class="w-5 h-5 opacity-50 mr-3">
-                        <input type="password" name="password" placeholder="Password" 
+                        <input type="password" name="password" placeholder="Password"
                                 class="w-full bg-transparent outline-none text-black placeholder-gray-400" id="password">
                         <button type="button" onclick="togglePassword('password')">
                             <img src="{{ asset('assets/signup/eye-closed.svg') }}" class="w-5 h-5 opacity-50"
@@ -55,7 +55,7 @@
                 <div>
                     <div class="flex items-center rounded-lg px-4 py-3 shadow-sm bg-[#FAFAFA]">
                         <img src="{{ asset('assets/signup/password.svg') }}" class="w-5 h-5 opacity-50 mr-3">
-                        <input type="password" name="password_confirmation" placeholder="Confirm Password" 
+                        <input type="password" name="password_confirmation" placeholder="Confirm Password"
                                 class="w-full bg-transparent outline-none text-black placeholder-gray-400" id="confirm-password">
                         <button type="button" onclick="togglePassword('confirm-password')">
                             <img src="{{ asset('assets/signup/eye-closed.svg') }}" class="w-5 h-5 opacity-50"
@@ -113,7 +113,7 @@
                 <div>
                     <div class="flex items-center rounded-lg px-4 py-3 shadow-sm bg-[#FAFAFA]">
                         <img src="{{ asset('assets/signup/user.svg') }}" class="w-5 h-5 opacity-50 mr-3">
-                        <input type="text" name="title" placeholder="Professional Title (e.g., M.Psi, Psikolog)" 
+                        <input type="text" name="title" placeholder="Professional Title (e.g., M.Psi, Psikolog)"
                             class="w-full bg-transparent outline-none text-black placeholder-gray-400"
                             value="{{ old('title') }}">
                     </div>
@@ -124,7 +124,7 @@
                 <div>
                     <div class="flex items-center rounded-lg px-4 py-3 shadow-sm bg-[#FAFAFA]">
                         <img src="{{ asset('assets/signup/card.svg') }}" class="w-5 h-5 opacity-50 mr-3">
-                        <input type="text" name="license_number" placeholder="License (STR/Practice ID)" 
+                        <input type="text" name="license_number" placeholder="License (STR/Practice ID)"
                                 class="w-full bg-transparent outline-none text-black placeholder-gray-400"
                                 value="{{ old('license_number') }}">
                     </div>
@@ -135,7 +135,7 @@
                 <div>
                     <div class="flex items-center rounded-lg px-4 py-3 shadow-sm bg-[#FAFAFA]">
                         <img src="{{ asset('assets/signup/book.svg') }}" class="w-5 h-5 opacity-50 mr-3">
-                        <input type="text" name="specialization" placeholder="Specialization (Clinical, Child, etc.)" 
+                        <input type="text" name="specialization" placeholder="Specialization (Clinical, Child, etc.)"
                                 class="w-full bg-transparent outline-none text-black placeholder-gray-400"
                                 value="{{ old('specialization') }}">
                     </div>
@@ -146,7 +146,7 @@
                 <div>
                     <div class="flex items-center rounded-lg px-4 py-3 shadow-sm bg-[#FAFAFA]">
                         <img src="{{ asset('assets/signup/briefcase.svg') }}" class="w-5 h-5 opacity-50 mr-3">
-                        <input type="number" name="years_experience" placeholder="Years of Experience" 
+                        <input type="number" name="years_experience" placeholder="Years of Experience"
                                 class="w-full bg-transparent outline-none text-black placeholder-gray-400"
                                 value="{{ old('years_experience') }}">
                     </div>
@@ -157,7 +157,7 @@
                 <div>
                     <div class="flex items-center rounded-lg px-4 py-3 shadow-sm bg-[#FAFAFA]">
                         <img src="{{ asset('assets/signup/dollar.svg') }}" class="w-5 h-5 opacity-50 mr-3">
-                        <input type="number" step="1000" name="consultation_fee" placeholder="Consultation Fee (e.g., 200000)" 
+                        <input type="number" step="1000" name="consultation_fee" placeholder="Consultation Fee (e.g., 200000)"
                             class="w-full bg-transparent outline-none text-black placeholder-gray-400"
                             value="{{ old('consultation_fee') }}">
                     </div>
@@ -218,7 +218,7 @@
                 {{-- LOGIN LINK --}}
                 <div class="text-center pt-3">
                     <p class="text-gray-600 text-sm">Already have an account?
-                        <a href="{{ route('login') }}" class="font-medium underline" style="color:#009C8F;">Sign in</a>
+                        <a href="{{ route('login') }}" class="font-medium underline" style="color:#009C8F;">Login</a>
                     </p>
                 </div>
 

@@ -29,7 +29,7 @@ class NavigationHelper
                     'icon' => 'assets/icons/book.svg',
                     'text' => 'Book Appointment',
                     'route' => 'patient.book.appointment',
-                    'patterns' => ['patient.book.appointment']
+                    'patterns' => ['patient.book.appointment', 'patient.payment.*']
                 ],
                 [
                     'icon' => 'assets/icons/calendar.svg',
@@ -77,7 +77,13 @@ class NavigationHelper
                     'icon' => 'assets/icons/home.svg',
                     'text' => 'Dashboard',
                     'route' => 'admin.dashboard',
-                    'patterns' => ['admin.*', 'profile.*']
+                    'patterns' => ['admin.dashboard', 'profile.*']
+                ],
+                [
+                    'icon' => 'assets/icons/users.svg',
+                    'text' => 'Verify Psychologists',
+                    'route' => 'admin.verify.index',
+                    'patterns' => ['admin.verify.*', 'profile.*']
                 ],
             ]
         ];
@@ -87,7 +93,7 @@ class NavigationHelper
 
     public static function isActive($patterns)
     {
-        foreach ((array)$patterns as $pattern) {
+        foreach ((array) $patterns as $pattern) {
             if (request()->routeIs($pattern)) {
                 return true;
             }

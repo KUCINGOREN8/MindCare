@@ -36,7 +36,7 @@ class Appointment extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function payment()
@@ -64,7 +64,7 @@ class Appointment extends Model
         return Carbon::createFromFormat(
             'Y-m-d H:i:s',
             $this->date->format('Y-m-d') . ' ' . $this->start_time,
-            config('app.timezone')
+            config('app.timezone', 'Asia/Jakarta')
         );
     }
 
@@ -105,5 +105,23 @@ class Appointment extends Model
         $availableFrom = $sessionStart->copy()->subMinutes(30);
 
         return $now >= $availableFrom && $now <= $sessionEnd;
+    }
+
+    public function getCanBeReviewedAttribute()
+    {
+        return $this->status === 'completed' && 
+            auth()->check() && 
+            auth()->id() === $this->user_id;
+    }
+
+    public function getHasBeenReviewedAttribute()
+    {
+        if (!$this->can_be_reviewed) {
+            return false;
+        }
+        
+        return $this->psychologist->reviews()
+            ->where('user_id', auth()->id())
+            ->exists();
     }
 }

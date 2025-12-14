@@ -60,23 +60,37 @@
                 }
             @endphp
 
-            <div class="flex items-center gap-4">
-                <div class="w-10 h-10 rounded-full {{ $iconBgColor }} {{ $iconTextColor }} flex items-center justify-center group-hover:bg-green-500 group-hover:text-white transition">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
+            <div class="flex flex-col flex-1 gap-5">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-full {{ $iconBgColor }} {{ $iconTextColor }} flex items-center justify-center group-hover:bg-green-500 group-hover:text-white transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="font-bold text-gray-800 text-sm">
+                            {{ $item->psychologist->user->full_name ?? $item->with ?? 'Psychologist' }}
+                        </p>
+                        <p class="text-xs text-gray-500">
+                            {{ isset($item->date) ? \Carbon\Carbon::parse($item->date)->format('d F Y') : '-' }} •
+                            {{ $item->start_time }} - {{ $item->end_time }}
+                            @if($item->psychologist->specialization ?? false)
+                                <br><span class="text-gray-400">Specialization: {{ $item->psychologist->specialization }}</span>
+                            @endif
+                        </p>
+                    </div>
                 </div>
-                <div>
-                    <p class="font-bold text-gray-800 text-sm">
-                        {{ $item->psychologist->user->full_name ?? $item->with ?? 'Psychologist' }}
-                    </p>
-                    <p class="text-xs text-gray-500">
-                        {{ isset($item->date) ? \Carbon\Carbon::parse($item->date)->format('d F Y') : '-' }} •
-                        {{ $item->start_time }} - {{ $item->end_time }}
-                        @if($item->psychologist->specialization ?? false)
-                            <br><span class="text-gray-400">Specialization: {{ $item->psychologist->specialization }}</span>
-                        @endif
-                    </p>
+                
+                <div class="">
+                    @if ($item->has_been_reviewed)
+                        <a href="{{ route('patient.appointments.review.edit', $item->id) }}"class="px-4 py-2 bg-[#00C3B3] hover:bg-[#179990] text-white rounded-md items-center justify-center">
+                            Edit Review
+                        </a>
+                    @else
+                        <a href="{{ route('patient.appointments.review.create', $item->id) }}" class="px-4 py-2 bg-[#00C3B3] hover:bg-[#179990] text-white rounded-md items-center justify-center">
+                            Give Review
+                        </a>
+                    @endif
                 </div>
             </div>
 
