@@ -105,7 +105,7 @@ class AppointmentController extends Controller
     public function cancel($id)
     {
         $appointment = Appointment::findOrFail($id);
-        $appointment->status = 'canceled';
+        $appointment->status = 'cancelled';
         $appointment->save();
         return back();
     }
