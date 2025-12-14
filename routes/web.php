@@ -47,7 +47,6 @@ Route::middleware('guest')->group(function () {
         Route::post('/step4/{user}', [AuthPsychologistController::class, 'storeStep4'])->name('storeStep4');
         Route::get('/step5/{user}', [AuthPsychologistController::class, 'showStep5'])->name('step5');
         Route::post('/step5/{user}', [AuthPsychologistController::class, 'storeStep5'])->name('storeStep5');
-        Route::get('/complete', [AuthPsychologistController::class, 'complete'])->name('complete');
     });
 
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -137,8 +136,8 @@ Route::middleware(['auth', 'otp', 'role:psychologist'])
         ->name('appointments.')
         ->controller(AppointmentController::class)
         ->group(function () {
-            // TO-DO: GANTI ROUTE DISINI KALAU PAGE NYA UDH
-            Route::get('/', 'index')->name('index');
+            Route::get('/', [PsychologistController::class, 'showSchedule'])->name('index');
+            Route::get('/chat/session/{appointment}', [ChatController::class, 'startSession'])->name('chat.session');
     });
 });
 

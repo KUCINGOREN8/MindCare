@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Psychologist;
-use App\Http\Requests\StorePsychologistRequest;
-use App\Http\Requests\UpdatePsychologistRequest;
 use App\Models\Appointment;
 use App\Models\PsychologistClientNote;
 use App\Models\User;
@@ -132,8 +130,12 @@ class PsychologistController extends Controller
                     'message' => 'Unauthorized access to appointment. Psychologist ID mismatch.',
                 ], 403);
             }
-            
+
             $appointment->update(['notes' => $request->notes]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Session notes saved successfully!',
+            ]);
 
         } catch (\Exception $e) {
             return response()->json([
@@ -184,5 +186,50 @@ class PsychologistController extends Controller
                 'message' => 'Failed to save notes: ' . $e->getMessage(),
             ], 500);
         }
+    }
+
+    public function showSchedule()
+    {
+        $psychologist = Auth::user()->psychologist;
+
+        Appointment::where('psychologist_id', $psychologist->id)
+            ->where('status', 'confirmed')
+            ->whereRaw("CONCAT(date, ' ', end_time) < ?", [now()->format('Y-m-d H:i:s')])
+            ->update(['status' => 'completed']);
+
+        Appointment::where('psychologist_id', $psychologist->id)
+            ->where('status', 'pending_payment')
+            ->whereRaw("CONCAT(date, ' ', end_time) < ?", [now()->format('Y-m-d H:i:s')])
+            ->update(['status' => 'cancelled']);
+
+        $upcomingAppointments = $psychologist->appointments()
+            ->with('user')
+            ->whereIn('status', ['confirmed', 'pending_payment', 'scheduled'])
+            ->whereNull('reschedule_date')
+            ->whereRaw("CONCAT(date, ' ', end_time) > ?", [now()->format('Y-m-d H:i:s')])
+            ->orderBy('date')
+            ->orderBy('start_time')
+            ->get();
+
+        $historyAppointments = $psychologist->appointments()
+            ->with('user')
+            ->whereIn('status', ['completed', 'cancelled'])
+            ->whereNull('reschedule_date')
+            ->orderBy('date', 'desc')
+            ->get();
+
+        $rescheduleAppointments = $psychologist->appointments()
+            ->with('user')
+            ->whereNotNull('reschedule_date')
+            ->where('status', '!=', 'cancelled')
+            ->orderBy('reschedule_date')
+            ->orderBy('reschedule_time')
+            ->get();
+
+        return view('psychologist.appointment.index', compact(
+            'upcomingAppointments',
+            'historyAppointments',
+            'rescheduleAppointments'
+        ));
     }
 }
