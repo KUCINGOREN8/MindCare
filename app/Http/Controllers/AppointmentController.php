@@ -200,4 +200,42 @@ class AppointmentController extends Controller
             return redirect()->route('patient.appointments.index')->with('error', 'Payment failed: ' . $e->getMessage());
         }
     }
+
+    public function psychologistAppointments()
+    {
+        $psychologist = Auth::user()->psychologist;
+
+        $upcomingAppointments = $psychologist->appointments()
+            ->with('user')
+            ->where('status', 'confirmed')
+            ->where(function($q) {
+                $q->whereDate('date', '>', now())
+                ->orWhere(function($q2) {
+                    $q2->whereDate('date', '=', now())
+                        ->whereTime('end_time', '>', now()->format('H:i:s'));
+                });
+            })
+            ->orderBy('date')
+            ->orderBy('start_time')
+            ->get();
+
+        $todayAppointments = $psychologist->appointments()
+            ->with('user')
+            ->whereDate('date', now())
+            ->where('status', 'confirmed')
+            ->orderBy('start_time')
+            ->get();
+
+        $pendingAppointments = $psychologist->appointments()
+            ->with('user')
+            ->where('status', 'pending_payment')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('psychologist.appointments.index', compact(
+            'upcomingAppointments',
+            'todayAppointments',
+            'pendingAppointments'
+        ));
+    }
 }

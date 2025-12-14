@@ -25,7 +25,7 @@ class AuthPsychologistController extends Controller
         $validator = Validator::make($request->all(), [
             'full_name' => 'required|string|min:3|max:255',
             'email' => 'required|email|unique:users,email|max:255',
-            'password' => ['required', 'confirmed', RulesPassword::min(8)->mixedCase()->numbers()],
+            'password' => ['required', 'confirmed', RulesPassword::min(6)->mixedCase()->numbers()],
             'date_of_birth' => 'required|date|before:today',
             'gender' => 'required|in:male,female,other',
             'preferred_language' => 'required|in:en,id',
