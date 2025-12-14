@@ -287,50 +287,47 @@ class UserController extends Controller
     }
 
     public function updatePrivacy(Request $request)
-{
-    $user = Auth::user();
-    
-    // VALIDASI SEKALIGUS - JANGAN PECAH
-    $validator = Validator::make($request->all(), [
-        'old_password' => [
-            'required',
-            'string',
-            // Custom rule untuk cek kecocokan
-            function ($attribute, $value, $fail) use ($user) {
-                if (!Hash::check($value, $user->password)) {
-                    $fail('The old password is incorrect.');
+    {
+        $user = Auth::user();
+        
+        $validator = Validator::make($request->all(), [
+            'old_password' => [
+                'required',
+                'string',
+                function ($attribute, $value, $fail) use ($user) {
+                    if (!Hash::check($value, $user->password)) {
+                        $fail('The old password is incorrect.');
+                    }
                 }
-            }
-        ],
-        'new_password' => [
-            'required',
-            'string',
-            'confirmed', // ← otomatis cek new_password_confirmation
-            'different:old_password',
-            RulesPassword::min(6)->mixedCase()->numbers()
-        ],
-        // 'new_password_confirmation' otomatis divalidasi
-    ], [
-        'old_password.required' => 'Old password is required',
-        'new_password.required' => 'New password is required',
-        'new_password.confirmed' => 'Password confirmation does not match',
-        'new_password.different' => 'New password must be different from old password',
-    ]);
+            ],
+            'new_password' => [
+                'required',
+                'string',
+                'confirmed',
+                'different:old_password',
+                RulesPassword::min(6)->mixedCase()->numbers()
+            ],
+        ], [
+            'old_password.required' => 'Old password is required',
+            'new_password.required' => 'New password is required',
+            'new_password.confirmed' => 'Password confirmation does not match',
+            'new_password.different' => 'New password must be different from old password',
+        ]);
 
-    if ($validator->fails()) {
-        return redirect()->back()
-            ->withErrors($validator)
-            ->withInput()
-            ->with('error', 'Please fix the errors below.');
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Please fix the errors below.');
+        }
+
+        $user->update([
+            'password' => Hash::make($request->new_password),
+        ]);
+
+        return redirect()->route('profile.index', ['tab' => 'privacy'])
+            ->with('success', 'Password updated successfully!');
     }
-
-    $user->update([
-        'password' => Hash::make($request->new_password),
-    ]);
-
-    return redirect()->route('profile.index', ['tab' => 'privacy'])
-        ->with('success', 'Password updated successfully!');
-}
 
     public function updatePreferences(Request $request)
     {
