@@ -6,12 +6,12 @@
     <div class="flex flex-1 flex-col gap-6">
         <div class="flex flex-col gap-6">
             <div class="flex bg-white p-6 rounded-md border-grey-border border justify-between">
-                        <div class="flex flex-col">
-                            <h1 class="font-bold text-lg text-primary">Edit Your Review</h1>
-                            <h5 class="text-captiondark text-sm">Update your experience with {{ $appointment->psychologist->user->full_name }}</h5>
-                        </div>
-                        <button onclick="window.history.back()" type="submit" class="px-4 py-2 bg-primary text-white rounded-md">Back</button>            </div>
-                    </div>
+                <div class="flex flex-col">
+                    <h1 class="font-bold text-lg text-primary">Edit Your Review</h1>
+                    <h5 class="text-captiondark text-sm">Update your experience with {{ $appointment->psychologist->user->full_name }}</h5>
+                </div>
+                <button onclick="window.history.back()" type="submit" class="px-4 py-2 bg-primary text-white rounded-md">Back</button>
+            </div>
         
             {{-- Appointment --}}
             <x-appointment-card
