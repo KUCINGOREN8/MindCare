@@ -24,7 +24,8 @@ class User extends Authenticatable
         'otp_code',
         'otp_expires_at',
         'otp_verified',
-        'role'
+        'role',
+        'status'
     ];
 
     protected $hidden = [
@@ -90,7 +91,7 @@ class User extends Authenticatable
 
     public function psychologist()
     {
-    return $this->hasOne(Psychologist::class);
+        return $this->hasOne(Psychologist::class);
     }
 
     public function conversationsAsPatient()
@@ -122,6 +123,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(Message::class, 'receiver_id');
     }
+
 
     public function appointments()
     {

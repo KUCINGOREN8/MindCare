@@ -41,9 +41,10 @@ class AuthPsychologistController extends Controller
             'preferred_language' => $request->preferred_language,
             'agree_to_terms' => true,
             'role' => 'psychologist',
+            'status' => 'pending',
         ]);
 
-        return redirect()->route('psychologist.signup.step2', $user);
+        return redirect()->route('psychologist.signup.step2', ['user' => $user->id]);
     }
 
     // Step 2: Professional Info
@@ -77,7 +78,7 @@ class AuthPsychologistController extends Controller
             'consultation_fee' => $request->consultation_fee,
             'short_bio' => $request->short_bio,
             'about_me' => $request->about_me,
-            'languages' => $request->languages,
+            'languages' => $request->input('languages'),
         ]);
 
         return redirect()->route('psychologist.signup.step3', $user);
@@ -142,6 +143,7 @@ class AuthPsychologistController extends Controller
 
         Auth()->login($user);
         $user->sendOTPNotification();
+        $user->save();
 
         return redirect()->route('otp.verify')->with('success', 'Registration successful! Please verify your email with OTP.');
     }
