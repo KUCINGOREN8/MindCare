@@ -1,6 +1,6 @@
 <div class="bg-white p-6 flex flex-col gap-6 rounded-md border-grey-border border">
     <div class="flex flex-1 items-start">
-        <h3 class="font-bold">History Appointments</h3>
+        <h3 class="font-bold">Reschedule Requests</h3>
     </div>
 
     @forelse($rescheduleRequests ?? [] as $request)

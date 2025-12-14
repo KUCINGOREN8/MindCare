@@ -11,12 +11,12 @@
 
         {{-- Upcoming Appointment --}}
         @include('components.upcoming-appointment', ['showSeeAll' => false])
-        
+
         {{-- History --}}
         @include('components.history-appointment')
 
         {{-- Reschedule --}}
         @include('components.reschedule-appointment')
-        
+
     </div>
 @endsection
