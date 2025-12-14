@@ -24,7 +24,8 @@ class User extends Authenticatable
         'otp_code',
         'otp_expires_at',
         'otp_verified',
-        'role'
+        'role',
+        'status'
     ];
 
     protected $hidden = [
@@ -90,7 +91,7 @@ class User extends Authenticatable
 
     public function psychologist()
     {
-    return $this->hasOne(Psychologist::class);
+        return $this->hasOne(Psychologist::class);
     }
 
     public function conversationsAsPatient()
@@ -123,5 +124,67 @@ class User extends Authenticatable
         return $this->hasMany(Message::class, 'receiver_id');
     }
 
-    
+
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class, 'user_id');
+    }
+
+    public function getDefaultAvatarUrl()
+    {
+        $gender = $this->gender ?? 'male';
+        
+        $avatarFiles = [
+            'female' => 'user_female.svg',
+            'male' => 'user_male.svg',
+            'other' => 'user_other.svg',
+        ];
+        
+        $filename = $avatarFiles[$gender] ?? 'user_male.svg';
+        $path = "assets/icons/{$filename}";
+        
+        // fallback
+        if (!file_exists(public_path($path))) {
+            $path = 'assets/icons/user_male.svg';
+        }
+        
+        return asset($path);
+    }
+
+    public function getPhotoUrlAttribute($value)
+    {
+        // Photo profile is customized
+        if ($value) {
+            if (filter_var($value, FILTER_VALIDATE_URL)) {
+                return $value;
+            }
+            
+            return asset('storage/' . $value);
+        }
+        
+        return $this->getDefaultAvatarUrl();
+    }
+
+    public function getPhotoPathAttribute()
+    {
+        if (!$this->attributes['photo_url'] ?? null) {
+            return null;
+        }
+        
+        $url = $this->attributes['photo_url'];
+        
+        if (filter_var($url, FILTER_VALIDATE_URL)) {
+            $parsedUrl = parse_url($url);
+            $path = $parsedUrl['path'] ?? '';
+            
+            return ltrim(str_replace('/storage/', '', $path), '/');
+        }
+        
+        return $url;
+    }
+
+    public function hasCustomPhoto()
+    {
+        return !empty($this->attributes['photo_url'] ?? null);
+    }
 }

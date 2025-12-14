@@ -171,10 +171,10 @@ Route::middleware(['auth', 'otp', 'role:admin'])
         Route::post('/verify-psychologists/{id}/approve', [AdminController::class, 'approvePsychologist'])->name('verify.approve');
         Route::delete('/verify-psychologists/{id}/reject', [AdminController::class, 'rejectPsychologist'])->name('verify.reject');
 
-        // Manage User (CRUD)
+        // Manage User (CRUD)---
         Route::resource('users', AdminController::class);
     });
-    //huhuu
+    //huhuuhaskas;a
 
 // SHARED ROUTES -> Auth + OTP Protected
 Route::middleware(['auth', 'otp'])->group(function () {

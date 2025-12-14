@@ -30,7 +30,7 @@
                     </div>
                    @foreach ($psychologist->reviews as $review)
                         <div class="flex flex-1 p-[16px] rounded-md border border-1 border-grey-border gap-3 items-center">
-                            <img src="{{ $review->user->photo_url ? asset($review->user->photo_url) : ($review->user->gender=="female" ? asset('assets/icons/user_female.svg') : asset('assets/icons/user_male.svg')) }}" 
+                            <img src="{{ $review->user->photo_url }}" 
                                 alt="" 
                                 class="w-[35px] h-[35px] rounded-full object-cover">
                             <div class="flex flex-col gap-2 flex-1">

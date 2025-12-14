@@ -16,8 +16,8 @@
             {{-- User Information --}}
             <div class="flex flex-col gap-4 lg:flex-row transition-all duration-300">
                 <img
-                    src="{{ $user->photo_url ? asset($user->photo_url) : ($user->gender == 'female' ? asset('assets/icons/user_female.svg') : asset('assets/icons/user_male.svg')) }}"
-                    class="rounded-full w-16 h-16 lg:mx-0 mx-auto"
+                    src="{{ $user->photo_url }}"
+                    class="rounded-full w-16 h-16 lg:mx-0 mx-auto object-cover"
                     alt="{{ $user->full_name }} profile picture"
                 >
                 <div class="flex flex-col justify-left text-left">

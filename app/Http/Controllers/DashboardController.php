@@ -14,6 +14,7 @@ use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
+    //terimakasih
     public function index()
     {
         $testimonials = Testimonial::inRandomOrder()->take(3)->get();
@@ -24,6 +25,11 @@ class DashboardController extends Controller
 
     public function showPatientDashboard() {
         $user = Auth::user();
+
+        if (!$user->otp_verified || $user->status !== 'active') {
+            Auth::logout();
+            return redirect()->route('login')->with('error', 'Please verify your email first or contact admin if your account is not active.');
+        }
 
         $upcomingAppointments = Appointment::with(['psychologist' => function($query) {
                 $query->with('user');
@@ -42,22 +48,22 @@ class DashboardController extends Controller
 
         return view('dashboard.patient.index', compact('user', 'upcomingAppointments'));
     }
-    
+
     public function moodStore(Request $request)
     {
         $request->validate([
             'mood' => ['required', Rule::in(['sad', 'flat', 'good', 'happy', 'blissful'])],
         ]);
-        
+
         $mood = Mood::create([
             'user_id' => auth()->id(),
             'mood' => $request->mood,
         ]);
-        
+
         return back()->with('success', 'Mood berhasil disimpan!')
         ->with('undo_id', $mood->id);
     }
-    
+
     public function undo(Request $request)
     {
         $mood = Mood::find($request->undo_id);
@@ -71,10 +77,15 @@ class DashboardController extends Controller
     }
 
     // === PSYCHOLOGIST DASHBOARD METHODS === //
-    
+
     public function showPsychologistDashboard() {
         $user = Auth::user();
-    
+
+        if (!$user->otp_verified || $user->status !== 'active') {
+            Auth::logout();
+            return redirect()->route('login');
+        }
+
         $stats = $this->getPsychologistStats($user->psychologist);
 
         $upcomingAppointments = Appointment::with(['user' => function($query) {
@@ -91,14 +102,14 @@ class DashboardController extends Controller
             ->orderBy('start_time')
             ->take(3)
             ->get();
-    
+
         return view('dashboard.psychologist.index', compact('user', 'upcomingAppointments', 'stats'));
     }
-    
+
     protected function getPsychologistStats($psychologist)
     {
         $now = Carbon::now();
-        
+
         return [
             // Stat 1: Total Patients
             'total_patients' => $this->getPsychologistTotalPatients($psychologist),
@@ -116,19 +127,19 @@ class DashboardController extends Controller
             'revenue_trend' => $this->calculateRevenueTrend($psychologist),
         ];
     }
-    
+
     protected function getPsychologistTotalPatients($psychologist)
     {
         return $psychologist->appointments()
             ->distinct('user_id')
             ->count('user_id');
     }
-        
+
     protected function getNewPatientsThisMonth($psychologist)
     {
         $startOfMonth = Carbon::now()->startOfMonth();
         $endOfMonth = Carbon::now()->endOfMonth();
-        
+
         return $psychologist->appointments()
             ->whereBetween('date', [$startOfMonth, $endOfMonth])
             ->whereNotIn('user_id', function($query) use ($psychologist, $startOfMonth) {
@@ -145,7 +156,7 @@ class DashboardController extends Controller
     {
         $startOfWeek = Carbon::now()->startOfWeek();
         $endOfWeek = Carbon::now()->endOfWeek();
-        
+
         return $psychologist->appointments()
             ->whereBetween('date', [$startOfWeek, $endOfWeek])
             ->whereIn('status', ['scheduled', 'confirmed', 'completed'])
@@ -159,23 +170,23 @@ class DashboardController extends Controller
             ->whereIn('status', ['scheduled', 'confirmed'])
             ->count();
     }
-    
+
         protected function getCompletedSessionsThisWeek($psychologist)
         {
             $startOfWeek = Carbon::now()->startOfWeek();
             $endOfWeek = Carbon::now()->endOfWeek();
-            
+
             return $psychologist->appointments()
                 ->whereBetween('date', [$startOfWeek, $endOfWeek])
                 ->where('status', 'completed')
                 ->count();
         }
-    
+
     protected function getPsychologistMonthlyRevenue($psychologist)
     {
         $startOfMonth = Carbon::now()->startOfMonth();
         $endOfMonth = Carbon::now()->endOfMonth();
-        
+
         return $psychologist->appointments()
             ->whereBetween('date', [$startOfMonth, $endOfMonth])
             ->whereHas('payment', function($query) {
@@ -192,25 +203,25 @@ class DashboardController extends Controller
     {
         $currentMonth = Carbon::now()->startOfMonth();
         $lastMonth = Carbon::now()->subMonth()->startOfMonth();
-        
+
         $currentPatients = $psychologist->appointments()
             ->where('date', '>=', $currentMonth)
             ->distinct('user_id')
             ->count('user_id');
-            
+
         $lastMonthPatients = $psychologist->appointments()
             ->whereBetween('date', [$lastMonth, $currentMonth->copy()->subDay()])
             ->distinct('user_id')
             ->count('user_id');
-            
+
         return $this->calculatePercentageTrend($currentPatients, $lastMonthPatients);
     }
-    
+
     protected function calculateRevenueTrend($psychologist)
     {
         $currentMonth = Carbon::now()->startOfMonth();
         $lastMonth = Carbon::now()->subMonth()->startOfMonth();
-        
+
         $currentRevenue = $psychologist->appointments()
             ->where('date', '>=', $currentMonth)
             ->whereHas('payment', function($q) {
@@ -219,7 +230,7 @@ class DashboardController extends Controller
             ->with('payment')
             ->get()
             ->sum(fn($a) => $a->payment->amount ?? 0);
-            
+
         $lastMonthRevenue = $psychologist->appointments()
             ->whereBetween('date', [$lastMonth, $currentMonth->copy()->subDay()])
             ->whereHas('payment', function($q) {
@@ -228,35 +239,35 @@ class DashboardController extends Controller
             ->with('payment')
             ->get()
             ->sum(fn($a) => $a->payment->amount ?? 0);
-            
+
         return $this->calculatePercentageTrend($currentRevenue, $lastMonthRevenue);
     }
-    
+
     protected function calculateSessionsTrend($psychologist)
     {
         $currentWeek = Carbon::now()->startOfWeek();
         $lastWeek = Carbon::now()->subWeek()->startOfWeek();
         $endOfLastWeek = $currentWeek->copy()->subDay();
-        
+
         $currentSessions = $psychologist->appointments()
             ->where('date', '>=', $currentWeek)
             ->whereIn('status', ['scheduled', 'confirmed', 'completed'])
             ->count();
-            
+
         $lastWeekSessions = $psychologist->appointments()
             ->whereBetween('date', [$lastWeek, $endOfLastWeek])
             ->whereIn('status', ['scheduled', 'confirmed', 'completed'])
             ->count();
-            
+
         return $this->calculatePercentageTrend($currentSessions, $lastWeekSessions);
     }
-    
+
     protected function calculatePercentageTrend($current, $previous)
     {
         if ($previous == 0) {
             return $current > 0 ? 100 : 0;
         }
-        
+
         $change = (($current - $previous) / $previous) * 100;
         return round($change, 1);
     }

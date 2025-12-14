@@ -12,8 +12,48 @@ class AdminController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $users = User::latest()->paginate(10);
-        return view('dashboard.admin.index', compact('user'))->with('users', $users);
+        // Hanya ambil user yang sudah active (atau semua terserah kebijakan)
+        $users = User::where('role', '!=', 'psychologist') // Contoh: List user biasa
+            ->orWhere(function ($q) {
+                $q->where('role', 'psychologist')->where('status', 'active');
+            })
+            ->latest()->paginate(10);
+
+        return view('dashboard.admin.index', compact('user', 'users'));
+    }
+
+    // --- FITUR BARU: VERIFIKASI PSIKOLOG ---
+
+    /**
+     * 1. Menampilkan daftar psikolog yang statusnya masih 'pending'
+     */
+    public function verifyIndex()
+    {
+        $user = Auth::user();
+        $pendingPsychologists = User::where('role', 'psychologist')
+            ->where('status', 'pending')
+            ->latest()
+            ->paginate(10);
+
+        return view('dashboard.admin.verify', compact('user', 'pendingPsychologists'));
+    }
+
+    public function approvePsychologist($id)
+    {
+        $psychologist = User::findOrFail($id);
+        $psychologist->update([
+            'status' => 'active'
+        ]);
+
+        return redirect()->back()->with('success', 'Psychologist registration has been approved.');
+    }
+
+    public function rejectPsychologist($id)
+    {
+        $psychologist = User::findOrFail($id);
+        $psychologist->delete();
+
+        return redirect()->back()->with('success', 'Psychologist registration has been rejected.');
     }
 
     public function create()

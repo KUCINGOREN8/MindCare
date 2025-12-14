@@ -37,7 +37,7 @@
                     <div class="text-center pt-3">
                         <p class="text-gray-600 text-sm">
                             Remember your password?
-                            <a href="{{ route('login') }}" class="font-medium underline" style="color: #009C8F;">Sign in</a>
+                            <a href="{{ route('login') }}" class="font-medium underline" style="color: #009C8F;">Login</a>
                         </p>
                     </div>
                 </form>

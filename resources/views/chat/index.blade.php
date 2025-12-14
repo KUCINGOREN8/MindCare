@@ -54,7 +54,7 @@ use Illuminate\Support\Str;
                 >
                     <div class="relative flex-shrink-0">
                         <img
-                            src="{{ $otherUser->photo_url ? asset($otherUser->photo_url) : ($otherUser->gender == 'female' ? asset('assets/icons/user_female.svg') : asset('assets/icons/user_male.svg')) }}"
+                            src="{{ $otherUser->photo_url }}"
                             class="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm"
                             alt="{{ $otherUser->full_name }}"
                         >

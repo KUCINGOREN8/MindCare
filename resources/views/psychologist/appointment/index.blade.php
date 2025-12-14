@@ -1,5 +1,5 @@
 @extends('layouts.dashboard')
-@section('title', 'Psychologist Schedule')
+@section('title', 'Psychologist Appointments')
 
 @section('content')
 
