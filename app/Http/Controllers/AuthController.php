@@ -14,7 +14,6 @@ use Illuminate\Validation\Rules\Password as RulesPassword;
 
 class AuthController extends Controller
 {
-
     public function showSignup()
     {
         return view('auth.signup');
@@ -49,6 +48,8 @@ class AuthController extends Controller
             'preferred_language' => $request->language,
             'agree_to_terms' => true,
             'role' => 'patient',
+            'status' => 'inactive',
+            'otp_verified' => false,
         ]);
 
         Auth::login($user);
@@ -65,23 +66,47 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
 
         if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
             $user = Auth::user();
-            return redirect()->intended(route( $user->role . '.dashboard'));
-        }
 
+            if ($user->status !== 'active') {
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+
+                $message = 'Your account is currently ' . $user->status . '.';
+                if ($user->status === 'pending') {
+                    $message .= ' Please wait for Admin approval.';
+                }
+
+                return back()->withErrors(['email' => $message])->onlyInput('email');
+            }
+
+            if (!$user->otp_verified) {
+                return redirect()->route('otp.verify')->with('error', 'Please verify your email with OTP.');
+            }
+
+            $request->session()->regenerate();
+
+            if ($user->role === 'admin') {
+                return redirect()->route('admin.dashboard');
+            } elseif ($user->role === 'psychologist') {
+                return redirect()->route('psychologist.dashboard');
+            }
+
+            return redirect()->route('patient.dashboard');
+        }
 
         return back()->withErrors([
             'email' => 'Invalid email or password.',
         ])->onlyInput('email');
     }
+
 
 
     public function showForgotPassword()
@@ -132,6 +157,7 @@ class AuthController extends Controller
             ? redirect()->route('login')->with('status', __($status))
             : back()->withErrors(['email' => [__($status)]]);
     }
+
 
 
     public function logout(Request $request)

@@ -3,10 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\Psychologist;
-use App\Models\PsychologistEducation;
-use App\Models\PsychologistExperience;
-use App\Models\PsychologistSchedule;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -14,7 +11,6 @@ use Illuminate\Validation\Rules\Password as RulesPassword;
 
 class AuthPsychologistController extends Controller
 {
-    // Step 1: Basic Info & Credentials
     public function showStep1()
     {
         return view('auth.psychologist.step1');
@@ -45,9 +41,11 @@ class AuthPsychologistController extends Controller
             'preferred_language' => $request->preferred_language,
             'agree_to_terms' => true,
             'role' => 'psychologist',
+            'status' => 'inactive',
+            'otp_verified' => false,
         ]);
 
-        return redirect()->route('psychologist.signup.step2', $user);
+        return redirect()->route('psychologist.signup.step2', ['user' => $user->id]);
     }
 
     // Step 2: Professional Info
@@ -64,8 +62,8 @@ class AuthPsychologistController extends Controller
             'license_number' => 'required|string|unique:psychologists,license_number',
             'years_experience' => 'required|integer|min:0',
             'consultation_fee' => 'required|numeric|min:10000',
-            'short_bio' => 'required|string|min:50|max:500',
-            'about_me' => 'required|string|min:100',
+            'short_bio' => 'required|string|min:5|max:500',
+            'about_me' => 'required|string|min:10',
             'languages' => 'required|array|min:1',
         ]);
 
@@ -81,7 +79,7 @@ class AuthPsychologistController extends Controller
             'consultation_fee' => $request->consultation_fee,
             'short_bio' => $request->short_bio,
             'about_me' => $request->about_me,
-            'languages' => $request->languages,
+            'languages' => $request->input('languages'),
         ]);
 
         return redirect()->route('psychologist.signup.step3', $user);
@@ -144,15 +142,10 @@ class AuthPsychologistController extends Controller
 
         $user->psychologist->schedules()->createMany($request->schedules);
 
-        // Login user dan kirim OTP
-        auth()->login($user);
+        Auth()->login($user);
         $user->sendOTPNotification();
+        $user->save();
 
-        return redirect()->route('psychologist.signup.complete');
-    }
-
-    public function complete()
-    {
-        return view('auth.psychologist.complete');
+        return redirect()->route('otp.verify')->with('success', 'Registration successful! Please verify your email with OTP.');
     }
 }
