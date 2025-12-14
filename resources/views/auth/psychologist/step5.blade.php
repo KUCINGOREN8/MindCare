@@ -16,32 +16,46 @@
                     @php $days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']; @endphp
 
                     @foreach($days as $index => $day)
+                    @php
+                        $startTime = old('schedules.' . $index . '.start_time', '09:00');
+                        $endTime = old('schedules.' . $index . '.end_time', '17:00');
+                        $notAvailable = old('schedules.' . $index . '.not_available', '0') == '1';
+                    @endphp
+
                     <div class="schedule-day bg-gray-50 p-6 rounded-lg mb-4 border border-gray-200">
                         <div class="flex items-center justify-between mb-4">
                             <h3 class="text-lg font-medium text-gray-800 capitalize">{{ $day }}</h3>
                             <label class="flex items-center">
+                                <input type="hidden" name="schedules[{{ $index }}][not_available]" value="0">
+
                                 <input type="checkbox" name="schedules[{{ $index }}][not_available]"
-                                       class="not-available-toggle mr-2"
-                                       style="accent-color: #dc2626;"
-                                       data-index="{{ $index }}">
+                                    class="not-available-toggle mr-2"
+                                    style="accent-color: #dc2626;"
+                                    data-index="{{ $index }}"
+                                    value="1"
+                                    {{ $notAvailable ? 'checked' : '' }}>
                                 <span class="text-sm text-gray-600">Not available</span>
                             </label>
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 schedule-fields" id="schedule-fields-{{ $index }}">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 schedule-fields"
+                            id="schedule-fields-{{ $index }}"
+                            style="{{ $notAvailable ? 'display: none;' : '' }}">
                             <input type="hidden" name="schedules[{{ $index }}][day_of_week]" value="{{ $day }}">
 
                             <div>
-                                <label class="block text-gray-700 mb-2">Start Time</label>
+                                <label class="block text-gray-700 mb-2">Start Time <span class="text-red-500">*</span></label>
                                 <input type="time" name="schedules[{{ $index }}][start_time]"
-                                       class="w-full outline-none text-black bg-white px-4 py-3 rounded-lg border border-gray-300 schedule-time"
-                                       value="09:00">
+                                    class="w-full outline-none text-black bg-white px-4 py-3 rounded-lg border border-gray-300 schedule-time"
+                                    value="{{ $startTime }}"
+                                    {{ $notAvailable ? 'disabled' : 'required' }}>
                             </div>
                             <div>
-                                <label class="block text-gray-700 mb-2">End Time</label>
+                                <label class="block text-gray-700 mb-2">End Time <span class="text-red-500">*</span></label>
                                 <input type="time" name="schedules[{{ $index }}][end_time]"
-                                       class="w-full outline-none text-black bg-white px-4 py-3 rounded-lg border border-gray-300 schedule-time"
-                                       value="17:00">
+                                    class="w-full outline-none text-black bg-white px-4 py-3 rounded-lg border border-gray-300 schedule-time"
+                                    value="{{ $endTime }}"
+                                    {{ $notAvailable ? 'disabled' : 'required' }}>
                             </div>
                         </div>
                     </div>

@@ -60,14 +60,13 @@ class AppointmentController extends Controller
 
     private function autoCompletePastAppointments($userId)
     {
-       $appointments = Appointment::where('user_id', $userId)->where('status', 'confirmed')->get();
+       $appointments = Appointment::where('user_id', $userId)->where('status', 'confirmed')->past()->get();
 
-       foreach ($appointments as $appointment) {
-        if ($appointment->is_past) {
-            $appointment->update(['status' => 'completed']);
+        foreach ($appointments as $appointment) {
+            $appointment->markAsCompleted();
         }
-        }
-       return $appointments->where('is_past', true)->count();
+
+        return $appointments->count();
     }
 
     private function autoUpdateExpiredPayments($userId)
@@ -89,7 +88,7 @@ class AppointmentController extends Controller
             $expiryTime = $payment->expiry_at ?? $payment->created_at->addMinutes(15);
 
             if (now()->greaterThan($expiryTime)) {
-                $payment->update(['status' => 'expired']);
+                $appointment->markAsExpired();
             }
         }
     }

@@ -21,6 +21,7 @@ class UserSeeder extends Seeder
             'agree_to_terms' => true,
             'role' => 'admin',
             'otp_verified' => true,
+            'status' => 'active',
         ]);
 
             // Psychologist User
@@ -34,6 +35,7 @@ class UserSeeder extends Seeder
                 'agree_to_terms' => true,
                 'role' => 'psychologist',
                 'otp_verified' => true,
+                'status' => 'active',
             ]);
 
         User::create([
@@ -46,6 +48,7 @@ class UserSeeder extends Seeder
             'agree_to_terms' => true,
             'role' => 'patient',
             'otp_verified' => true,
+            'status' => 'active',
         ]);
     }
 }
