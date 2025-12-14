@@ -6,6 +6,7 @@ use App\Models\Appointment;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Models\Testimonial;
 use App\Models\Mood;
 use App\Models\Psychologist;
@@ -124,6 +125,8 @@ class DashboardController extends Controller
             // Stat 3: Monthly Revenue
             'monthly_revenue' => $this->getPsychologistMonthlyRevenue($psychologist),
             'revenue_trend' => $this->calculateRevenueTrend($psychologist),
+
+            'review_stats' => $this->getReviewStats($psychologist),
         ];
     }
 
@@ -269,5 +272,52 @@ class DashboardController extends Controller
 
         $change = (($current - $previous) / $previous) * 100;
         return round($change, 1);
+    }
+
+    public function getReviewStats($psychologist) {
+        $reviews = $psychologist->reviews()
+            ->select('rating', DB::raw('COUNT(*) as count'))
+            ->groupBy('rating')
+            ->get()
+            ->keyBy('rating')
+            ->toArray();
+
+        $ratingLabels = [
+            1 => 'Poor (1★)',
+            2 => 'Fair (2★)',
+            3 => 'Good (3★)',
+            4 => 'Great (4★)',
+            5 => 'Excellent (5★)'
+        ];
+
+        $reviewData = [];
+        $reviewLabels = [];
+        $reviewColors = [
+            '#EF4444',
+            '#F97316',
+            '#EAB308',
+            '#22C55E',
+            '#3B82F6'
+        ];
+
+        $totalRating = 0;
+            $totalReviews = 0;
+            
+            foreach ($ratingLabels as $rating => $label) {
+                $count = isset($reviews[$rating]) ? $reviews[$rating]['count'] : 0;
+                $reviewData[] = $count;
+                $totalRating += $rating * $count;
+                $totalReviews += $count;
+            }
+            
+            $averageRating = $totalReviews > 0 ? $totalRating / $totalReviews : 0;
+            
+            return [
+                'labels' => $reviewLabels,
+                'data' => $reviewData,
+                'colors' => $reviewColors,
+                'total_reviews' => $totalReviews,
+                'average_rating' => $averageRating
+            ];
     }
 }
