@@ -49,9 +49,6 @@
                                     class="w-full outline-none text-black bg-white px-4 py-3 rounded-lg border border-gray-300 schedule-time"
                                     value="{{ $startTime }}"
                                     {{ $notAvailable ? 'disabled' : 'required' }}>
-                                @error('schedules.' . $index . '.start_time')
-                                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                                @enderror
                             </div>
                             <div>
                                 <label class="block text-gray-700 mb-2">End Time <span class="text-red-500">*</span></label>
@@ -59,9 +56,6 @@
                                     class="w-full outline-none text-black bg-white px-4 py-3 rounded-lg border border-gray-300 schedule-time"
                                     value="{{ $endTime }}"
                                     {{ $notAvailable ? 'disabled' : 'required' }}>
-                                @error('schedules.' . $index . '.end_time')
-                                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                                @enderror
                             </div>
                         </div>
                     </div>

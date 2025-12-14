@@ -234,25 +234,14 @@ class AuthPsychologistController extends Controller
     public function storeStep5(Request $request, User $user)
     {
         $validated = $request->validate([
-            'schedules' => 'required|array|size:7',
+            'schedules' => 'required|array|min:1|max:7',
             'schedules.*.day_of_week' => 'required|in:monday,tuesday,wednesday,thursday,friday,saturday,sunday',
-            'schedules.*.not_available' => 'required|in:0,1',
-            'schedules.*.start_time' => 'required_if:schedules.*.not_available,0|nullable|date_format:H:i',
-            'schedules.*.end_time' => 'required_if:schedules.*.not_available,0|nullable|date_format:H:i|after:schedules.*.start_time',
+            'schedules.*.start_time' => 'required|date_format:H:i',
+            'schedules.*.end_time' => 'required|date_format:H:i|after:schedules.*.start_time',
         ]);
 
-        $schedulesForDB = [];
-        foreach ($validated['schedules'] as $schedule) {
-            $schedulesForDB[] = [
-                'day_of_week' => $schedule['day_of_week'],
-                'start_time' => $schedule['not_available'] == '1' ? null : $schedule['start_time'],
-                'end_time' => $schedule['not_available'] == '1' ? null : $schedule['end_time'],
-                'not_available' => $schedule['not_available'] == '1',
-            ];
-        }
-
         $user->psychologist->schedules()->delete();
-        $user->psychologist->schedules()->createMany($schedulesForDB);
+        $user->psychologist->schedules()->createMany($validated['schedules']);
 
         Auth()->login($user);
         $user->sendOTPNotification();

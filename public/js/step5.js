@@ -16,8 +16,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function toggleDayAvailability(checkbox, index, isInitial = false) {
         const fields = document.getElementById(`schedule-fields-${index}`);
+        if (!fields) return;
+
         const timeInputs = fields.querySelectorAll('.schedule-time');
-        const dayName = fields.closest('.schedule-day').querySelector('h3').textContent;
 
         if (checkbox.checked) {
             timeInputs.forEach(input => {
@@ -31,7 +32,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 input.disabled = false;
                 input.required = true;
                 input.placeholder = '';
-
                 if (isInitial || !input.value) {
                     input.value = i === 0 ? '09:00' : '17:00';
                 }
@@ -42,45 +42,10 @@ document.addEventListener('DOMContentLoaded', function() {
     form.addEventListener('submit', function(e) {
         e.preventDefault();
 
-        let isValid = true;
-        const errorMessages = [];
-        const schedules = [];
-
-        document.querySelectorAll('.schedule-day').forEach((day, index) => {
-            const checkbox = day.querySelector('.not-available-toggle');
-            const dayName = day.querySelector('h3').textContent;
-            const notAvailable = checkbox.checked;
-
-            if (!notAvailable) {
-                const startTime = day.querySelector('input[name="schedules['+index+'][start_time]"]').value;
-                const endTime = day.querySelector('input[name="schedules['+index+'][end_time]"]').value;
-
-                if (!startTime || !endTime) {
-                    errorMessages.push(`Please set time for ${dayName} or mark as "Not available"`);
-                    isValid = false;
-                } else if (startTime >= endTime) {
-                    errorMessages.push(`For ${dayName}, end time must be after start time`);
-                    isValid = false;
-                } else {
-                    schedules.push({
-                        day_of_week: day.querySelector('input[name="schedules['+index+'][day_of_week]"]').value,
-                        start_time: startTime,
-                        end_time: endTime
-                    });
-                }
-            }
+        document.querySelectorAll('.not-available-toggle:checked').forEach(checkbox => {
+            const dayDiv = checkbox.closest('.schedule-day');
+            if (dayDiv) dayDiv.remove();
         });
-
-        const availableDays = document.querySelectorAll('.not-available-toggle:not(:checked)').length;
-        if (availableDays === 0) {
-            errorMessages.push('Please set availability for at least one day');
-            isValid = false;
-        }
-
-        if (!isValid) {
-            alert('Please fix the following issues:\n\n' + errorMessages.join('\n'));
-            return;
-        }
 
         this.submit();
     });
