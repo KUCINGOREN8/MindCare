@@ -30,7 +30,7 @@ Client Details - {{ $client->full_name }}
                     <div class="text-center">
                         <div class="inline-block relative">
                             <div class="absolute inset-0 bg-gradient-to-br from-primary/20 to-purple-400/20 rounded-full blur-xl"></div>
-                            <img src="{{ $client->photo_url ? asset($client->photo_url) : ($client->gender=='female' ? asset('assets/icons/user_female.svg') : asset('assets/icons/user_male.svg')) }}"
+                            <img src="{{ $client->photo_url }}"
                                  alt="{{ $client->full_name }}"
                                  class="relative w-28 h-28 rounded-full object-cover border-4 border-white shadow-lg">
                         </div>

@@ -25,7 +25,7 @@
                 <div class="flex items-center">
                     <div class="relative">
                         <img
-                            src="{{ $otherUser->photo_url ? asset($otherUser->photo_url) : ($otherUser->gender == 'female' ? asset('assets/icons/user_female.svg') : asset('assets/icons/user_male.svg')) }}"
+                            src="{{ $otherUser->photo_url }}"
                             class="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm"
                             alt="{{ $otherUser->full_name }}"
                         >
@@ -66,7 +66,7 @@
                             <div class="flex items-start gap-2">
                                 @if($message['sender_id'] != auth()->id())
                                     <img
-                                        src="{{ $message['sender']['photo_url'] ? asset($message['sender']['photo_url']) : ($message['sender']['gender'] == 'female' ? asset('assets/icons/user_female.svg') : asset('assets/icons/user_male.svg')) }}"
+                                        src="{{ $message['sender']['photo_url'] }}"
                                         class="w-8 h-8 rounded-full flex-shrink-0 border border-gray-200 mt-1"
                                     />
                                 @endif
@@ -597,7 +597,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     <div class="flex items-start gap-2">
                         ${!isSent ? `
-                            <img src="${messageData.sender.photo_url || (messageData.sender.gender == 'female' ? '/assets/icons/user_female.svg' : '/assets/icons/user_male.svg')}"
+                            <img src="${messageData.sender.photo_url }"
                                 class="w-8 h-8 rounded-full flex-shrink-0 border border-gray-200 mt-1"
                                 onerror="this.onerror=null; this.src='/assets/icons/user_${messageData.sender.gender == 'female' ? 'female' : 'male'}.svg';" />
                         ` : ''}

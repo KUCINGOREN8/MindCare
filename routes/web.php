@@ -155,7 +155,7 @@ Route::middleware(['auth', 'otp', 'role:psychologist'])
         ->controller(AppointmentController::class)
         ->group(function () {
             // TO-DO: GANTI ROUTE DISINI KALAU PAGE NYA UDH
-            Route::get('/', 'index')->name('index');
+            Route::get('/', 'psychologistAppointments')->name('index');
     });
 });
 
@@ -173,12 +173,20 @@ Route::middleware(['auth', 'otp', 'role:admin'])
 
 // SHARED ROUTES -> Auth + OTP Protected
 Route::middleware(['auth', 'otp'])->group(function () {
-    // Settings Profile
+    // Settings
     Route::prefix('profile')->name('profile.')->controller(UserController::class)->group(function () {
         Route::get('/', 'showProfile')->name('index');
+
+        // Profile 
         Route::put('/update','updateProfile')->name('update');
-        Route::put('/profile/password', 'updatePrivacy')->name('privacy.update');
-        Route::put('/profile/preferences', 'updatePreferences')->name('preferences.update');
+        Route::post('/upload-photo', 'uploadPhoto')->name('upload-photo');
+        Route::delete('/delete-photo', 'deletePhoto')->name('delete-photo');
+
+        // Privacy
+        Route::put('/password', 'updatePrivacy')->name('privacy.update');
+
+        // Preferences
+        Route::put('/preferences', 'updatePreferences')->name('preferences.update');
 
         // Accessible for psychologist only
         Route::middleware('role:psychologist')->group(function () {

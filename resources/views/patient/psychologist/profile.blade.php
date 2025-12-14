@@ -11,7 +11,7 @@
 
                 <div class="flex flex-col md:flex-row justify-between gap-3">
                     <div class="flex flex-1 flex-col items-center justify-center text-center ">
-                        <img src="{{ $psychologist->user->photo_url ? asset($psychologist->user->photo_url) : ($psychologist->user->gender=="female" ? asset('assets/icons/user_female.svg') : asset('assets/icons/user_male.svg')) }}" alt="" style='width:100px;'>
+                        <img src="{{ $psychologist->user->photo_url }}" class="rounded-full w-24 h-24 lg:mx-0 mx-auto" alt="">
                         <h1 class="font-semibold text-lg"> {{ $psychologist->user->full_name }} </h1>
                         <h5 class="text-captiondark text-sm"> {{ $psychologist->title }} </h5>
                     </div>
@@ -119,7 +119,7 @@
                     </div>
                     @foreach ($psychologist->reviews->take(2) as $review)
                         <div class="flex flex-1 p-[16px] rounded-md border border-1 border-grey-border gap-3 items-center">
-                            <img src="{{ $review->user->photo_url ? asset($review->user->photo_url) : ($review->user->gender=="female" ? asset('assets/icons/user_female.svg') : asset('assets/icons/user_male.svg')) }}" class="w-[35px] h-[35px] rounded-full object-cover">
+                            <img src="{{ $review->user->photo_url }}" class="w-[35px] h-[35px] rounded-full object-cover">
                             <div class="flex flex-col gap-2 flex-1">
                                 <p class="text-sm wrap-break-word whitespace-normal">{{ $review->review }}</p>
                                 <div class="inline-flex  tracking-wide w-fit">
