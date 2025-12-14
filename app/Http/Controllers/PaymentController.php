@@ -179,7 +179,7 @@ class PaymentController extends Controller
             'pending' => 'Payment is pending. Please complete your payment.',
             'failed' => 'Payment failed. Please try again.',
             'expired' => 'Payment expired. Please book again.',
-            'canceled' => 'Payment was cancelled.',
+            'cancelled' => 'Payment was cancelled.',
         ];
 
         return $messages[$status] ?? 'Payment status unknown.';

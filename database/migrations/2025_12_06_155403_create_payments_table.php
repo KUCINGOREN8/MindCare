@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('order_id')->unique();
             $table->decimal('amount', 10, 2);
             $table->enum('status', [
-                'pending', 'success', 'failed', 'expired', 'canceled'
+                'pending', 'success', 'failed', 'expired', 'cancelled'
             ])->default('pending');
             $table->string('payment_type')->nullable();
             $table->string('transaction_id')->nullable();

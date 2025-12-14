@@ -15,13 +15,23 @@ class BookAppointmentController extends Controller
 {
     public function showBook(?Psychologist $psychologist = null)
     {
+        $user = Auth::user();
+        if (!$user->otp_verified || $user->status !== 'active') {
+            Auth::logout();
+            return redirect()->route('login')->with('error', 'Please verify your email first or contact admin.');
+        }
+
         if ($psychologist) {
+            if (!$psychologist->user || !$psychologist->user->otp_verified || $psychologist->user->status !== 'active') {
+                abort(404, 'Psychologist not found or not active');
+            }
+
             $psychologists = collect([$psychologist->load('user', 'schedules')]);
             $isSpecific = true;
         } else {
             $psychologists = Psychologist::with(['user', 'schedules'])
                 ->whereHas('user', function($q) {
-                    $q->where('otp_verified', true);
+                    $q->where('otp_verified', true)->where('status', 'active');
                 })
                 ->get();
             $isSpecific = false;
@@ -32,6 +42,12 @@ class BookAppointmentController extends Controller
 
      public function store(Request $request)
     {
+        $psychologist = Psychologist::with('user')->find($request->psychologist_id);
+
+        if (!$psychologist || !$psychologist->user || !$psychologist->user->otp_verified || $psychologist->user->status !== 'active') {
+            return back()->with('error', 'Cannot book appointment with this psychologist.');
+        }
+
         $appointment = Appointment::create([
             'user_id' => Auth::id(),
             'psychologist_id' => $request->psychologist_id,
@@ -95,6 +111,13 @@ class BookAppointmentController extends Controller
 
     public function getAvailableDates(Psychologist $psychologist)
     {
+        if (!$psychologist->user || !$psychologist->user->otp_verified || $psychologist->user->status !== 'active') {
+            return response()->json([
+                'error' => 'Psychologist not available',
+                'message' => 'This psychologist is not currently available for booking.'
+            ]);
+        }
+
         $availableDates = [];
         $schedules = $psychologist->schedules;
 
@@ -111,6 +134,13 @@ class BookAppointmentController extends Controller
 
     public function getAvailableTimes(Psychologist $psychologist, Request $request)
     {
+        if (!$psychologist->user || !$psychologist->user->otp_verified || $psychologist->user->status !== 'active') {
+            return response()->json([
+                'error' => 'Psychologist not available',
+                'message' => 'This psychologist is not currently available for booking.'
+            ]);
+        }
+
         $request->validate([
             'date' => 'required|date'
         ]);
@@ -166,6 +196,10 @@ class BookAppointmentController extends Controller
         $time = $request->time;
 
         $psychologists = Psychologist::with(['user', 'schedules'])
+            ->whereHas('user', function($q) {
+                $q->where('otp_verified', true)
+                ->where('status', 'active');
+            })
             ->whereHas('schedules', function($q) use ($date) {
                 $dayOfWeek = strtolower(Carbon::parse($date)->format('l'));
                 $q->where('day_of_week', $dayOfWeek);
