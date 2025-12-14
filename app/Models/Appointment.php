@@ -101,4 +101,22 @@ class Appointment extends Model
 
         return $now >= $availableFrom && $now <= $sessionEnd;
     }
+
+    public function getCanBeReviewedAttribute()
+    {
+        return $this->status === 'completed' && 
+            auth()->check() && 
+            auth()->id() === $this->user_id;
+    }
+
+    public function getHasBeenReviewedAttribute()
+    {
+        if (!$this->can_be_reviewed) {
+            return false;
+        }
+        
+        return $this->psychologist->reviews()
+            ->where('user_id', auth()->id())
+            ->exists();
+    }
 }

@@ -70,7 +70,7 @@ My Clients
                         <div class="flex items-center gap-4">
                             <!-- Profile -->
                             <div class="relative">
-                                <img src="{{ $client->photo_url ? asset($client->photo_url) : ($client->gender=="female" ? asset('assets/icons/user_female.svg') : asset('assets/icons/user_male.svg')) }}"
+                                <img src="{{ $client->photo_url }}"
                                      alt="{{ $client->full_name }}"
                                      class="w-12 h-12 rounded-full object-cover">
                             </div>

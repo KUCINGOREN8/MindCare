@@ -22,11 +22,11 @@ Find Psychologist
             </div>
 
             {{-- Layout --}}
-            <div x-show="query.length === 0" class="grid grid-cols-3 gap-6">
+            <div x-show="query.length === 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach($psychologists as $psychologist)
                 <div class="flex flex-col bg-white rounded-md border border-grey-border p-6 items-center text-center gap-3">
                     <div class="justify-items-center">
-                        <img src="{{ $psychologist->user->photo_url ? asset($psychologist->user->photo_url) : ($psychologist->user->gender=="female" ? asset('assets/icons/user_female.svg') : asset('assets/icons/user_male.svg')) }}" alt="" style='width:100px;'>
+                        <img src="{{ $psychologist->user->photo_url }}" class="rounded-full w-16 h-16 lg:mx-0 mx-auto" alt="Profile Picture">
                     </div>
 
                     <div class="mb-2">
