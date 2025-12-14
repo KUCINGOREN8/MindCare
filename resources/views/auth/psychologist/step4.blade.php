@@ -15,7 +15,8 @@
 
                 <div id="experienceContainer">
                     <div class="experience-entry bg-gray-50 p-6 rounded-lg mb-4 border border-gray-200 relative">
-                        <button type="button" class="remove-experience-btn absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center shadow-md hover:bg-red-600 z-10 transition-colors" style="display: none;">
+                        <button type="button" class="remove-experience-btn absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center shadow-md hover:bg-red-600 z-10 transition-colors"
+                            style="{{ $experiences->count() > 1 ? 'display: flex;' : 'display: none;' }}">
                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                             </svg>
@@ -24,25 +25,107 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                             <div>
                                 <label class="block text-gray-700 mb-2">Position <span class="text-red-500">*</span></label>
-                                <input type="text" name="experiences[0][position]" required class="w-full outline-none text-black bg-white px-4 py-3 rounded-lg border border-gray-300" placeholder="Clinical Psychologist">
+                                <input type="text" name="experiences[0][position]" required
+                                    class="w-full outline-none text-black bg-white px-4 py-3 rounded-lg border border-gray-300"
+                                    placeholder="Clinical Psychologist"
+                                    value="{{ old('experiences.0.position', $experiences[0]->position ?? '') }}">
+                                @error('experiences.0.position')
+                                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                @enderror
                             </div>
                             <div>
                                 <label class="block text-gray-700 mb-2">Organization <span class="text-red-500">*</span></label>
-                                <input type="text" name="experiences[0][organization]" required class="w-full outline-none text-black bg-white px-4 py-3 rounded-lg border border-gray-300" placeholder="Serenity Wellness Clinic">
+                                <input type="text" name="experiences[0][organization]" required
+                                    class="w-full outline-none text-black bg-white px-4 py-3 rounded-lg border border-gray-300"
+                                    placeholder="Serenity Wellness Clinic"
+                                    value="{{ old('experiences.0.organization', $experiences[0]->organization ?? '') }}">
+                                @error('experiences.0.organization')
+                                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-gray-700 mb-2">Start Year <span class="text-red-500">*</span></label>
-                                <input type="text" name="experiences[0][start_year]" required maxlength="4" class="w-full outline-none text-black bg-white px-4 py-3 rounded-lg border border-gray-300" placeholder="2022">
+                                <input type="text" name="experiences[0][start_year]" required maxlength="4"
+                                    class="w-full outline-none text-black bg-white px-4 py-3 rounded-lg border border-gray-300"
+                                    placeholder="2022"
+                                    value="{{ old('experiences.0.start_year', $experiences[0]->start_year ?? '') }}">
+                                @error('experiences.0.start_year')
+                                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                @enderror
                             </div>
                             <div>
                                 <label class="block text-gray-700 mb-2">End Year</label>
-                                <input type="text" name="experiences[0][end_year]" maxlength="4" class="w-full outline-none text-black bg-white px-4 py-3 rounded-lg border border-gray-300" placeholder="2023">
+                                <input type="text" name="experiences[0][end_year]" maxlength="4"
+                                    class="w-full outline-none text-black bg-white px-4 py-3 rounded-lg border border-gray-300"
+                                    placeholder="2023"
+                                    value="{{ old('experiences.0.end_year', $experiences[0]->end_year ?? '') }}">
                                 <p class="text-sm text-gray-500 mt-1">Leave blank if currently working here</p>
+                                @error('experiences.0.end_year')
+                                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
                     </div>
+
+                    @foreach($experiences as $index => $experience)
+                        @if($index > 0)
+                            <div class="experience-entry bg-gray-50 p-6 rounded-lg mb-4 border border-gray-200 relative">
+                                <button type="button" class="remove-experience-btn absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center shadow-md hover:bg-red-600 z-10 transition-colors">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </button>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                    <div>
+                                        <label class="block text-gray-700 mb-2">Position <span class="text-red-500">*</span></label>
+                                        <input type="text" name="experiences[{{ $index }}][position]" required
+                                            class="w-full outline-none text-black bg-white px-4 py-3 rounded-lg border border-gray-300"
+                                            placeholder="Clinical Psychologist"
+                                            value="{{ old('experiences.' . $index . '.position', $experience->position) }}">
+                                        @error('experiences.' . $index . '.position')
+                                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-700 mb-2">Organization <span class="text-red-500">*</span></label>
+                                        <input type="text" name="experiences[{{ $index }}][organization]" required
+                                            class="w-full outline-none text-black bg-white px-4 py-3 rounded-lg border border-gray-300"
+                                            placeholder="Serenity Wellness Clinic"
+                                            value="{{ old('experiences.' . $index . '.organization', $experience->organization) }}">
+                                        @error('experiences.' . $index . '.organization')
+                                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-gray-700 mb-2">Start Year <span class="text-red-500">*</span></label>
+                                        <input type="text" name="experiences[{{ $index }}][start_year]" required maxlength="4"
+                                            class="w-full outline-none text-black bg-white px-4 py-3 rounded-lg border border-gray-300"
+                                            placeholder="2022"
+                                            value="{{ old('experiences.' . $index . '.start_year', $experience->start_year) }}">
+                                        @error('experiences.' . $index . '.start_year')
+                                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-700 mb-2">End Year</label>
+                                        <input type="text" name="experiences[{{ $index }}][end_year]" maxlength="4"
+                                            class="w-full outline-none text-black bg-white px-4 py-3 rounded-lg border border-gray-300"
+                                            placeholder="2023"
+                                            value="{{ old('experiences.' . $index . '.end_year', $experience->end_year) }}">
+                                        <p class="text-sm text-gray-500 mt-1">Leave blank if currently working here</p>
+                                        @error('experiences.' . $index . '.end_year')
+                                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                    @endforeach
                 </div>
 
                 <div class="mb-8">

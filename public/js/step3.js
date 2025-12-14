@@ -1,11 +1,17 @@
 document.addEventListener('DOMContentLoaded', function() {
-    let educationCount = 1;
     const container = document.getElementById('educationContainer');
     const addBtn = document.getElementById('addEducationBtn');
 
     if (!container || !addBtn) return;
 
-    addBtn.addEventListener('click', function() {
+    function getCurrentEducationCount() {
+        return container.querySelectorAll('.education-entry').length;
+    }
+
+    function addEducationField() {
+        const currentCount = getCurrentEducationCount();
+        const newIndex = currentCount;
+
         const newEntry = document.createElement('div');
         newEntry.className = 'education-entry bg-gray-50 p-6 rounded-lg mb-4 border border-gray-200 relative';
         newEntry.innerHTML = `
@@ -17,42 +23,67 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                     <label class="block text-gray-700 mb-2">Degree <span class="text-red-500">*</span></label>
-                    <input type="text" name="educations[${educationCount}][degree]" required class="w-full outline-none text-black bg-white px-4 py-3 rounded-lg border border-gray-300" placeholder="Doctor of Psychology">
+                    <input type="text" name="educations[${newIndex}][degree]" required
+                           class="w-full outline-none text-black bg-white px-4 py-3 rounded-lg border border-gray-300"
+                           placeholder="Doctor of Psychology">
                 </div>
                 <div>
                     <label class="block text-gray-700 mb-2">Institution <span class="text-red-500">*</span></label>
-                    <input type="text" name="educations[${educationCount}][institution]" required class="w-full outline-none text-black bg-white px-4 py-3 rounded-lg border border-gray-300" placeholder="BINUS University">
+                    <input type="text" name="educations[${newIndex}][institution]" required
+                           class="w-full outline-none text-black bg-white px-4 py-3 rounded-lg border border-gray-300"
+                           placeholder="BINUS University">
                 </div>
                 <div>
                     <label class="block text-gray-700 mb-2">Year <span class="text-red-500">*</span></label>
-                    <input type="text" name="educations[${educationCount}][year]" required maxlength="4" class="w-full outline-none text-black bg-white px-4 py-3 rounded-lg border border-gray-300" placeholder="2022">
+                    <input type="text" name="educations[${newIndex}][year]" required maxlength="4"
+                           class="w-full outline-none text-black bg-white px-4 py-3 rounded-lg border border-gray-300"
+                           placeholder="2022">
                 </div>
             </div>
         `;
 
         container.appendChild(newEntry);
-        educationCount++;
+        updateRemoveButtons();
+    }
 
-        if (educationCount === 2) {
-            const firstRemoveBtn = container.querySelector('.education-entry:first-child .remove-education-btn');
-            if (firstRemoveBtn) {
-                firstRemoveBtn.style.display = 'flex';
-            }
-        }
+    function updateRemoveButtons() {
+        const entries = container.querySelectorAll('.education-entry');
+        const removeButtons = container.querySelectorAll('.remove-education-btn');
+
+        removeButtons.forEach(btn => {
+            btn.style.display = entries.length > 1 ? 'flex' : 'none';
+        });
+    }
+
+    function updateEducationIndexes() {
+        const entries = container.querySelectorAll('.education-entry');
+
+        entries.forEach((entry, index) => {
+            const inputs = entry.querySelectorAll('input');
+            inputs.forEach(input => {
+                const name = input.getAttribute('name');
+                const matches = name.match(/educations\[(\d+)\]\[(\w+)\]/);
+                if (matches) {
+                    const newName = `educations[${index}][${matches[2]}]`;
+                    input.setAttribute('name', newName);
+                }
+            });
+        });
+    }
+
+    addBtn.addEventListener('click', function() {
+        addEducationField();
+        updateEducationIndexes();
     });
 
     container.addEventListener('click', function(e) {
         if (e.target.closest('.remove-education-btn')) {
             const entry = e.target.closest('.education-entry');
             entry.remove();
-            educationCount--;
-
-            if (educationCount === 1) {
-                const firstRemoveBtn = container.querySelector('.education-entry:first-child .remove-education-btn');
-                if (firstRemoveBtn) {
-                    firstRemoveBtn.style.display = 'none';
-                }
-            }
+            updateEducationIndexes();
+            updateRemoveButtons();
         }
     });
+
+    updateRemoveButtons();
 });
