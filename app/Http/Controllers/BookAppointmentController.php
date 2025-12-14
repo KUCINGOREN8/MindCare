@@ -48,6 +48,37 @@ class BookAppointmentController extends Controller
             return back()->with('error', 'Cannot book appointment with this psychologist.');
         }
 
+        $appointmentDateTime = Carbon::parse($request->date . ' ' . $request->start_time);
+        if ($appointmentDateTime->lte(now())) {
+            return back()->with('error', 'Cannot book past appointment time.');
+        }
+
+        $existingAppointment = Appointment::where('psychologist_id', $request->psychologist_id)
+            ->whereDate('date', $request->date)
+            ->where('start_time', $request->start_time)
+            ->whereIn('status', ['pending_payment', 'pending', 'confirmed'])
+            ->first();
+
+        if ($existingAppointment) {
+            return back()->with('error', 'This time slot is already booked. Please choose another time.');
+        }
+
+        $dayOfWeek = strtolower(Carbon::parse($request->date)->format('l'));
+        $schedule = $psychologist->schedules()->where('day_of_week', $dayOfWeek)->first();
+
+        $startTime = strtotime($request->start_time);
+        $scheduleStart = strtotime($schedule->start_time);
+        $scheduleEnd = strtotime($schedule->end_time);
+        $sessionDuration = 5400; 
+
+        if ($startTime < $scheduleStart || ($startTime + $sessionDuration) > $scheduleEnd) {
+            return back()->with('error', 'Selected time is outside psychologist working hours.');
+        }
+
+        if (!$schedule) {
+            return back()->with('error', 'Psychologist is not available on this day.');
+        }
+
         $appointment = Appointment::create([
             'user_id' => Auth::id(),
             'psychologist_id' => $request->psychologist_id,
@@ -146,6 +177,11 @@ class BookAppointmentController extends Controller
         ]);
 
         $date = $request->date;
+        $now = now();
+
+        if (Carbon::parse($date)->lt($now->startOfDay())) {
+            return response()->json([]);
+        }
 
         $dayOfWeek = strtolower(Carbon::parse($date)->format('l'));
         $schedule = $psychologist->schedules()->where('day_of_week', $dayOfWeek)->first();
@@ -156,7 +192,7 @@ class BookAppointmentController extends Controller
 
         $bookedTimes = Appointment::where('psychologist_id', $psychologist->id)
             ->whereDate('date', $date)
-            ->where('status', '!=', 'cancelled')
+            ->whereIn('status', ['pending_payment', 'pending', 'confirmed'])
             ->pluck('start_time')
             ->toArray();
 
@@ -168,6 +204,11 @@ class BookAppointmentController extends Controller
 
         for ($time = $start; $time <= $end - $sessionDuration; $time += 3600) {
             $timeStr = date('H:i', $time);
+
+            $selectedDateTime = Carbon::parse($date . ' ' . $timeStr);
+            if ($selectedDateTime->lte($now)) {
+                continue;
+            }
 
             $isAvailable = true;
             $sessionEnd = $time + $sessionDuration;
@@ -194,11 +235,16 @@ class BookAppointmentController extends Controller
     {
         $date = $request->date;
         $time = $request->time;
+        $now = now();
+
+        $selectedDateTime = Carbon::parse($date . ' ' . $time);
+        if ($selectedDateTime->lte($now)) {
+            return response()->json([]);
+        }
 
         $psychologists = Psychologist::with(['user', 'schedules'])
             ->whereHas('user', function($q) {
-                $q->where('otp_verified', true)
-                ->where('status', 'active');
+                $q->where('otp_verified', true)->where('status', 'active');
             })
             ->whereHas('schedules', function($q) use ($date) {
                 $dayOfWeek = strtolower(Carbon::parse($date)->format('l'));
@@ -207,7 +253,7 @@ class BookAppointmentController extends Controller
             ->whereDoesntHave('appointments', function($q) use ($date, $time) {
                 $q->whereDate('date', $date)
                 ->where('start_time', $time)
-                ->where('status', '!=', 'cancelled');
+                ->whereIn('status', ['pending_payment', 'pending', 'confirmed']);
             })
             ->get();
 
