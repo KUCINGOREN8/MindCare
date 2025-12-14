@@ -11,7 +11,7 @@
         <!-- Right Container -->
         <div class="w-full lg:w-[70%] flex items-center justify-center bg-white overflow-y-auto" style="padding-top: 12rem; padding-bottom: 4rem; padding-left: 2rem; padding-right: 2rem;">
             <div class="w-full max-w-lg">
-                <h2 class="text-5xl font-bold mb-8 text-center" style="color: #009C8F;">SIGN IN</h2>
+                <h2 class="text-5xl font-bold mb-8 text-center" style="color: #009C8F;">LOGIN</h2>
 
                 <form class="space-y-6" method="POST" action="{{ route('login.post') }}">
                     @csrf
