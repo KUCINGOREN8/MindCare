@@ -16,6 +16,21 @@ class ChatController extends Controller
     {
         $user = Auth::user();
 
+        if (!$user->otp_verified) {
+            Auth::logout();
+            return redirect()->route('login')->with('error', 'Please verify your email first.');
+        }
+
+        if ($user->isPatient() && $user->status !== 'active') {
+            Auth::logout();
+            return redirect()->route('login')->with('error', 'Your account is not active.');
+        }
+
+        if ($user->isPsychologist() && $user->status !== 'active') {
+            return redirect()->route('psychologist.dashboard')
+                ->with('error', 'Your account is pending admin approval. Chat feature is not available yet.');
+        }
+
         if ($user->isPatient()) {
             $conversations = Conversation::where('patient_id', $user->id)
                 ->with(['psychologist', 'latestMessage'])
@@ -53,6 +68,15 @@ class ChatController extends Controller
     {
         $currentUser = Auth::user();
 
+        if (!$currentUser->otp_verified) {
+            Auth::logout();
+            return redirect()->route('login')->with('error', 'Please verify your email first.');
+        }
+
+        if ($otherUser->role === 'psychologist' && (!$otherUser->otp_verified || $otherUser->status !== 'active')) {
+            abort(404, 'Psychologist not found or not active');
+        }
+
         if ($currentUser->role === 'patient' && $otherUser->role !== 'psychologist') {
             abort(400, 'Patient can only chat with psychologist.');
         }
@@ -89,6 +113,21 @@ class ChatController extends Controller
     public function show(Conversation $conversation)
     {
         $user = Auth::user();
+
+        if (!$user->otp_verified) {
+            Auth::logout();
+            return redirect()->route('login')->with('error', 'Please verify your email first.');
+        }
+
+        if ($user->isPatient() && $user->status !== 'active') {
+            Auth::logout();
+            return redirect()->route('login')->with('error', 'Your account is not active.');
+        }
+
+        if ($user->isPsychologist() && $user->status !== 'active') {
+            return redirect()->route('psychologist.dashboard')
+                ->with('error', 'Your account is pending admin approval. Chat feature is not available yet.');
+        }
 
         if (!$conversation->isParticipant($user->id)) {
             abort(403, 'Unauthorized access to this conversation');
@@ -265,6 +304,20 @@ class ChatController extends Controller
     public function startSession(Appointment $appointment)
     {
         $user = Auth::user();
+
+        if (!$user->otp_verified) {
+            Auth::logout();
+            return redirect()->route('login')->with('error', 'Please verify your email first.');
+        }
+
+        if ($appointment->psychologist && $appointment->psychologist->user) {
+            $psychologistUser = $appointment->psychologist->user;
+            if (!$psychologistUser->otp_verified || $psychologistUser->status !== 'active') {
+                abort(404, 'Psychologist not found or not active');
+            }
+        }
+
+
         if ($user->role === 'patient') {
             if ($appointment->user_id !== $user->id) {
                 abort(403, 'This is not your appointment.');

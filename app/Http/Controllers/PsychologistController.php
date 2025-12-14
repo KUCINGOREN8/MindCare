@@ -14,7 +14,12 @@ class PsychologistController extends Controller
 
     public function showFindPsychologist()
     {
-        $psychologists = Psychologist::with('user')->get();
+        $psychologists = Psychologist::with('user')->whereHas('user', function($query) {
+            $query->where('otp_verified', true)
+                ->where('status', 'active')
+                ->where('role', 'psychologist');
+        })
+        ->get();
 
         return view('patient.psychologist.find', compact('psychologists'));
     }
@@ -30,7 +35,11 @@ class PsychologistController extends Controller
             'reviews' => function ($query) {
                 $query->latest();
             }])
-            ->findOrFail($id);
+            ->whereHas('user', function($query) {
+            $query->where('otp_verified', true)
+                ->where('status', 'active');
+            })
+        ->findOrFail($id);
 
         return view('patient.psychologist.profile', compact('psychologist'));
     }
@@ -41,7 +50,7 @@ class PsychologistController extends Controller
 
          $results = Psychologist::with('user')
             ->whereHas('user', function ($q) use ($query) {
-                $q->where('full_name', 'LIKE', "%{$query}%");
+                $q->where('full_name', 'LIKE', "%{$query}%")->where('otp_verified', true)->where('status', 'active');
             })
             ->select('id', 'user_id', 'title')
             ->get()
@@ -59,8 +68,12 @@ class PsychologistController extends Controller
     }
 
     public function showReview($id) {
-        $psychologist = Psychologist::with('user', 'reviews')->orderBy('created_at', 'desc')->findOrFail($id);
-
+        $psychologist = Psychologist::with('user', 'reviews')->whereHas('user', function($query) {
+            $query->where('otp_verified', true)
+                ->where('status', 'active');
+            })
+            ->findOrFail($id);
+        
         return view('patient.psychologist.review', compact('psychologist'));
     }
 

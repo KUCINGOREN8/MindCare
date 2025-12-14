@@ -41,7 +41,8 @@ class AuthPsychologistController extends Controller
             'preferred_language' => $request->preferred_language,
             'agree_to_terms' => true,
             'role' => 'psychologist',
-            'status' => 'pending',
+            'status' => 'inactive',
+            'otp_verified' => false,
         ]);
 
         return redirect()->route('psychologist.signup.step2', ['user' => $user->id]);

@@ -8,8 +8,8 @@ return new class extends Migration {
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->enum('status', ['active', 'pending', 'rejected'])
-                ->default('active')
+            $table->enum('status', ['active', 'pending', 'rejected', 'inactive'])
+                ->default('inactive')
                 ->after('role');
         });
     }

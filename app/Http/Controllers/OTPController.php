@@ -41,6 +41,12 @@ class OTPController extends Controller
                 'otp_expires_at' => null,
             ]);
 
+            if ($user->role === 'patient') {
+                $user->update(['status' => 'active']);
+            } elseif ($user->role === 'psychologist') {
+                $user->update(['status' => 'pending']);
+            }
+
             if ($user->role === 'psychologist' && $user->status === 'pending') {
                 Auth::logout();
 

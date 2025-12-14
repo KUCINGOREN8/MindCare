@@ -48,7 +48,8 @@ class AuthController extends Controller
             'preferred_language' => $request->language,
             'agree_to_terms' => true,
             'role' => 'patient',
-            'status' => 'active',
+            'status' => 'inactive',
+            'otp_verified' => false,
         ]);
 
         Auth::login($user);
@@ -70,12 +71,9 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        // 1. Cek Kredensial (Email & Password)
         if (Auth::attempt($credentials)) {
+            $user = Auth::user();
 
-            $user = Auth::user(); // Ambil data user
-
-            // 2. CEK STATUS (Logika Baru)
             if ($user->status !== 'active') {
                 Auth::logout();
                 $request->session()->invalidate();
@@ -89,11 +87,12 @@ class AuthController extends Controller
                 return back()->withErrors(['email' => $message])->onlyInput('email');
             }
 
-            // 3. Jika Active, Lanjut Masuk
+            if (!$user->otp_verified) {
+                return redirect()->route('otp.verify')->with('error', 'Please verify your email with OTP.');
+            }
+
             $request->session()->regenerate();
 
-            // Redirect sesuai role
-            // Pastikan route ini ada di web.php (admin.dashboard / user.dashboard / psychologist.dashboard)
             if ($user->role === 'admin') {
                 return redirect()->route('admin.dashboard');
             } elseif ($user->role === 'psychologist') {
