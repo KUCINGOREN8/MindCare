@@ -1,10 +1,19 @@
 <div class="grid grid-cols-[20%_80%]">
     <p class="text-[#4D4D4E]">Photo Profile</p>
     <div class="flex justify-between">
-        <img src="{{ $user->photo_url ? asset($user->photo_url) : ($user->gender=="female" ? asset('assets/icons/user_female.svg') : asset('assets/icons/user_male.svg')) }}" class="rounded-full w-16 h-16 lg:mx-0 mx-auto" alt="pfp"> 
-        <div class="flex gap-3">
-            <a href="" class="text-red-600">Delete</a>
-            <a href="" class="text-primary">Upload</a>
+        <img id="profileImage" src="{{ $user->photo_url }}" class="object-cover rounded-full w-16 h-16 lg:mx-0 mx-auto" alt="Profile Picture"> 
+        
+        <div class="flex flex-col items-end justify-end">
+            <input type="file" id="photoInput" accept="image/*" class="hidden" onchange="uploadPhoto()">
+            <div class="flex gap-3 flex-col sm:flex-row">
+                <button id="deletePhotoBtn" type="button" onclick="deletePhoto()" class="text-red-600 hover:text-red-800 {{ !$user->photo_url ? 'disabled:cursor-not-allowed disabled:opacity-100' : '' }}" @disabled(!$user->photo_url) >
+                    Delete
+                </button>
+                <button id="uploadPhotoBtn" type="button" onclick="document.getElementById('photoInput').click()" class="text-primary hover:text-primary-dark">
+                    Upload
+                </button>
+            </div>
+            <p class="text-xs text-gray-500 mt-1">Max 2MB (JPEG, PNG, GIF)</p>
         </div>
     </div>
 </div>
@@ -115,3 +124,119 @@
         </button>
     </div>
 </form>
+
+<script>
+    const defaultPhotoUrl = "{{ $user->gender == 'female' ? asset('assets/icons/user_female.svg') : asset('assets/icons/user_male.svg') }}";
+
+    async function uploadPhoto() {
+        const input = document.getElementById('photoInput');
+        const file = input.files[0];
+        
+        if (!file) return;
+        
+        // Validasi tipe file
+        const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/webp'];
+        if (!validTypes.includes(file.type)) {
+            alert('Please select a valid image file (JPEG, PNG, GIF, WebP)');
+            input.value = '';
+            return;
+        }
+        
+        // Validasi ukuran file (maks 2MB)
+        if (file.size > 2 * 1024 * 1024) {
+            alert('Image size must be less than 2MB');
+            input.value = '';
+            return;
+        }
+        
+        // Set loading state
+        const uploadBtn = document.getElementById('uploadPhotoBtn');
+        const originalText = uploadBtn.textContent;
+        uploadBtn.textContent = 'Uploading...';
+        uploadBtn.disabled = true;
+        
+        const formData = new FormData();
+        formData.append('photo', file);
+        formData.append('_token', '{{ csrf_token() }}');
+        
+        try {
+            const response = await fetch('{{ route("profile.upload-photo") }}', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                }
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                const profileImage = document.getElementById('profileImage');
+                profileImage.src = result.photo_url + '?t=' + new Date().getTime();
+                
+                const deleteBtn = document.getElementById('deletePhotoBtn');
+                deleteBtn.disabled = false;
+                
+                showNotification('Profile photo updated successfully!', 'success');
+            } else {
+                showNotification(result.message || 'Failed uploading photo', 'error');
+            }
+        } catch (error) {
+            showNotification('Failed uploading photo. Please try again.', 'error');
+        } finally {
+            uploadBtn.textContent = originalText;
+            uploadBtn.disabled = false;
+            input.value = '';
+        }
+    }
+
+    async function deletePhoto() {
+        if (!confirm('Are you sure to delete your photo profile?')) {
+            return;
+        }
+        
+        const deleteBtn = document.getElementById('deletePhotoBtn');
+        const originalText = deleteBtn.textContent;
+        deleteBtn.textContent = 'Deleting...';
+        deleteBtn.disabled = true;
+        
+        try {
+            const response = await fetch('{{ route("profile.delete-photo") }}', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                const profileImage = document.getElementById('profileImage');
+                profileImage.src = defaultPhotoUrl;
+                
+                deleteBtn.disabled = true;
+                deleteBtn.textContent = 'Delete';
+                
+                showNotification('Photo profile deleted successfully!', 'success');
+            } else {
+                showNotification(result.message || 'Failed deleting photo', 'error');
+                deleteBtn.disabled = false;
+                deleteBtn.textContent = originalText;
+            }
+        } catch (error) {
+            showNotification('Failed deleting photo. Please try again.', 'error');
+            deleteBtn.disabled = false;
+            deleteBtn.textContent = originalText;
+        }
+    }
+
+    function showNotification(message, type = 'success') {
+        window.dispatchEvent(new CustomEvent('open-snackbar', {
+            detail: { message, type }
+        }));
+    }
+</script>

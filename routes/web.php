@@ -13,12 +13,15 @@ use App\Http\Controllers\UserController;
 // use App\Http\Controllers\MoodController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Middleware\OTPMiddleware;
+use App\Http\Middleware\CheckAppointmentReview;
 use App\Http\Middleware\CheckRole;
 use Illuminate\Support\Facades\Route;
 
 app('router')->aliasMiddleware('otp', OTPMiddleware::class);
 app('router')->aliasMiddleware('role', CheckRole::class);
+app('router')->aliasMiddleware('review', CheckAppointmentReview::class);
 
 // Redirect root "/" → landing page
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
@@ -102,7 +105,21 @@ Route::middleware(['auth', 'otp', 'role:patient'])
             Route::post('/{id}/cancel', 'cancel')->name('cancel');
             Route::post('/{id}/reschedule', 'reschedule')->name('reschedule');
             Route::get('/chat/session/{appointment}', [ChatController::class, 'startSession'])->name('chat.session');
-        });
+
+            // Appointment Review
+            Route::middleware(['review:create'])->group(function () {
+                Route::get('/{id}/review', [ReviewController::class, 'create'])->name('review.create');
+                Route::post('/{id}/review', [ReviewController::class, 'store'])->name('review.store');                
+            });
+            Route::middleware(['review:edit'])->group(function () {          
+                Route::get('/{id}/review/edit', [ReviewController::class, 'edit'])->name('review.edit');
+                Route::put('/{id}/review', [ReviewController::class, 'update'])->name('review.update');
+            });
+            Route::middleware(['review:delete'])->group(function () {
+                Route::delete('/{id}/review', [ReviewController::class, 'destroy'])->name('review.destroy');
+            });
+            
+        }); 
 
         // Payment
         Route::prefix('payment')->name('payment.')->group(function () {
@@ -157,12 +174,20 @@ Route::middleware(['auth', 'otp', 'role:admin'])
 
 // SHARED ROUTES -> Auth + OTP Protected
 Route::middleware(['auth', 'otp'])->group(function () {
-    // Settings Profile
+    // Settings
     Route::prefix('profile')->name('profile.')->controller(UserController::class)->group(function () {
         Route::get('/', 'showProfile')->name('index');
-        Route::put('/update', 'updateProfile')->name('update');
-        Route::put('/profile/password', 'updatePrivacy')->name('privacy.update');
-        Route::put('/profile/preferences', 'updatePreferences')->name('preferences.update');
+
+        // Profile 
+        Route::put('/update','updateProfile')->name('update');
+        Route::post('/upload-photo', 'uploadPhoto')->name('upload-photo');
+        Route::delete('/delete-photo', 'deletePhoto')->name('delete-photo');
+
+        // Privacy
+        Route::put('/password', 'updatePrivacy')->name('privacy.update');
+
+        // Preferences
+        Route::put('/preferences', 'updatePreferences')->name('preferences.update');
 
         // Accessible for psychologist only
         Route::middleware('role:psychologist')->group(function () {

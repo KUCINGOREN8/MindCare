@@ -231,7 +231,7 @@ class AppointmentController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('psychologist.appointments.index', compact(
+        return view('psychologist.appointment.index', compact(
             'upcomingAppointments',
             'todayAppointments',
             'pendingAppointments'

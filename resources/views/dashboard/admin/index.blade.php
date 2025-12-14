@@ -56,7 +56,7 @@
                                             <div class="flex items-center">
                                                 <div class="flex-shrink-0 h-10 w-10">
                                                     <img class="h-10 w-10 rounded-full object-cover"
-                                                        src="{{ $u->photo_url ? asset($u->photo_url) : ($u->gender == 'female' ? asset('assets/icons/user_female.svg') : asset('assets/icons/user_male.svg')) }}">
+                                                        src="{{ $u->photo_url }}">
                                                 </div>
                                                 <div class="ml-4">
                                                     <div class="text-sm font-medium text-gray-900">{{ $u->full_name }}</div>
