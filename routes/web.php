@@ -46,7 +46,6 @@ Route::middleware('guest')->group(function () {
         Route::post('/step4/{user}', [AuthPsychologistController::class, 'storeStep4'])->name('storeStep4');
         Route::get('/step5/{user}', [AuthPsychologistController::class, 'showStep5'])->name('step5');
         Route::post('/step5/{user}', [AuthPsychologistController::class, 'storeStep5'])->name('storeStep5');
-        // Route::get('/complete', [AuthPsychologistController::class, 'complete'])->name('complete');
     });
 
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -77,7 +76,7 @@ Route::middleware(['auth', 'otp', 'role:patient'])
         // Patient Mood
         Route::post('/mood', [DashboardController::class, 'moodStore'])->name('mood.store');
         // Route::post('/mood/undo', [MoodController::class, 'undo'])->name('mood.undo');
-    
+
         // Psychologist
         Route::get('find-psychologist', [PsychologistController::class, 'showFindPsychologist'])->name('find.psychologist');
         Route::get('/search', [PsychologistController::class, 'showSearch'])->name('psychologist.search');
@@ -123,18 +122,23 @@ Route::middleware(['auth', 'otp', 'role:psychologist'])
         // Dashboard
         Route::get('/dashboard', [DashboardController::class, 'showPsychologistDashboard'])->name('dashboard');
 
-        // My Clients
-        Route::get('/clients', [PsychologistController::class, 'showClients'])->name('clients');
+    // My Clients
+    Route::get('/clients' , [PsychologistController::class, 'showClients'])->name('clients');
+    Route::get('/clients/{client}/details', [PsychologistController::class, 'showClientDetails'])->name('clients.details');
+    Route::get('/clients/{client}/appointments', [PsychologistController::class, 'getClientAppointments'])->name('clients.appointments');
+    Route::get('/clients/{client}/general-notes', [PsychologistController::class, 'getGeneralNotes'])->name('clients.general-notes');
+    Route::post('/notes/general/store', [PsychologistController::class, 'storeGeneralNotes'])->name('notes.general.store');
+    Route::post('/notes/store', [PsychologistController::class, 'storeSessionNotes'])->name('notes.session.store');
 
         // Appointments
         Route::prefix('appointments')
-            ->name('appointments.')
-            ->controller(AppointmentController::class)
-            ->group(function () {
-            // TO-DO: GANTI ROUTE DISINI KALAU PAGE NYA UDH
-            Route::get('/', 'index')->name('index');
-        });
+        ->name('appointments.')
+        ->controller(AppointmentController::class)
+        ->group(function () {
+            Route::get('/', [PsychologistController::class, 'showSchedule'])->name('index');
+            Route::get('/chat/session/{appointment}', [ChatController::class, 'startSession'])->name('chat.session');
     });
+});
 
 // ADMIN ROUTES => Auth + OTP + Role protected
 Route::middleware(['auth', 'otp', 'role:admin'])

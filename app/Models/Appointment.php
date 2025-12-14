@@ -36,7 +36,7 @@ class Appointment extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function payment()
@@ -59,7 +59,7 @@ class Appointment extends Model
         return Carbon::createFromFormat(
             'Y-m-d H:i:s',
             $this->date->format('Y-m-d') . ' ' . $this->start_time,
-            config('app.timezone')
+            config('app.timezone', 'Asia/Jakarta')
         );
     }
 

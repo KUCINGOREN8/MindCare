@@ -24,7 +24,7 @@ Dashboard
                     icon-color="#2563EB"
                     trend="{{ $stats['total_patients_trend'] }}"
                 />
-                
+
                 <x-stat-card
                     title="Sessions This Week"
                     value="{{ $stats['sessions_this_week'] }}"
@@ -34,7 +34,7 @@ Dashboard
                     icon-color="#9333EA"
                     trend="{{ $stats['sessions_trend'] }}"
                 />
-                
+
                 <x-stat-card
                     title="Monthly Revenue"
                     value="Rp {{ number_format($stats['monthly_revenue'], 0, ',', '.') }}"
@@ -46,7 +46,7 @@ Dashboard
                 />
             </x-stats-grid>
 
-            @include('components.upcoming-appointment')
+            @include('components.psychologist.upcoming-appointment')
 
             <div class="bg-white p-6 flex flex-col gap-6 rounded-md border-grey-border border">
                 <div class="flex gap-4 justify-between items-start">
@@ -78,9 +78,6 @@ Dashboard
                                             <p>{{ $patient->full_name }}</p>
                                         </div>
                                         <div>
-                                            <div class="bg-notification-green-bg py-1 px-3 rounded-xl">
-                                                <p class="text-[#16A34A]">Active</p>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
