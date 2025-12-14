@@ -123,5 +123,8 @@ class User extends Authenticatable
         return $this->hasMany(Message::class, 'receiver_id');
     }
 
-    
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class, 'user_id');
+    }
 }
