@@ -101,7 +101,7 @@
                                     '<svg ',
                                 '<svg class="w-6 h-6 text-[#A1AAB2] opacity-50 mr-4" fill="currentColor" ',
                                 file_get_contents(public_path('assets/signup/language.svg'))
-                            ) !!}   
+                            ) !!}
                             <select name="language" class="w-full outline-none bg-transparent text-gray-400" onchange="this.style.color = this.value ? '#000000' : '#9CA3AF'">
                                 <option value="" disabled selected class="text-gray-400">Preferred Language</option>
                                 <option value="en" {{ old('language') == 'en' ? 'selected' : '' }} class="text-black" >English</option>
@@ -132,7 +132,7 @@
                     <div class="text-center pt-3">
                         <p class="text-gray-600 text-sm">
                             Already have an account?
-                            <a href="{{ route('login') }}" class="font-medium underline" style="color: #009C8F;">Sign in</a>
+                            <a href="{{ route('login') }}" class="font-medium underline" style="color: #009C8F;">Login</a>
                             here.
                         </p>
                     </div>
