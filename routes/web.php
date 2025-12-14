@@ -126,6 +126,11 @@ Route::middleware(['auth', 'otp', 'role:psychologist'])
 
     // My Clients
     Route::get('/clients' , [PsychologistController::class, 'showClients'])->name('clients');
+    Route::get('/clients/{client}/details', [PsychologistController::class, 'showClientDetails'])->name('clients.details');
+    Route::get('/clients/{client}/appointments', [PsychologistController::class, 'getClientAppointments'])->name('clients.appointments');
+    Route::get('/clients/{client}/general-notes', [PsychologistController::class, 'getGeneralNotes'])->name('clients.general-notes');
+    Route::post('/notes/general/store', [PsychologistController::class, 'storeGeneralNotes'])->name('notes.general.store');
+    Route::post('/notes/store', [PsychologistController::class, 'storeSessionNotes'])->name('notes.session.store');
 
     // Appointments
         Route::prefix('appointments')
@@ -166,11 +171,11 @@ Route::middleware(['auth', 'otp'])->group(function () {
             // Education
             Route::post('/education', [UserController::class, 'storeEducation'])->name('education.store');
             Route::delete('education/{id}', [UserController::class, 'destroyEducation'])->name('education.destroy');
-            
+
             // Experience
             Route::post('/experience', [UserController::class, 'storeExperience'])->name('experience.store');
             Route::delete('/experience/{id}', [UserController::class, 'destroyExperience'])->name('experience.destroy');
-            
+
             // Schedule
             Route::put('/schedule', 'updateSchedule')->name('schedule.update');
 
