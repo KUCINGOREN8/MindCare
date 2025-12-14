@@ -46,34 +46,153 @@ class DashboardController extends Controller
             ->take(3)
             ->get();
 
-        return view('dashboard.patient.index', compact('user', 'upcomingAppointments'));
+        $moodData = $this->getWeeklyMoodData($user);
+
+        $todayMood = Mood::where('user_id', $user->id)
+        ->whereDate('created_at', now()->format('Y-m-d'))
+        ->first();
+    
+        return view('dashboard.patient.index', compact(
+            'user', 
+            'upcomingAppointments', 
+            'moodData',
+            'todayMood'
+        ));
     }
 
     public function moodStore(Request $request)
     {
         $request->validate([
-            'mood' => ['required', Rule::in(['sad', 'flat', 'good', 'happy', 'blissful'])],
-        ]);
+        'mood' => ['required', Rule::in(['sad', 'flat', 'good', 'happy', 'blissful'])],
+    ]);
 
-        $mood = Mood::create([
-            'user_id' => auth()->id(),
+    $userId = auth()->id();
+    $today = now()->format('Y-m-d');
+
+    $existingMood = Mood::where('user_id', $userId)
+        ->whereDate('created_at', $today)
+        ->first();
+
+    if ($existingMood) {
+        // Update mood yang sudah ada
+        $existingMood->update([
             'mood' => $request->mood,
         ]);
-
-        return back()->with('success', 'Mood berhasil disimpan!')
-        ->with('undo_id', $mood->id);
+        
+        return back()->with('success', 'Mood berhasil diperbarui!');
+    } else {
+        // Buat mood baru
+        $mood = Mood::create([
+            'user_id' => $userId,
+            'mood' => $request->mood,
+        ]);
+        
+        return back()->with('success', 'Mood berhasil disimpan!');
+    }
     }
 
-    public function undo(Request $request)
+    private function getWeeklyMoodData($user) 
     {
-        $mood = Mood::find($request->undo_id);
-
-        if ($mood && $mood->user_id == auth()->id()) {
-            $mood->delete();
-            return back()->with('success', 'Mood berhasil dibatalkan.');
+        $startOfWeek = now()->startOfWeek();
+        $endOfWeek = now()->endOfWeek();
+        
+        $weeklyMoods = Mood::where('user_id', $user->id)
+            ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
+            ->orderBy('created_at')
+            ->get();
+        
+        $weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+        $chartData = [];
+        $moodValues = [];
+        
+        foreach ($weekDays as $index => $day) {
+            $chartData[$day] = null;
         }
+        
+        $moodValueMap = [
+            'sad' => 1,
+            'flat' => 2,
+            'good' => 3,
+            'happy' => 4,
+            'blissful' => 5
+        ];
+        
+        foreach ($weeklyMoods as $mood) {
+            $dayName = $mood->created_at->format('D');
+            if (in_array($dayName, $weekDays)) {
+                $chartData[$dayName] = $moodValueMap[$mood->mood];
+                $moodValues[] = $moodValueMap[$mood->mood];
+            }
+        }
+        
+        $averageMood = count($moodValues) > 0 ? array_sum($moodValues) / count($moodValues) : 0;
+        $note = $this->generateMoodNote($averageMood, $moodValues);
+        
+        return [
+            'chartData' => $chartData,
+            'averageMood' => $averageMood,
+            'note' => $note,
+            'moodValueMap' => $moodValueMap,
+            'weekDays' => $weekDays
+        ];
+    }
 
-        return back()->with('error', 'Mood tidak ditemukan atau tidak bisa dibatalkan.');
+    private function generateMoodNote($averageMood, $moodValues)
+    {
+        if (count($moodValues) === 0) {
+            return [
+                'title' => 'No mood data yet',
+                'subtitle' => 'Log your mood to see insights',
+                'color' => 'gray',
+                'suggest_appointment' => false
+            ];
+        }
+        
+        if ($averageMood >= 4) {
+            return [
+                'title' => '🌟 You\'ve been feeling calmer lately, great job!',
+                'subtitle' => 'Your emotional wellbeing is shining through',
+                'color' => 'green',
+                'suggest_appointment' => false
+            ];
+        } elseif ($averageMood >= 2.5 && $averageMood < 4) {
+            $variation = $this->calculateMoodVariation($moodValues);
+            if ($variation > 0) {
+                return [
+                    'title' => '📈 Steady Progress!',
+                    'subtitle' => 'Your mood is getting better day by day',
+                    'color' => 'yellow',
+                    'suggest_appointment' => false
+                ];
+            } else {
+                return [
+                    'title' => '⚖️ Finding Balance',
+                    'subtitle' => 'Your mood has been stable this week',
+                    'color' => 'yellow',
+                    'suggest_appointment' => false
+                ];
+            }
+        } else {
+            return [
+                'title' => '💬 Let\'s Talk About It',
+                'subtitle' => 'Consider scheduling a session to discuss your feelings',
+                'color' => 'red',
+                'suggest_appointment' => true
+            ];
+        }
+    }
+
+    private function calculateMoodVariation($moodValues)
+    {
+        if (count($moodValues) < 2) return 0;
+        
+        $firstHalf = array_slice($moodValues, 0, ceil(count($moodValues)/2));
+        $secondHalf = array_slice($moodValues, floor(count($moodValues)/2));
+        
+        $avgFirst = array_sum($firstHalf) / count($firstHalf);
+        $avgSecond = array_sum($secondHalf) / count($secondHalf);
+        
+        return $avgSecond - $avgFirst;
     }
 
     // === PSYCHOLOGIST DASHBOARD METHODS === //

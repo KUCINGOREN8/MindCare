@@ -46,41 +46,58 @@ Dashboard
                     <h1 class="text-primary font-bold text-lg">Good Day, {{ $user->full_name }}!</h1>
                     <h5 class="text-captiondark text-sm">How are you feeling today?</h5>
                 </div>
-                @if($user->role == 'patient')
-                    <form action="{{ route('patient.mood.store') }}" method="POST" x-data="{ selected: null }">
-                        @csrf
-                        <input type="hidden" name="mood" :value="selected">
+                
+                <form action="{{ route('patient.mood.store') }}" method="POST" x-data="{ selected: '{{ optional($todayMood)->mood }}', hasSubmittedToday: {{ optional($todayMood)->mood ? 'true' : 'false' }} }">
+                    @csrf
+                    <input type="hidden" name="mood" :value="selected">
 
-                        <div class="flex items-center gap-4">
-                            <p class="text-caption-dark">Rate your mood:</p>
-                            <div class="flex gap-4">
-                                @foreach ([
-                                    ['id' => 'sad', 'img' => 'sad.png', 'alt' => 'Sad'],
-                                    ['id' => 'flat', 'img' => 'flat.png', 'alt' => 'Flat'],
-                                    ['id' => 'good', 'img' => 'good.png', 'alt' => 'Good'],
-                                    ['id' => 'happy', 'img' => 'happy.png', 'alt' => 'Happy'],
-                                    ['id' => 'blissful', 'img' => 'blissful.png', 'alt' => 'Blissful'],
-                                ] as $mood)
-                                    <button
-                                        type="button"
-                                        @click="selected = '{{ $mood['id'] }}'; $nextTick(() => $el.closest('form').submit())"
-                                        :class="selected === '{{ $mood['id'] }}'
-                                            ? 'bg-secondary text-white scale-110'
-                                            : 'bg-transparent hover:bg-secondary/10'"
-                                        class="p-2 rounded-full transition transform duration-300 hover:scale-110"
-                                    >
-                                        <img src="{{ asset('assets/dashboard/' . $mood['img']) }}"
-                                            alt="{{ $mood['alt'] }}"
-                                            class="w-8 h-8">
-                                    </button>
-                                @endforeach
-                            </div>
+                    <div class="flex items-center gap-4">
+                        <p class="text-caption-dark">
+                            <span x-show="!hasSubmittedToday">Rate your mood:</span>
+                            <span x-show="hasSubmittedToday" class="flex flex-col">
+                                <span>
+                                    Today's mood: 
+                                    <span class="font-medium capitalize" x-text="selected"></span>
+                                </span>
+                                <span class="text-sm text-gray-500">(click to update)</span>
+                            </span>
+                        </p>
+                        <div class="flex gap-4">
+                            @foreach ([
+                                ['id' => 'sad', 'img' => 'sad.png', 'alt' => 'Sad'],
+                                ['id' => 'flat', 'img' => 'flat.png', 'alt' => 'Flat'],
+                                ['id' => 'good', 'img' => 'good.png', 'alt' => 'Good'],
+                                ['id' => 'happy', 'img' => 'happy.png', 'alt' => 'Happy'],
+                                ['id' => 'blissful', 'img' => 'blissful.png', 'alt' => 'Blissful'],
+                            ] as $mood)
+                                <button
+                                    type="button"
+                                    @click="selected = '{{ $mood['id'] }}'; hasSubmittedToday = true; $nextTick(() => $el.closest('form').submit())"
+                                    :class="selected === '{{ $mood['id'] }}'
+                                        ? 'bg-secondary text-white scale-110'
+                                        : 'bg-transparent hover:bg-secondary/10'"
+                                    class="p-2 rounded-full transition transform duration-300 hover:scale-110"
+                                    :title="hasSubmittedToday && selected === '{{ $mood['id'] }}' ? 'Click to change mood' : ''"
+                                >
+                                    <img src="{{ asset('assets/dashboard/' . $mood['img']) }}"
+                                        alt="{{ $mood['alt'] }}"
+                                        class="w-8 h-8">
+                                </button>
+                            @endforeach
                         </div>
-                    </form>
-                @endif
+                    </div>
+                </form>
             </div>
 
             @include('components.upcoming-appointment')
+
+            <x-mood-chart 
+                :chartData="$moodData['chartData']"
+                :averageMood="$moodData['averageMood']"
+                :note="$moodData['note']"
+                height="250px"
+                id="patientMoodChart"
+            />
         </div>
     </div>
 

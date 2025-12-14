@@ -81,7 +81,17 @@ class UserController extends Controller
             'name' => 'required|string|min:3|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'gender' => 'required|in:male,female,other',
-            'date_of_birth' => 'required|date|before:today',
+            'date_of_birth' => [
+                'required',
+                'date',
+                'before:today',
+                function ($attribute, $value, $fail) {
+                    $age = date_diff(date_create($value), date_create('today'))->y;
+                    if ($age < 18) {
+                        $fail('You must be at least 18 years old to register.');
+                    }
+                }
+            ],
         ], [
             'date_of_birth.date' => 'Please enter a valid date',
             'date_of_birth.before' => 'Date of birth must be in the past',
