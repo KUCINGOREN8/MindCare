@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\PsychologistEducation;
 use App\Models\PsychologistExperience;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -21,6 +22,55 @@ class UserController extends Controller
         }
 
         return view('settings.index', compact('user', 'psychologist'));
+    }
+
+    public function uploadPhoto(Request $request)
+    {
+        $request->validate([
+            'photo' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+        ]);
+
+        $user = Auth::user();
+
+        // Delete old photo if exists
+        if ($user->photo_url) {
+            $oldPath = $user->photo_url;
+            if (Storage::disk('public')->exists($oldPath)) {
+                Storage::disk('public')->delete($oldPath);
+            }
+        }
+
+        // Store new photo
+        $path = $request->file('photo')->store('profile-photos', 'public');
+
+        // Update user photo (simpan path relatif)
+        $user->photo_url = $path;
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'photo_url' => $user->photo_url,
+            'message' => 'Photo profile updated successfully!'
+        ]);
+    }
+
+    public function deletePhoto()
+    {
+        $user = Auth::user();
+        
+        // Delete photo from storage
+        if ($user->photo_url && Storage::disk('public')->exists($user->photo_url)) {
+            Storage::disk('public')->delete($user->photo_url);
+        }
+
+        // Set photo_url to null
+        $user->photo_url = null;
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Photo profile deleted successfully!'
+        ]);
     }
 
     public function updateProfile(Request $request)

@@ -5,7 +5,8 @@
     'time' => '',
     'joinRoute' => '#',
     'rescheduleRoute' => '#',
-    'isSessionAvailable' => false
+    'isSessionAvailable' => false,
+    'showButtons' => true,
 ])
 
 @if($appointment)
@@ -48,17 +49,19 @@
             </p>
         </div>
 
-        <div class="flex gap-2">
-            <x-appointment-button
-                text="Join Session"
-                active="{{ $appointment->is_session_available }}"
-                route="{{ route('patient.appointments.chat.session', $appointment->id) }}"
-            />
-            <x-appointment-button
-                text="Reschedule"
-                secondary="true"
-                route="{{ route('patient.appointments.reschedule', $appointment->id) }}"
-            />
-        </div>
+        @if ($showButtons)
+            <div class="flex gap-2">
+                <x-appointment-button
+                    text="Join Session"
+                    active="{{ $appointment->is_session_available }}"
+                    route="{{ route('patient.appointments.chat.session', $appointment->id) }}"
+                />
+                <x-appointment-button
+                    text="Reschedule"
+                    secondary="true"
+                    route="{{ route('patient.appointments.reschedule', $appointment->id) }}"
+                />
+            </div>
+        @endif
     </div>
 @endif

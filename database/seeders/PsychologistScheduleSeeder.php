@@ -29,19 +29,19 @@ class PsychologistScheduleSeeder extends Seeder
                 'psychologist_id' => $psychologist->id,
                 'day_of_week' => 'tuesday',
                 'start_time' => '05:00',
-                'end_time' => '24:00',
+                'end_time' => '23:00',
             ],
             [
                 'psychologist_id' => $psychologist->id,
                 'day_of_week' => 'wednesday',
                 'start_time' => '22:00',
-                'end_time' => '24:00',
+                'end_time' => '23:00',
             ],
             [
                 'psychologist_id' => $psychologist->id,
                 'day_of_week' => 'thursday',
                 'start_time' => '09:00',
-                'end_time' => '24:00',
+                'end_time' => '12:00',
             ],
             [
                 'psychologist_id' => $psychologist->id,

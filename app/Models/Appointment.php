@@ -125,5 +125,21 @@ class Appointment extends Model
                     $q2->whereDate('date', '=', now()->format('Y-m-d'))->whereTime('end_time', '<=', now()->format('H:i:s'));
                 });
         });
+    public function getCanBeReviewedAttribute()
+    {
+        return $this->status === 'completed' && 
+            auth()->check() && 
+            auth()->id() === $this->user_id;
+    }
+
+    public function getHasBeenReviewedAttribute()
+    {
+        if (!$this->can_be_reviewed) {
+            return false;
+        }
+        
+        return $this->psychologist->reviews()
+            ->where('user_id', auth()->id())
+            ->exists();
     }
 }

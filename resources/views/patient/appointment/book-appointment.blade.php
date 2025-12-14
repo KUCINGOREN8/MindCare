@@ -24,7 +24,7 @@ Book Appointment
             <h2 class="font-semibold mb-4 text-lg">Psychologist Selected</h2>
             <div class="flex items-center gap-4 p-4 bg-blue-50 rounded-lg">
                 <img class="w-16 h-16 rounded-full object-cover shadow"
-                     src="{{ $psychologists[0]->user->photo_url ? asset($psychologists[0]->user->photo_url) : ($psychologists[0]->user->gender=='female' ? asset('assets/icons/user_female.svg') : asset('assets/icons/user_male.svg')) }}" />
+                     src="{{ $psychologists[0]->user->photo_url }}" />
                 <div>
                     <div class="font-semibold text-gray-800">{{ $psychologists[0]->user->full_name }}</div>
                     <div class="text-sm text-gray-600">{{ $psychologists[0]->title }}</div>
@@ -161,11 +161,7 @@ Book Appointment
                                 : 'border-gray-300 bg-white text-gray-800'">
 
                             <img class="mx-auto mb-3 w-20 h-20 rounded-full object-cover shadow"
-                                :src="psych.user.photo_url
-                                    ? psych.user.photo_url
-                                    : (psych.user.gender == 'female'
-                                        ? '{{ asset('assets/icons/user_female.svg') }}'
-                                        : '{{ asset('assets/icons/user_male.svg') }}')" />
+                                :src="psych.user.photo_url" />
 
                             <div
                                 x-text="psych.user.full_name"
