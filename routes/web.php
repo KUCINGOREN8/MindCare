@@ -174,6 +174,7 @@ Route::middleware(['auth', 'otp', 'role:admin'])
         // Manage User (CRUD)
         Route::resource('users', AdminController::class);
     });
+    //huhuu
 
 // SHARED ROUTES -> Auth + OTP Protected
 Route::middleware(['auth', 'otp'])->group(function () {

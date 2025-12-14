@@ -194,7 +194,7 @@
                 return redirect()->route('patient.appointments.index')->with('error', 'Payment failed: ' . $e->getMessage());
             }
         }
-
+        //ini yang tadi
 
         public function reschedule(Request $request, $id)
         {

@@ -45,3 +45,4 @@ function closeRescheduleModal() {
     document.getElementById('rescheduleModal').classList.add('hidden');
 }
 </script>
+//res modal

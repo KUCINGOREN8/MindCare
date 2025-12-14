@@ -113,8 +113,7 @@ class Appointment extends Model
             auth()->check() && 
             auth()->id() === $this->user_id;
     }
-
-    public function getHasBeenReviewedAttribute()
+//app       public function getHasBeenReviewedAttribute()
     {
         if (!$this->can_be_reviewed) {
             return false;
