@@ -274,50 +274,45 @@ class DashboardController extends Controller
         return round($change, 1);
     }
 
-    public function getReviewStats($psychologist) {
+    public function getReviewStats($psychologist)
+    {
         $reviews = $psychologist->reviews()
             ->select('rating', DB::raw('COUNT(*) as count'))
             ->groupBy('rating')
             ->get()
-            ->keyBy('rating')
-            ->toArray();
+            ->keyBy('rating');
 
-        $ratingLabels = [
-            1 => 'Poor (1★)',
-            2 => 'Fair (2★)',
-            3 => 'Good (3★)',
-            4 => 'Great (4★)',
-            5 => 'Excellent (5★)'
+        $ratingConfig = [
+            1 => ['label' => 'Poor (1★)', 'color' => '#FF383C'],
+            2 => ['label' => 'Fair (2★)', 'color' => '#F97316'],
+            3 => ['label' => 'Good (3★)', 'color' => '#FFD63D'],
+            4 => ['label' => 'Great (4★)', 'color' => '#3B82F6'],
+            5 => ['label' => 'Excellent (5★)', 'color' => '#00C3B3']
         ];
 
-        $reviewData = [];
         $reviewLabels = [];
-        $reviewColors = [
-            '#EF4444',
-            '#F97316',
-            '#EAB308',
-            '#22C55E',
-            '#3B82F6'
-        ];
-
+        $reviewData = [];
+        $reviewColors = [];
         $totalRating = 0;
-            $totalReviews = 0;
+        $totalReviews = 0;
+        
+        foreach ($ratingConfig as $rating => $config) {
+            $count = isset($reviews[$rating]) ? $reviews[$rating]['count'] : 0;
             
-            foreach ($ratingLabels as $rating => $label) {
-                $count = isset($reviews[$rating]) ? $reviews[$rating]['count'] : 0;
-                $reviewData[] = $count;
-                $totalRating += $rating * $count;
-                $totalReviews += $count;
-            }
+            $reviewLabels[] = $config['label'];
+            $reviewData[] = $count;
+            $reviewColors[] = $config['color'];
             
-            $averageRating = $totalReviews > 0 ? $totalRating / $totalReviews : 0;
-            
-            return [
-                'labels' => $reviewLabels,
-                'data' => $reviewData,
-                'colors' => $reviewColors,
-                'total_reviews' => $totalReviews,
-                'average_rating' => $averageRating
-            ];
+            $totalRating += $rating * $count;
+            $totalReviews += $count;
+        }
+        
+        return [
+            'labels' => $reviewLabels,
+            'data' => $reviewData,
+            'colors' => $reviewColors,
+            'total_reviews' => $totalReviews,
+            'average_rating' => $totalReviews > 0 ? $totalRating / $totalReviews : 0
+        ];
     }
 }
