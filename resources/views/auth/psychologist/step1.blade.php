@@ -103,7 +103,11 @@
                                 <input type="date" name="date_of_birth" required
                                     class="w-full outline-none bg-transparent" style="color: #9CA3AF;"
                                     onchange="this.style.color='#000000'"
-                                    value="{{ old('date_of_birth', $user->date_of_birth ?? '') }}">
+                                    value="{{ old('date_of_birth', 
+                                        isset($user->date_of_birth) 
+                                            ? \Carbon\Carbon::parse($user->date_of_birth)->format('Y-m-d')
+                                            : ''
+                                    ) }}">
                             </div>
                             @error('date_of_birth')
                                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
