@@ -20,8 +20,7 @@ class NotificationController extends Controller
             if ($adminNotifications) {
                 $notifications = array_merge($notifications, $adminNotifications);
             }
-        }
-        else {
+        } else {
             $appointmentReminders = $this->getAppointmentReminders($user);
             if ($appointmentReminders) {
                 $notifications = array_merge($notifications, $appointmentReminders);
@@ -67,43 +66,10 @@ class NotificationController extends Controller
                 ->first();
 
             if ($appointment && $appointment->psychologist && $appointment->psychologist->user) {
-                $startDateTime = Carbon::createFromFormat(
-                    'Y-m-d H:i:s',
-                    $appointment->date->format('Y-m-d') . ' ' . $appointment->start_time
-                );
-
-                $psychologistName = $appointment->psychologist->user->full_name;
-
-                if ($startDateTime->isToday()) {
-                    $hoursToStart = $now->diffInHours($startDateTime);
-                    $minutesToStart = $now->diffInMinutes($startDateTime);
-
-                    if ($hoursToStart > 0) {
-                        $message = "Your session with Dr. {$psychologistName} starts in {$hoursToStart} " . ($hoursToStart == 1 ? 'hour' : 'hours');
-                    } else {
-                        $message = "Your session with Dr. {$psychologistName} starts in {$minutesToStart} " . ($minutesToStart == 1 ? 'minute' : 'minutes');
-                    }
-                } elseif ($startDateTime->isTomorrow()) {
-                    $time = Carbon::parse($appointment->start_time)->format('g:i A');
-                    $message = "Your session with Dr. {$psychologistName} is tomorrow at {$time}";
-                } else {
-                    $date = $appointment->date->format('M j');
-                    $time = Carbon::parse($appointment->start_time)->format('g:i A');
-                    $message = "Your session with Dr. {$psychologistName} is on {$date} at {$time}";
-                }
-
-                $notifications[] = [
-                    'icon' => 'assets/icons/calendar.svg',
-                    'title' => 'Session Reminder',
-                    'message' => $message,
-                    'time' => $this->formatTimeAgo($startDateTime),
-                    'type' => 'reminder',
-                    'timestamp' => $startDateTime->toDateTimeString(),
-                    'appointment_id' => $appointment->id,
-                ];
+                // TRUE karena ini Patient
+                $this->processAppointment($appointment, $notifications, $now, true);
             }
-        }
-        elseif ($user->role === 'psychologist' && $user->psychologist) {
+        } elseif ($user->role === 'psychologist' && $user->psychologist) {
             $appointment = Appointment::with('user')
                 ->where('psychologist_id', $user->psychologist->id)
                 ->where('status', 'confirmed')
@@ -119,59 +85,79 @@ class NotificationController extends Controller
                 ->first();
 
             if ($appointment && $appointment->user) {
-                $startDateTime = Carbon::createFromFormat(
-                    'Y-m-d H:i:s',
-                    $appointment->date->format('Y-m-d') . ' ' . $appointment->start_time
-                );
-
-                $patientName = $appointment->user->full_name;
-
-                if ($startDateTime->isToday()) {
-                    $hoursToStart = $now->diffInHours($startDateTime);
-                    $minutesToStart = $now->diffInMinutes($startDateTime);
-
-                    if ($hoursToStart > 0) {
-                        $message = "Your session with {$patientName} starts in {$hoursToStart} " . ($hoursToStart == 1 ? 'hour' : 'hours');
-                    } else {
-                        $message = "Your session with {$patientName} starts in {$minutesToStart} " . ($minutesToStart == 1 ? 'minute' : 'minutes');
-                    }
-                } elseif ($startDateTime->isTomorrow()) {
-                    $time = Carbon::parse($appointment->start_time)->format('g:i A');
-                    $message = "Your session with {$patientName} is tomorrow at {$time}";
-                } else {
-                    $date = $appointment->date->format('M j');
-                    $time = Carbon::parse($appointment->start_time)->format('g:i A');
-                    $message = "Your session with {$patientName} is on {$date} at {$time}";
-                }
-
-                $notifications[] = [
-                    'icon' => 'assets/icons/calendar.svg',
-                    'title' => 'Session Reminder',
-                    'message' => $message,
-                    'time' => $this->formatTimeAgo($startDateTime),
-                    'type' => 'reminder',
-                    'timestamp' => $startDateTime->toDateTimeString(),
-                    'appointment_id' => $appointment->id,
-                ];
+                // FALSE karena ini Psychologist
+                $this->processAppointment($appointment, $notifications, $now, false);
             }
         }
 
         return $notifications;
     }
 
+    // --- BAGIAN INI YANG SEBELUMNYA MASIH HARDCODED ---
+    private function processAppointment($appointment, &$notifications, $now, $isPatient)
+    {
+        $startDateTime = Carbon::createFromFormat(
+            'Y-m-d H:i:s',
+            $appointment->date->format('Y-m-d') . ' ' . $appointment->start_time
+        );
+
+        // Tentukan nama lawan bicara
+        if ($isPatient) {
+            // "Dr. Budi"
+            $nameDisplay = __('notifications.dr_prefix') . $appointment->psychologist->user->full_name;
+        } else {
+            // "Andi"
+            $nameDisplay = $appointment->user->full_name;
+        }
+
+        // PERBAIKAN: Menggunakan __() translation key, bukan string biasa
+        if ($startDateTime->isToday()) {
+            $hoursToStart = $now->diffInHours($startDateTime);
+            $minutesToStart = $now->diffInMinutes($startDateTime);
+
+            if ($hoursToStart > 0) {
+                // Mengambil key: session_starts_hours
+                $message = __('notifications.session_starts_hours', ['name' => $nameDisplay, 'count' => $hoursToStart]);
+            } else {
+                // Mengambil key: session_starts_minutes
+                $message = __('notifications.session_starts_minutes', ['name' => $nameDisplay, 'count' => $minutesToStart]);
+            }
+        } elseif ($startDateTime->isTomorrow()) {
+            $time = Carbon::parse($appointment->start_time)->format('H:i');
+            // Mengambil key: session_tomorrow
+            $message = __('notifications.session_tomorrow', ['name' => $nameDisplay, 'time' => $time]);
+        } else {
+            // Format tanggal mengikuti locale (misal: 12 Mei)
+            $date = $appointment->date->translatedFormat('d M');
+            $time = Carbon::parse($appointment->start_time)->format('H:i');
+            // Mengambil key: session_date
+            $message = __('notifications.session_date', ['name' => $nameDisplay, 'date' => $date, 'time' => $time]);
+        }
+
+        $notifications[] = [
+            'icon' => 'assets/icons/calendar.svg',
+            'title' => __('notifications.session_reminder_title'), // Translate Judul
+            'message' => $message,
+            'time' => $this->formatTimeAgo($startDateTime),
+            'type' => 'reminder',
+            'timestamp' => $startDateTime->toDateTimeString(),
+            'appointment_id' => $appointment->id,
+        ];
+    }
+
+    // --- BAGIAN PESAN JUGA PERLU DIGANTI ---
     private function getMessageReminders(User $user)
     {
         $now = Carbon::now();
-        $conversation = Conversation::where(function($query) use ($user) {
-                if ($user->role === 'patient') {
-                    $query->where('patient_id', $user->id)
-                        ->where('unread_patient', '>', 0);
-                }
-                elseif ($user->role === 'psychologist') {
-                    $query->where('psychologist_id', $user->id)
-                        ->where('unread_psychologist', '>', 0);
-                }
-            })
+        $conversation = Conversation::where(function ($query) use ($user) {
+            if ($user->role === 'patient') {
+                $query->where('patient_id', $user->id)
+                    ->where('unread_patient', '>', 0);
+            } elseif ($user->role === 'psychologist') {
+                $query->where('psychologist_id', $user->id)
+                    ->where('unread_psychologist', '>', 0);
+            }
+        })
             ->whereHas('latestMessage')
             ->with(['latestMessage', 'psychologist', 'patient'])
             ->orderBy('last_message_at', 'desc')
@@ -181,18 +167,21 @@ class NotificationController extends Controller
             return [];
         }
 
-        if (($user->role === 'patient' && (!$conversation->psychologist)) ||
-            ($user->role === 'psychologist' && (!$conversation->patient))) {
+        if (
+            ($user->role === 'patient' && (!$conversation->psychologist)) ||
+            ($user->role === 'psychologist' && (!$conversation->patient))
+        ) {
             return [];
         }
 
         $latestMessage = $conversation->latestMessage;
 
+        // Translate role default jika nama kosong
         if ($user->role === 'patient') {
-            $senderName = $conversation->psychologist->full_name ?? 'Psychologist';
-            $prefix = "Dr. ";
+            $senderName = $conversation->psychologist->full_name ?? __('notifications.default_psychologist');
+            $prefix = __('notifications.dr_prefix');
         } else {
-            $senderName = $conversation->patient->full_name ?? 'Patient';
+            $senderName = $conversation->patient->full_name ?? __('notifications.default_patient');
             $prefix = "";
         }
 
@@ -202,13 +191,14 @@ class NotificationController extends Controller
 
         if ($latestMessage->hasAttachment()) {
             $attachmentIcon = $latestMessage->getAttachmentIcon();
-            $messageText = "{$attachmentIcon} Sent an attachment";
+            // Translate notifikasi attachment
+            $messageText = __('notifications.sent_attachment', ['icon' => $attachmentIcon]);
         }
 
         return [
             [
                 'icon' => 'assets/icons/messages.svg',
-                'title' => 'New Message',
+                'title' => __('notifications.new_message_title'), // Translate Judul
                 'message' => "{$prefix}{$senderName}: {$messageText}",
                 'time' => $this->formatTimeAgo($latestMessage->created_at),
                 'type' => 'message',
@@ -238,8 +228,8 @@ class NotificationController extends Controller
 
             $notifications[] = [
                 'icon' => 'assets/icons/calendar.svg',
-                'title' => 'New Psychologist Registration',
-                'message' => "{$psychologist->full_name} is waiting for verification",
+                'title' => __('notifications.new_psychologist_title'),
+                'message' => __('notifications.waiting_verification', ['name' => $psychologist->full_name]),
                 'time' => $timeAgo,
                 'type' => 'reminder',
                 'timestamp' => $psychologist->created_at->toDateTimeString(),
@@ -257,15 +247,15 @@ class NotificationController extends Controller
         $diffInMinutes = $now->diffInMinutes($time);
 
         if ($diffInMinutes < 1) {
-            return 'Just now';
+            return __('notifications.just_now');
         } elseif ($diffInMinutes < 60) {
-            return "{$diffInMinutes} minutes ago";
+            return __('notifications.minutes_ago', ['count' => $diffInMinutes]);
         } elseif ($diffInMinutes < 1440) {
             $hours = floor($diffInMinutes / 60);
-            return "{$hours} " . ($hours == 1 ? 'hour' : 'hours') . " ago";
+            return __('notifications.hours_ago', ['count' => $hours]);
         } else {
             $days = floor($diffInMinutes / 1440);
-            return "{$days} " . ($days == 1 ? 'day' : 'days') . " ago";
+            return __('notifications.days_ago', ['count' => $days]);
         }
     }
 
@@ -275,89 +265,87 @@ class NotificationController extends Controller
             return [
                 [
                     'icon' => 'assets/icons/calendar.svg',
-                    'title' => 'No Upcoming Sessions',
-                    'message' => 'You don\'t have any upcoming sessions scheduled',
-                    'time' => 'Just now',
+                    'title' => __('notifications.no_upcoming_title'),
+                    'message' => __('notifications.no_upcoming_body'),
+                    'time' => __('notifications.just_now'),
                     'type' => 'reminder',
                     'timestamp' => Carbon::now()->toDateTimeString(),
                 ],
                 [
                     'icon' => 'assets/icons/messages.svg',
-                    'title' => 'No New Messages',
-                    'message' => 'Check back later for updates from your psychologist',
-                    'time' => 'Today',
+                    'title' => __('notifications.no_msg_title'),
+                    'message' => __('notifications.no_msg_patient_body'),
+                    'time' => __('notifications.today'),
                     'type' => 'message',
                     'timestamp' => Carbon::now()->toDateTimeString(),
                 ],
                 [
                     'icon' => 'assets/icons/check.svg',
-                    'title' => 'Track Your Mood',
-                    'message' => 'Log your daily mood to see insights and progress',
-                    'time' => 'This week',
+                    'title' => __('notifications.track_mood_title'),
+                    'message' => __('notifications.track_mood_body'),
+                    'time' => __('notifications.this_week'),
                     'type' => 'achievement',
                     'timestamp' => Carbon::now()->toDateTimeString(),
                 ],
                 [
                     'icon' => 'assets/icons/tips.svg',
-                    'title' => 'Daily Wellness Tip',
-                    'message' => 'Try a 5-minute meditation to start your day',
-                    'time' => '1 day ago',
+                    'title' => __('notifications.wellness_tip_title'),
+                    'message' => __('notifications.wellness_tip_body'),
+                    'time' => __('notifications.one_day_ago'),
                     'type' => 'tip',
                     'timestamp' => Carbon::now()->subDay()->toDateTimeString(),
                 ],
             ];
-        }
-        elseif ($user->role === 'psychologist') {
+        } elseif ($user->role === 'psychologist') {
             return [
                 [
                     'icon' => 'assets/icons/calendar.svg',
-                    'title' => 'No Upcoming Sessions',
-                    'message' => 'You don\'t have any upcoming sessions scheduled',
-                    'time' => 'Just now',
+                    'title' => __('notifications.no_upcoming_title'),
+                    'message' => __('notifications.no_upcoming_body'),
+                    'time' => __('notifications.just_now'),
                     'type' => 'reminder',
                     'timestamp' => Carbon::now()->toDateTimeString(),
                 ],
                 [
                     'icon' => 'assets/icons/messages.svg',
-                    'title' => 'No New Messages',
-                    'message' => 'Check back later for messages from patients',
-                    'time' => 'Today',
+                    'title' => __('notifications.no_msg_title'),
+                    'message' => __('notifications.no_msg_psych_body'),
+                    'time' => __('notifications.today'),
                     'type' => 'message',
                     'timestamp' => Carbon::now()->toDateTimeString(),
                 ],
                 [
                     'icon' => 'assets/icons/check.svg',
-                    'title' => 'Session Notes',
-                    'message' => 'Review and update your session notes',
+                    'title' => __('notifications.session_notes_title'),
+                    'message' => __('notifications.session_notes_body'),
                     'time' => '',
                     'type' => 'achievement',
                     'timestamp' => Carbon::now()->toDateTimeString(),
                 ],
                 [
                     'icon' => 'assets/icons/tips.svg',
-                    'title' => 'Patient Progress',
-                    'message' => 'Track your patients\' wellbeing progress',
+                    'title' => __('notifications.patient_progress_title'),
+                    'message' => __('notifications.patient_progress_body'),
                     'time' => '',
                     'type' => 'tip',
                     'timestamp' => Carbon::now()->subDay()->toDateTimeString(),
                 ],
             ];
-        }
-        elseif ($user->role === 'admin') {
+        } elseif ($user->role === 'admin') {
             return [
                 [
                     'icon' => 'assets/icons/calendar.svg',
-                    'title' => 'All Users Verified',
-                    'message' => 'No pending psychologist registrations',
-                    'time' => 'Just now',
+                    'title' => __('notifications.all_verified_title'),
+                    'message' => __('notifications.all_verified_body'),
+                    'time' => __('notifications.just_now'),
                     'type' => 'reminder',
                     'timestamp' => Carbon::now()->toDateTimeString(),
                 ],
                 [
                     'icon' => 'assets/icons/check.svg',
-                    'title' => 'System Monitoring',
-                    'message' => 'All systems are running smoothly',
-                    'time' => 'Today',
+                    'title' => __('notifications.system_monitoring_title'),
+                    'message' => __('notifications.system_monitoring_body'),
+                    'time' => __('notifications.today'),
                     'type' => 'achievement',
                     'timestamp' => Carbon::now()->toDateTimeString(),
                 ],
