@@ -38,4 +38,5 @@ return [
 
     'btn_confirm' => 'Konfirmasi & Bayar',
     'alert_complete_fields' => 'Harap lengkapi semua kolom: Tanggal, Waktu, dan Psikolog',
+    'view_summary' => 'Lihat Ringkasan',
 ];

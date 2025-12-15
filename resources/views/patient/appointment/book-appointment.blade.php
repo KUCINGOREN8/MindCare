@@ -124,7 +124,7 @@
 
         <!-- TIME CARD -->
         <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-            <h2 class="font-semibold mb-4 text-lg">2. Choose Time</h2>
+            <h2 class="font-semibold mb-4 text-lg">{{ __('appointment.step_2') }}</h2>
             <div class="grid grid-cols-4 gap-3">
                 <template x-for="time in ['09:00','10:00','11:00', '12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00']" :key="time">
                     <button @click="selectedTime = time; fetchAvailablePsychologists()"
@@ -136,7 +136,7 @@
                     </button>
                 </template>
             </div>
-            <p x-show="!selectedDate" class="text-sm text-gray-500 mt-2">Please select a date first</p>
+            <p x-show="!selectedDate" class="text-sm text-gray-500 mt-2">{{ __('appointment.select_date_first') }}
         </div>
 
                 <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
@@ -205,18 +205,18 @@
         </svg>
     </button>
 
-    <h3 class="font-semibold text-lg mb-4">Appointment Summary</h3>
+    <h3 class="font-semibold text-lg mb-4">{{ __('appointment.summary_title') }}</h3>
     <div class="text-sm space-y-4">
         <div class="flex justify-between">
-            <span class="text-gray-500">Date</span>
+            <span class="text-gray-500">{{ __('appointment.label_date') }}</span>
             <span class="font-medium" x-text="selectedDate ? formatDate(selectedDate) : '-'"></span>
         </div>
         <div class="flex justify-between">
-            <span class="text-gray-500">Time</span>
+            <span class="text-gray-500">{{ __('appointment.label_time') }}</span>
             <span class="font-medium" x-text="selectedTime ? selectedTime + ' - ' + calculateEndTime(selectedTime) : '-'"></span>
         </div>
         <div class="flex justify-between">
-            <span class="text-gray-500">Psychologist</span>
+            <span class="text-gray-500">{{ __('appointment.label_psychologist') }}</span>
             <span class="font-medium text-right">
                 @if($isSpecific)
                 <span>{{ $psychologists[0]->user->full_name }} - {{ $psychologists[0]->title }}</span>
@@ -224,16 +224,16 @@
                 <template x-for="psych in availablePsychologists" :key="psych.id">
                     <span x-show="selectedPsychologist == psych.id" x-text="psych.user.full_name + ' - ' + psych.title"></span>
                 </template>
-                <span x-show="!selectedPsychologist" class="text-gray-400">Not selected</span>
+                <span x-show="!selectedPsychologist" class="text-gray-400" x-text="trans.notSelected"></span>
                 @endif
             </span>
         </div>
         <div class="flex justify-between">
-            <span class="text-gray-500">Duration</span>
-            <span class="font-medium">90 minutes</span>
+            <span class="text-gray-500">{{ __('appointment.label_duration') }}</span>
+            <span class="font-medium">{{ __('appointment.duration_val') }}</span>
         </div>
         <div class="flex justify-between border-t pt-4">
-            <span class="text-gray-500 font-semibold">Fee</span>
+            <span class="text-gray-500 font-semibold">{{ __('appointment.label_fee') }}</span>
             <span class="font-bold text-lg">
                 @if($isSpecific)
                 <span>Rp {{ number_format($psychologists[0]->consultation_fee, 0, ',', '.') }}</span>
@@ -262,7 +262,7 @@
             @click="submitForm()"
             class="w-full bg-primary text-white py-3 rounded-lg font-medium transition disabled:opacity-40 hover:bg-primary/90"
             :disabled="!selectedDate || !selectedTime || !selectedPsychologist">
-        Confirm & Pay
+        {{ __('appointment.btn_confirm') }}
     </button>
     </form>
 </div>
@@ -270,7 +270,7 @@
 <!-- SIDEBAR POPUP BUTTON (MOBILE) -->
 <button @click="showSummary = true"
         class="lg:hidden fixed z-30 shadow-lg rounded-xl bottom-4 right-4 bg-primary text-white px-5 py-3 font-bold hover:bg-primary/90 transition-all">
-    View Summary
+    {{ __('appointment.view_summary') }}
 </button>
 
 </div>
