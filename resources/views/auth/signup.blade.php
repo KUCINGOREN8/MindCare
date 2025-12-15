@@ -4,10 +4,10 @@
 @section('content')
     <div class="flex" style="height: 100vh;">
         <!-- Left Container-->
-        <div class="w-full lg:w-[70%] flex items-center justify-center bg-white overflow-y-auto" style="padding-top: 12rem; padding-bottom: 4rem; padding-left: 2rem; padding-right: 2rem;">
+        <div class="w-full lg:w-[70%] flex items-center justify-center bg-white overflow-y-auto"
+            style="padding-top: 12rem; padding-bottom: 4rem; padding-left: 2rem; padding-right: 2rem;">
             <div class="w-full max-w-lg">
-                <h2 class="text-5xl font-bold mb-8 text-center" style="color: #009C8F;">SIGN UP</h2>
-
+                <h2 class="text-5xl font-bold mb-8 text-center" style="color: #009C8F;">{{ __('messages.signup') }}</h2>
                 <form class="space-y-6" method="POST" action="{{ route('register') }}">
                     @csrf
 
@@ -16,9 +16,11 @@
                             {!! str_replace(
                                 '<svg ',
                                 '<svg class="w-6 h-6 text-[#A1AAB2] opacity-50 mr-4" fill="currentColor" ',
-                                file_get_contents(public_path('assets/signup/user.svg'))
+                                file_get_contents(public_path('assets/signup/user.svg')),
                             ) !!}
-                            <input type="text" name="full_name" placeholder="Full Name" class="w-full outline-none text-black placeholder-gray-400 bg-transparent" value="{{ old('full_name') }}">
+                            <input type="text" name="full_name" placeholder="{{ __('messages.fullname') }}"
+                                class="w-full outline-none text-black placeholder-gray-400 bg-transparent"
+                                value="{{ old('full_name') }}">
                         </div>
                         @error('full_name')
                             <p class="text-red-500 text-sm mt-2 ml-1">{{ $message }}</p>
@@ -27,8 +29,11 @@
 
                     <div>
                         <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
-                            <img src="{{ asset('assets/signup/email.svg') }}" alt="icon" class="w-5 h-5 mr-4 opacity-50">
-                            <input type="email" name="email" placeholder="Email" class="w-full outline-none text-black placeholder-gray-400 bg-transparent" value="{{ old('email') }}">
+                            <img src="{{ asset('assets/signup/email.svg') }}" alt="icon"
+                                class="w-5 h-5 mr-4 opacity-50">
+                            <input type="email" name="email" placeholder="Email"
+                                class="w-full outline-none text-black placeholder-gray-400 bg-transparent"
+                                value="{{ old('email') }}">
                         </div>
                         @error('email')
                             <p class="text-red-500 text-sm mt-2 ml-1">{{ $message }}</p>
@@ -40,11 +45,13 @@
                             {!! str_replace(
                                 '<svg ',
                                 '<svg class="w-6 h-6 text-[#A1AAB2] opacity-50 mr-4" fill="currentColor" ',
-                                file_get_contents(public_path('assets/signup/password.svg'))
+                                file_get_contents(public_path('assets/signup/password.svg')),
                             ) !!}
-                            <input type="password" name="password" placeholder="Password" class="w-full outline-none text-black placeholder-gray-400 bg-transparent" id="password">
+                            <input type="password" name="password" placeholder="Password"
+                                class="w-full outline-none text-black placeholder-gray-400 bg-transparent" id="password">
                             <button type="button" class="password-toggle" onclick="togglePassword('password')">
-                                <img src="{{ asset('assets/signup/eye-closed.svg') }}" alt="Show password" class="w-5 h-5 opacity-50" id="password-eye"
+                                <img src="{{ asset('assets/signup/eye-closed.svg') }}" alt="Show password"
+                                    class="w-5 h-5 opacity-50" id="password-eye"
                                     data-closed-icon="{{ asset('assets/signup/eye-closed.svg') }}"
                                     data-open-icon="{{ asset('assets/signup/eye-open.svg') }}">
                             </button>
@@ -59,11 +66,15 @@
                             {!! str_replace(
                                 '<svg ',
                                 '<svg class="w-6 h-6 text-[#A1AAB2] opacity-50 mr-4" fill="currentColor" ',
-                                file_get_contents(public_path('assets/signup/password.svg'))
+                                file_get_contents(public_path('assets/signup/password.svg')),
                             ) !!}
-                            <input type="password" name="password_confirmation" placeholder="Confirm Password" class="w-full outline-none text-black placeholder-gray-400 bg-transparent" id="confirm-password">
+                            <input type="password" name="password_confirmation"
+                                placeholder="{{ __('messages.confirmpassword') }}"
+                                class="w-full outline-none text-black placeholder-gray-400 bg-transparent"
+                                id="confirm-password">
                             <button type="button" class="password-toggle" onclick="togglePassword('confirm-password')">
-                                <img src="{{ asset('assets/signup/eye-closed.svg') }}" alt="Show password" class="w-5 h-5 opacity-50" id="confirm-password-eye"
+                                <img src="{{ asset('assets/signup/eye-closed.svg') }}" alt="Show password"
+                                    class="w-5 h-5 opacity-50" id="confirm-password-eye"
                                     data-closed-icon="{{ asset('assets/signup/eye-closed.svg') }}"
                                     data-open-icon="{{ asset('assets/signup/eye-open.svg') }}">
                             </button>
@@ -72,8 +83,11 @@
 
                     <div>
                         <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
-                            <img src="{{ asset('assets/signup/calender.svg') }}" alt="icon" class="w-5 h-5 mr-4 opacity-50">
-                            <input type="date" name="date_of_birth" class="w-full outline-none bg-transparent" style="color: #9CA3AF;" onchange="this.style.color = '#000000'" value="{{ old('date_of_birth') }}">
+                            <img src="{{ asset('assets/signup/calender.svg') }}" alt="icon"
+                                class="w-5 h-5 mr-4 opacity-50">
+                            <input type="date" name="date_of_birth" class="w-full outline-none bg-transparent"
+                                style="color: #9CA3AF;" onchange="this.style.color = '#000000'"
+                                value="{{ old('date_of_birth') }}">
                         </div>
                         @error('date_of_birth')
                             <p class="text-red-500 text-sm mt-2 ml-1">{{ $message }}</p>
@@ -82,12 +96,18 @@
 
                     <div>
                         <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
-                            <img src="{{ asset('assets/signup/gender.svg') }}" alt="icon" class="w-5 h-5 mr-4 opacity-50">
-                            <select name="gender" class="w-full outline-none bg-transparent text-gray-400" onchange="this.style.color = this.value ? '#000000' : '#9CA3AF'">
-                                <option value="" disabled selected class="text-gray-400">Gender</option>
-                                <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }} class="text-black">Male</option>
-                                <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }} class="text-black">Female</option>
-                                <option value="other" {{ old('gender') == 'other' ? 'selected' : '' }} class="text-black">Other</option>
+                            <img src="{{ asset('assets/signup/gender.svg') }}" alt="icon"
+                                class="w-5 h-5 mr-4 opacity-50">
+                            <select name="gender" class="w-full outline-none bg-transparent text-gray-400"
+                                onchange="this.style.color = this.value ? '#000000' : '#9CA3AF'">
+                                <option value="" disabled selected class="text-gray-400">{{ __('messages.gender') }}
+                                </option>
+                                <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }} class="text-black">
+                                    {{ __('messages.male') }}</option>
+                                <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}
+                                    class="text-black">{{ __('messages.female') }}</option>
+                                <option value="other" {{ old('gender') == 'other' ? 'selected' : '' }} class="text-black">
+                                    {{ __('messages.other') }}</option>
                             </select>
                         </div>
                         @error('gender')
@@ -98,14 +118,18 @@
                     <div>
                         <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
                             {!! str_replace(
-                                    '<svg ',
+                                '<svg ',
                                 '<svg class="w-6 h-6 text-[#A1AAB2] opacity-50 mr-4" fill="currentColor" ',
-                                file_get_contents(public_path('assets/signup/language.svg'))
+                                file_get_contents(public_path('assets/signup/language.svg')),
                             ) !!}
-                            <select name="language" class="w-full outline-none bg-transparent text-gray-400" onchange="this.style.color = this.value ? '#000000' : '#9CA3AF'">
-                                <option value="" disabled selected class="text-gray-400">Preferred Language</option>
-                                <option value="en" {{ old('language') == 'en' ? 'selected' : '' }} class="text-black" >English</option>
-                                <option value="id" {{ old('language') == 'id' ? 'selected' : '' }} class="text-black">Indonesian</option>
+                            <select name="language" class="w-full outline-none bg-transparent text-gray-400"
+                                onchange="this.style.color = this.value ? '#000000' : '#9CA3AF'">
+                                <option value="" disabled selected class="text-gray-400">
+                                    {{ __('messages.preferlang') }}</option>
+                                <option value="en" {{ old('language') == 'en' ? 'selected' : '' }} class="text-black">
+                                    {{ __('messages.english') }}</option>
+                                <option value="id" {{ old('language') == 'id' ? 'selected' : '' }}
+                                    class="text-black">{{ __('messages.indonesian') }}</option>
                             </select>
                         </div>
                         @error('language')
@@ -114,14 +138,17 @@
                     </div>
 
                     <div class="flex items-start pt-2">
-                        <input type="checkbox" name="terms" id="terms" class="w-4 h-4 mt-0.5 mr-3" style="accent-color: #009C8F;">
-                        <label for="terms" class="text-sm text-gray-500">Agree to Terms & Privacy Policy</label>
+                        <input type="checkbox" name="terms" id="terms" class="w-4 h-4 mt-0.5 mr-3"
+                            style="accent-color: #009C8F;">
+                        <label for="terms" class="text-sm text-gray-500">{{ __('messages.terms') }}</label>
                     </div>
 
                     <div>
                         <div class="pt-4">
-                            <button type="submit" class="w-full text-white py-3 rounded-lg font-medium hover:opacity-90 transition text-base shadow-md" style="background-color: #009C8F;">
-                                Sign up
+                            <button type="submit"
+                                class="w-full text-white py-3 rounded-lg font-medium hover:opacity-90 transition text-base shadow-md"
+                                style="background-color: #009C8F;">
+                                {{ __('messages.signup') }}
                             </button>
                         </div>
                         @error('terms')
@@ -131,9 +158,10 @@
 
                     <div class="text-center pt-3">
                         <p class="text-gray-600 text-sm">
-                            Already have an account?
-                            <a href="{{ route('login') }}" class="font-medium underline" style="color: #009C8F;">Login</a>
-                            here.
+                            {{ __('messages.alreadyhaveaccount') }}
+                            <a href="{{ route('login') }}" class="font-medium underline"
+                                style="color: #009C8F;">{{ __('messages.login') }}</a>
+                            {{ __('messages.here') }}.
                         </p>
                     </div>
                 </form>
@@ -142,7 +170,8 @@
 
         <!-- Right Container -->
         <div class="hidden lg:block lg:w-[30%] relative">
-            <img src="{{ asset('assets/signup/right-image.jpg') }}" alt="Person writing" class="w-full h-full object-cover">
+            <img src="{{ asset('assets/signup/right-image.jpg') }}" alt="Person writing"
+                class="w-full h-full object-cover">
         </div>
     </div>
 

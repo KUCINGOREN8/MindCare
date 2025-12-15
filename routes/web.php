@@ -29,9 +29,11 @@ Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
 // Language switcher
 Route::get('/lang/{lang}', function ($lang) {
-    session(['locale' => $lang]);
+    if (in_array($lang, ['en', 'id'])) {
+        session(['locale' => $lang]);
+    }
     return back();
-})->name('switch.lang');
+})->name('switch.lang'); // <--- Nama route ini harus sama dengan di component
 
 // Public guest-only routes
 Route::middleware('guest')->group(function () {
@@ -159,13 +161,13 @@ Route::middleware(['auth', 'otp', 'role:psychologist'])
 
         // Appointments
         Route::prefix('appointments')
-        ->name('appointments.')
-        ->controller(AppointmentController::class)
-        ->group(function () {
+            ->name('appointments.')
+            ->controller(AppointmentController::class)
+            ->group(function () {
             Route::get('/', [PsychologistController::class, 'showSchedule'])->name('index');
             Route::get('/chat/session/{appointment}', [ChatController::class, 'startSession'])->name('chat.session');
+        });
     });
-});
 
 // ADMIN ROUTES => Auth + OTP + Role protected
 Route::middleware(['auth', 'otp', 'role:admin'])
