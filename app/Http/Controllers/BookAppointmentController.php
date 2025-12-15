@@ -9,7 +9,7 @@ use App\Models\Payment;
 use App\Services\MidtransService;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-
+use Illuminate\Support\Facades\Log;
 
 class BookAppointmentController extends Controller
 {
@@ -69,7 +69,7 @@ class BookAppointmentController extends Controller
         $startTime = strtotime($request->start_time);
         $scheduleStart = strtotime($schedule->start_time);
         $scheduleEnd = strtotime($schedule->end_time);
-        $sessionDuration = 5400; 
+        $sessionDuration = 5400;
 
         if ($startTime < $scheduleStart || ($startTime + $sessionDuration) > $scheduleEnd) {
             return back()->with('error', 'Selected time is outside psychologist working hours.');
@@ -233,30 +233,65 @@ class BookAppointmentController extends Controller
 
     public function getAvailablePsychologists(Request $request)
     {
-        $date = $request->date;
-        $time = $request->time;
-        $now = now();
+        try {
+            $date = $request->date;
+            $time = $request->time;
 
-        $selectedDateTime = Carbon::parse($date . ' ' . $time);
-        if ($selectedDateTime->lte($now)) {
+            if (!$date || !$time) {
+                return response()->json([]);
+            }
+
+            $dayOfWeek = strtolower(Carbon::parse($date)->format('l'));
+
+            $allPsychologists = Psychologist::with(['user', 'schedules'])
+                ->whereHas('user', function($q) {
+                    $q->where('otp_verified', true)->where('status', 'active');
+                })
+                ->get();
+
+            $availablePsychologists = $allPsychologists->filter(function($psychologist) use ($date, $time, $dayOfWeek) {
+                $schedule = $psychologist->schedules->first(function($schedule) use ($dayOfWeek) {
+                    return strtolower($schedule->day_of_week) === $dayOfWeek;
+                });
+
+                if (!$schedule) {
+                    return false;
+                }
+                $selectedTime = strtotime($time);
+                $scheduleStart = strtotime($schedule->start_time);
+                $scheduleEnd = strtotime($schedule->end_time);
+                $sessionDuration = 5400;
+
+                if ($selectedTime < $scheduleStart || ($selectedTime + $sessionDuration) > $scheduleEnd) {
+                    return false;
+                }
+
+                $hasAppointment = $psychologist->appointments()
+                    ->whereDate('date', $date)
+                    ->where('start_time', $time)
+                    ->whereIn('status', ['pending_payment', 'pending', 'confirmed'])
+                    ->exists();
+
+                return !$hasAppointment;
+            })
+            ->map(function($psychologist) {
+                return [
+                    'id' => $psychologist->id,
+                    'user' => [
+                        'full_name' => $psychologist->user->full_name,
+                        'gender' => $psychologist->user->gender,
+                        'photo_url' => $psychologist->user->photo_url,
+                    ],
+                    'title' => $psychologist->title,
+                    'consultation_fee' => $psychologist->consultation_fee,
+                ];
+            });
+
+            return response()->json($availablePsychologists->values());
+
+        } catch (\Exception $e) {
+            Log::error('Error in getAvailablePsychologists: ' . $e->getMessage());
             return response()->json([]);
         }
-
-        $psychologists = Psychologist::with(['user', 'schedules'])
-            ->whereHas('user', function($q) {
-                $q->where('otp_verified', true)->where('status', 'active');
-            })
-            ->whereHas('schedules', function($q) use ($date) {
-                $dayOfWeek = strtolower(Carbon::parse($date)->format('l'));
-                $q->where('day_of_week', $dayOfWeek);
-            })
-            ->whereDoesntHave('appointments', function($q) use ($date, $time) {
-                $q->whereDate('date', $date)
-                ->where('start_time', $time)
-                ->whereIn('status', ['pending_payment', 'pending', 'confirmed']);
-            })
-            ->get();
-
-        return response()->json($psychologists);
     }
 }

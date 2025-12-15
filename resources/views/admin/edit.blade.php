@@ -140,5 +140,5 @@
             </div>
         </div>
 
-        <x-user-profile-card :user="$user" />
+        <x-user-profile-card :user="$user" :notifications="$notifications" />
     @endsection
