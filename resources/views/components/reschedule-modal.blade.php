@@ -8,12 +8,19 @@
 
             <div class="mb-3">
                 <label class="text-sm">New Date</label>
-                <input type="date" name="reschedule_date" class="w-full border rounded px-3 py-2" required>
+                <select name="reschedule_date" id="reschedule_date_select" 
+                        class="w-full border rounded px-3 py-2" required 
+                        onchange="updateTimeSlots(this.value)">
+                    <option value="">Select New Date</option>
+                </select>
             </div>
 
             <div class="mb-4">
                 <label class="text-sm">New Time</label>
-                <input type="time" name="reschedule_time" class="w-full border rounded px-3 py-2" required>
+                <select name="reschedule_time" id="reschedule_time_select" 
+                        class="w-full border rounded px-3 py-2" required>
+                    <option value="">Select New Time</option>
+                </select>
             </div>
 
             <div class="flex justify-end gap-2">
@@ -27,21 +34,3 @@
         </form>
     </div>
 </div>
-
-<script>
-function openRescheduleModal(id, date, time) {
-    const modal = document.getElementById('rescheduleModal');
-    const form = document.getElementById('rescheduleForm');
-
-    form.action = `/patient/appointments/${id}/reschedule`;
-
-    form.querySelector('input[name="reschedule_date"]').value = date;
-    form.querySelector('input[name="reschedule_time"]').value = time;
-
-    modal.classList.remove('hidden');
-}
-
-function closeRescheduleModal() {
-    document.getElementById('rescheduleModal').classList.add('hidden');
-}
-</script>

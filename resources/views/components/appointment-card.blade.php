@@ -18,6 +18,7 @@
             onclick="window.location.href='{{ route('patient.appointments.payment', $appointment->id) }}'"
         @endif
     >
+           
         {{-- Header --}}
         <div class="flex items-center justify-between gap-3">
             <div class="flex flex-col gap-0">
@@ -70,20 +71,19 @@
                 route="{{ route('patient.appointments.chat.session', $appointment->id) }}"
             />
 
-            {{-- Reschedule (OPEN MODAL, NOT ROUTE) --}}
-            @if($appointment->status === 'confirmed' && $appointment->is_upcoming)
+            
             <button
-                type="button"
                 onclick="openRescheduleModal(
                     {{ $appointment->id }},
-                    '{{ $appointment->date }}',
-                    '{{ $appointment->start_time }}'
+                    '{{ \Carbon\Carbon::parse($appointment->date)->format('Y-m-d') }}',
+                    '{{ \Carbon\Carbon::parse($appointment->start_time)->format('H:i') }}',
+                    '{{ json_encode($appointment->psychologist->schedules) }}' // <-- Kirim Jadwal
                 )"
-                class="px-4 py-2 text-sm border rounded-md hover:bg-gray-50"
+                class="flex-1 px-4 py-2 text-center text-sm font-semibold border rounded-md transition-colors 
+                        border-gray-300 text-gray-700 bg-white hover:bg-gray-50"
             >
                 Reschedule
             </button>
-            @endif
 
         </div>
     </div>

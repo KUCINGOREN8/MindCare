@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Appointment;
 use App\Models\Payment;
+use App\Models\PsychologistSchedule;
 use App\Services\MidtransService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,17 +13,19 @@ use Exception;
 
 class AppointmentController extends Controller
 {
-    public function index()
+
+
+        public function index()
     {
         $user = Auth::user();
 
         $this->autoCompletePastAppointments($user->id);
         $this->autoUpdateExpiredPayments($user->id);
 
-        // UPCOMING
-        $upcomingAppointments = Appointment::with('psychologist.user')
+        $upcomingAppointments = Appointment::with('psychologist.user', 'psychologist.schedules') 
             ->where('user_id', $user->id)
             ->whereNotIn('status', ['completed', 'cancelled'])
+            // Hapus whereNull('reschedule_time') di sini
             ->where(function ($query) {
                 $query->whereDate('date', '>', now())
                     ->orWhere(function ($q) {
@@ -36,7 +39,14 @@ class AppointmentController extends Controller
 
         $upcomingIds = $upcomingAppointments->pluck('id')->toArray();
 
-        // HISTORY
+        
+        $rescheduleRequests = Appointment::with('psychologist.user')
+            ->where('user_id', $user->id)
+            ->whereNotNull('reschedule_time')
+            ->orderBy('reschedule_date', 'asc')
+            ->get();
+        
+        
         $history = Appointment::with('psychologist.user')
             ->where('user_id', $user->id)
             ->whereNotIn('id', $upcomingIds)
@@ -46,7 +56,7 @@ class AppointmentController extends Controller
 
         return view(
             'patient.appointment.appointments',
-            compact('upcomingAppointments', 'history', 'user')
+            compact('upcomingAppointments', 'history', 'user', 'rescheduleRequests')
         );
     }
 
@@ -182,39 +192,87 @@ class AppointmentController extends Controller
         }
     }
 
-    public function reschedule(Request $request, $id)
+        public function reschedule(Request $request, $id)
     {
         $request->validate([
-            'reschedule_date' => 'required|date',
-            'reschedule_time' => 'required',
+            'reschedule_date' => 'required|date|after_or_equal:today',
+            'reschedule_time' => 'required|date_format:H:i',
+            'reschedule_reason' => 'nullable|string|max:255',
         ]);
 
         $appointment = Appointment::where('id', $id)
+            ->with('psychologist')
             ->where('user_id', auth()->id())
             ->firstOrFail();
 
-        if ($appointment->status === 'completed') {
-            return back()->with('error', 'Appointment already completed.');
+        if ($appointment->status === 'completed' || $appointment->status === 'cancelled') {
+            return back()->with('error', 'Appointment cannot be rescheduled.');
         }
+        
+        // Simpan waktu aktif lama sebelum ditimpa
+        $oldDate = Carbon::parse($appointment->date)->format('D, d M Y');
+        $oldTime = Carbon::parse($appointment->start_time)->format('H:i');
+        $oldDateTimeString = "Original: {$oldDate} at {$oldTime}"; 
 
+        $newDate = Carbon::parse($request->reschedule_date);
+        $newDayOfWeek = strtolower($newDate->format('l')); 
+
+        $newStartTime = $request->reschedule_time;
+        $newEndTime = Carbon::createFromFormat('H:i', $newStartTime)->addMinutes(60)->format('H:i:s'); 
+        
+        // --- Validasi Ketersediaan Jadwal Psikolog ---
+        $isAvailable = PsychologistSchedule::where('psychologist_id', $appointment->psychologist_id)
+            ->whereRaw("LOWER(day_of_week) = ?", [$newDayOfWeek])
+            ->where('start_time', '<=', $newStartTime)
+            ->where('end_time', '>=', $newEndTime)
+            ->exists();
+
+        if (!$isAvailable) {
+            return back()->with('error', 'The selected time is outside the psychologist\'s registered working hours for that day.');
+        }
+        
+        // --- Validasi Bentrok Booking Lain ---
+        $isBooked = Appointment::where('psychologist_id', $appointment->psychologist_id)
+            ->where('date', $newDate->toDateString())
+            ->where('start_time', '<=', $newStartTime)
+            ->where('end_time', '>', $newStartTime)
+            ->whereNotIn('status', ['completed', 'cancelled'])
+            ->where('id', '!=', $appointment->id) 
+            ->exists();
+            
+        if ($isBooked) {
+            return back()->with('error', 'The selected time slot is already booked by another patient.');
+        }
+        
+        // Buat riwayat reschedule baru untuk disimpan
+        $rescheduleReasonHistory = "Rescheduled from [{$oldDateTimeString}] because: {$request->reschedule_reason}";
+
+        
         $appointment->update([
-            'date'       => $request->reschedule_date,
-            'start_time' => $request->reschedule_time,
-            'status'     => 'confirmed',
+            'date'              => $newDate->toDateString(),    
+            'start_time'        => $newStartTime,               
+            'end_time'          => $newEndTime,                 
+            
+            'reschedule_date'   => $newDate->toDateString(),                      
+            'reschedule_time'   => $newStartTime,                        
+            'reschedule_reason' => $rescheduleReasonHistory, 
+            
+            'status'            => 'confirmed',                
         ]);
 
         return redirect()
             ->route('patient.appointments.index')
-            ->with('success', 'Appointment successfully rescheduled.');
+            ->with('success', 'Appointment has been successfully rescheduled.');
     }
 
-    public function psychologistAppointments()
+        public function psychologistAppointments()
     {
         $psychologist = Auth::user()->psychologist;
 
         $upcomingAppointments = $psychologist->appointments()
             ->with('user')
             ->where('status', 'confirmed')
+            ->whereNull('reschedule_time') // Hanya yang tidak ada permintaan reschedule aktif
             ->where(function($q) {
                 $q->whereDate('date', '>', now())
                     ->orWhere(function($q2) {
@@ -230,6 +288,7 @@ class AppointmentController extends Controller
             ->with('user')
             ->whereDate('date', now())
             ->where('status', 'confirmed')
+            ->whereNull('reschedule_time') // Hanya yang tidak ada permintaan reschedule aktif
             ->orderBy('start_time')
             ->get();
 
@@ -238,11 +297,19 @@ class AppointmentController extends Controller
             ->where('status', 'pending_payment')
             ->orderBy('created_at', 'desc')
             ->get();
+            
+        // RESCHEDULE REQUESTS: Hanya cek reschedule_time
+        $rescheduleRequests = $psychologist->appointments()
+            ->with('user')
+            ->whereNotNull('reschedule_time')
+            ->orderBy('reschedule_date')
+            ->get();
 
         return view('psychologist.appointment.index', compact(
             'upcomingAppointments',
             'todayAppointments',
-            'pendingAppointments'
+            'pendingAppointments',
+            'rescheduleRequests'
         ));
     }
 }
