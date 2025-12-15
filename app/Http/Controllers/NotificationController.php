@@ -4,12 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Models\Appointment;
 use App\Models\Conversation;
+use App\Models\Mood;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class NotificationController extends Controller
 {
+    protected $openAIService;
+
+    protected function getOpenAIService()
+    {
+        return app(\App\Services\OpenAIService::class);
+    }
+
     public function getNotifications()
     {
         $user = Auth::user();
@@ -29,6 +38,16 @@ class NotificationController extends Controller
             $messageReminders = $this->getMessageReminders($user);
             if ($messageReminders) {
                 $notifications = array_merge($notifications, $messageReminders);
+            }
+
+            $moodAchievements = $this->getMoodAchievements($user);
+            if ($moodAchievements) {
+                $notifications = array_merge($notifications, $moodAchievements);
+            }
+
+            $dailyTip = $this->getDailyWellnessTip($user);
+            if ($dailyTip) {
+                $notifications = array_merge($notifications, [$dailyTip]);
             }
         }
 
@@ -66,7 +85,6 @@ class NotificationController extends Controller
                 ->first();
 
             if ($appointment && $appointment->psychologist && $appointment->psychologist->user) {
-                // TRUE karena ini Patient
                 $this->processAppointment($appointment, $notifications, $now, true);
             }
         } elseif ($user->role === 'psychologist' && $user->psychologist) {
@@ -85,7 +103,6 @@ class NotificationController extends Controller
                 ->first();
 
             if ($appointment && $appointment->user) {
-                // FALSE karena ini Psychologist
                 $this->processAppointment($appointment, $notifications, $now, false);
             }
         }
@@ -93,7 +110,6 @@ class NotificationController extends Controller
         return $notifications;
     }
 
-    // --- BAGIAN INI YANG SEBELUMNYA MASIH HARDCODED ---
     private function processAppointment($appointment, &$notifications, $now, $isPatient)
     {
         $startDateTime = Carbon::createFromFormat(
@@ -101,42 +117,33 @@ class NotificationController extends Controller
             $appointment->date->format('Y-m-d') . ' ' . $appointment->start_time
         );
 
-        // Tentukan nama lawan bicara
         if ($isPatient) {
-            // "Dr. Budi"
             $nameDisplay = __('notifications.dr_prefix') . $appointment->psychologist->user->full_name;
         } else {
-            // "Andi"
             $nameDisplay = $appointment->user->full_name;
         }
 
-        // PERBAIKAN: Menggunakan __() translation key, bukan string biasa
         if ($startDateTime->isToday()) {
             $hoursToStart = $now->diffInHours($startDateTime);
             $minutesToStart = $now->diffInMinutes($startDateTime);
 
             if ($hoursToStart > 0) {
-                // Mengambil key: session_starts_hours
                 $message = __('notifications.session_starts_hours', ['name' => $nameDisplay, 'count' => $hoursToStart]);
             } else {
-                // Mengambil key: session_starts_minutes
                 $message = __('notifications.session_starts_minutes', ['name' => $nameDisplay, 'count' => $minutesToStart]);
             }
         } elseif ($startDateTime->isTomorrow()) {
             $time = Carbon::parse($appointment->start_time)->format('H:i');
-            // Mengambil key: session_tomorrow
             $message = __('notifications.session_tomorrow', ['name' => $nameDisplay, 'time' => $time]);
         } else {
-            // Format tanggal mengikuti locale (misal: 12 Mei)
             $date = $appointment->date->translatedFormat('d M');
             $time = Carbon::parse($appointment->start_time)->format('H:i');
-            // Mengambil key: session_date
             $message = __('notifications.session_date', ['name' => $nameDisplay, 'date' => $date, 'time' => $time]);
         }
 
         $notifications[] = [
             'icon' => 'assets/icons/calendar.svg',
-            'title' => __('notifications.session_reminder_title'), // Translate Judul
+            'title' => __('notifications.session_reminder_title'),
             'message' => $message,
             'time' => $this->formatTimeAgo($startDateTime),
             'type' => 'reminder',
@@ -145,7 +152,6 @@ class NotificationController extends Controller
         ];
     }
 
-    // --- BAGIAN PESAN JUGA PERLU DIGANTI ---
     private function getMessageReminders(User $user)
     {
         $now = Carbon::now();
@@ -176,7 +182,6 @@ class NotificationController extends Controller
 
         $latestMessage = $conversation->latestMessage;
 
-        // Translate role default jika nama kosong
         if ($user->role === 'patient') {
             $senderName = $conversation->psychologist->full_name ?? __('notifications.default_psychologist');
             $prefix = __('notifications.dr_prefix');
@@ -191,14 +196,13 @@ class NotificationController extends Controller
 
         if ($latestMessage->hasAttachment()) {
             $attachmentIcon = $latestMessage->getAttachmentIcon();
-            // Translate notifikasi attachment
             $messageText = __('notifications.sent_attachment', ['icon' => $attachmentIcon]);
         }
 
         return [
             [
                 'icon' => 'assets/icons/messages.svg',
-                'title' => __('notifications.new_message_title'), // Translate Judul
+                'title' => __('notifications.new_message_title'),
                 'message' => "{$prefix}{$senderName}: {$messageText}",
                 'time' => $this->formatTimeAgo($latestMessage->created_at),
                 'type' => 'message',
@@ -206,6 +210,89 @@ class NotificationController extends Controller
                 'conversation_id' => $conversation->id,
             ]
         ];
+    }
+
+    private function getMoodAchievements(User $user)
+    {
+        if ($user->role !== 'patient') {
+            return [];
+        }
+
+        $service = $this->getOpenAIService();
+        $streakDays = $this->calculateMoodStreak($user->id);
+
+        if ($streakDays <= 1) {
+            return [];
+        }
+
+        $achievementMessage = $service->generateAchievementMessage($streakDays);
+
+        return [
+            [
+                'icon' => 'assets/icons/check.svg',
+                'title' => __('notifications.achievement_title'),
+                'message' => $achievementMessage,
+                'time' => __('notifications.today'),
+                'type' => 'achievement',
+                'timestamp' => Carbon::now()->toDateTimeString(),
+            ]
+        ];
+    }
+
+    private function getDailyWellnessTip(User $user)
+    {
+        if ($user->role !== 'patient') {
+            return null;
+        }
+
+        $service = $this->getOpenAIService();
+
+        $todayMood = Mood::where('user_id', $user->id)
+            ->whereDate('created_at', Carbon::today())
+            ->first();
+
+        $moodType = $todayMood->mood ?? null;
+
+        $streakDays = $this->calculateMoodStreak($user->id);
+
+        $tip = $service->generateDailyTip($moodType, $streakDays);
+
+        if (!$tip) {
+            return null;
+        }
+
+        return [
+            'icon' => 'assets/icons/tips.svg',
+            'title' => __('notifications.wellness_tip_title'),
+            'message' => $tip,
+            'time' => __('notifications.today'),
+            'type' => 'tip',
+            'timestamp' => Carbon::now()->toDateTimeString(),
+        ];
+    }
+
+     private function calculateMoodStreak($userId): int
+    {
+        $today = Carbon::today();
+        $streak = 0;
+
+        for ($i = 0; $i < 365; $i++) {
+            $checkDate = $today->copy()->subDays($i);
+
+            $hasMood = Mood::where('user_id', $userId)
+                ->whereDate('created_at', $checkDate)
+                ->exists();
+
+            if ($hasMood) {
+                $streak++;
+            } else {
+                if ($i > 0) {
+                    break;
+                }
+            }
+        }
+
+        return $streak;
     }
 
     private function getAdminNotifications(User $user)
