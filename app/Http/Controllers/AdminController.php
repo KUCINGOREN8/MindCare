@@ -113,6 +113,8 @@ class AdminController extends Controller
             'gender' => $request->gender,
             'preferred_language' => $request->language,
             'agree_to_terms' => true,
+            'status' => 'active',
+            'otp_verified' => true,
         ]);
 
         return redirect()->route('admin.dashboard')->with('success', 'User created successfully!');
