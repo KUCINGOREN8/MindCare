@@ -48,50 +48,18 @@ Dashboard
 
             @include('components.psychologist.upcoming-appointment')
 
-            <div class="bg-white p-6 flex flex-col gap-6 rounded-md border-grey-border border">
-                <div class="flex gap-4 justify-between items-start">
-                    <h3 class="font-bold">Recent Clients</h3>
-                    <a href="{{ route("psychologist.clients") }}" class="underline hover:text-primary text-caption text-sm ">See all</a>
-                </div>
-                <div class="flex flex-col gap-3">
-                    @php
-                        $appointments = $user->psychologist->appointments()
-                            ->with('user')
-                            ->orderBy('created_at', 'desc')
-                            ->get();
-
-                        $uniqueAppointments = $appointments->unique('user_id')->take(2);
-                    @endphp
-
-                    @if($uniqueAppointments->count() > 0)
-                        @foreach ($uniqueAppointments as $appointment)
-                            @php
-                                $patient = $appointment->user;
-                            @endphp
-
-                            @if($patient)
-                                <div class="bg-white p-3 flex flex-1 gap-6 rounded-md border-grey-border border">
-                                    <div class="flex flex-1 justify-between">
-                                        <div class="flex flex-row gap-3 items-center">
-                                            <img src="{{ $patient->photo_url ? asset($patient->photo_url) : ($patient->gender=="female" ? asset('assets/icons/user_female.svg') : asset('assets/icons/user_male.svg')) }}"
-                                                class="rounded-full w-12 h-12 lg:mx-0 mx-auto" alt="pfp">
-                                            <p>{{ $patient->full_name }}</p>
-                                        </div>
-                                        <div>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endif
-                        @endforeach
-                    @else
-                        <div class="bg-white p-6 text-center rounded-md border-grey-border border">
-                            <p class="text-gray-500">No recent clients found</p>
-                        </div>
-                    @endif
-                </div>
+            <div class="flex flex-col md:flex-row gap-6">
+                <x-recent-clients :user="$user"/>
+                <x-review-chart
+                    :labels="$stats['review_stats']['labels']"
+                    :data="$stats['review_stats']['data']"
+                    :colors="$stats['review_stats']['colors']"
+                    :total-reviews="$stats['review_stats']['total_reviews']"
+                    :average-rating="$stats['review_stats']['average_rating']"
+                />
             </div>
         </div>
     </div>
 
-    <x-user-profile-card :user="$user" />
+    <x-user-profile-card :user="$user" :notifications="$notifications" />
 @endsection

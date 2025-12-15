@@ -13,6 +13,7 @@
                 readonly
                 data-readonly="true"
                 data-password-field="true"
+                required
             >
             <button type="button" class="password-toggle" onclick="togglePassword('password')">
                 <img src="{{ asset('assets/signup/eye-closed.svg') }}" alt="Show password" class="w-5 h-5 opacity-50" id="password-eye"
@@ -36,6 +37,7 @@
                 readonly
                 data-readonly="true"
                 data-password-field="true"
+                required
             >
             <button type="button" class="password-toggle" onclick="togglePassword('password')">
                 <img src="{{ asset('assets/signup/eye-closed.svg') }}" alt="Show password" class="w-5 h-5 opacity-50" id="password-eye"
@@ -53,7 +55,7 @@
         <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
             <input 
                 type="password" 
-                name="confirm_password" 
+                name="new_password_confirmation" 
                 placeholder="Confirm Password" 
                 class="w-full outline-none text-black placeholder-gray-400 bg-transparent read-only:text-[#A1AAB2]"
                 readonly
@@ -66,7 +68,7 @@
                     data-open-icon="{{ asset('assets/signup/eye-open.svg') }}">
             </button>
             </div>
-        @error('confirm_password')
+        @error('new_password_confirmation')
             <p class="text-red-500 mt-2 ml-1">{{ $message }}</p>
         @enderror
     </div>

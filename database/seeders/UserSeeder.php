@@ -26,7 +26,7 @@ class UserSeeder extends Seeder
 
             // Psychologist User
             User::create([
-                'full_name' => 'Dr. Emily Chen',
+                'full_name' => 'Emily Chen',
                 'email' => 'doctor@gmail.com',
                 'password' => Hash::make('123456'),
                 'date_of_birth' => '2005-01-01',

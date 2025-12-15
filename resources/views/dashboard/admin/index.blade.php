@@ -7,19 +7,19 @@
             <div class="flex flex-col bg-white p-6 gap-4 rounded-md border-grey-border border">
                 <div class="flex flex-col">
                     <h1 class="text-primary font-bold text-lg">Good Day, {{ $user->full_name }}!</h1>
-                    <h5 class="text-captiondark text-sm">Manage user who using BeOkay</h5>
+                    <h5 class="text-captiondark text-sm">{{ __('messages.mood') }}</h5>
                 </div>
             </div>
 
             <div class="bg-white p-6 flex flex-col gap-6 rounded-md border-grey-border border">
                 <div class="flex justify-between items-center">
                     <div class="flex flex-col gap-1 justify-between items-start">
-                        <h3 class="font-bold">User Management</h3>
-                        <p class="text-xs text-caption-dark">Manage all registered users and admins.</p>
+                        <h3 class="font-bold">{{ __('messages.admindashboardtitle') }}</h3>
+                        <p class="text-xs text-caption-dark">{{ __('messages.admindashboarddesc') }}</p>
                     </div>
                     <a href="{{ route('admin.users.create') }}"
                         class="bg-primary hover:bg-primary-dark text-white text-sm font-medium py-2 px-4 rounded-md transition-colors shadow-sm flex items-center gap-2">
-                        <span>+ Add New User</span>
+                        <span>+ {{ __('messages.adminadd') }}</span>
                     </a>
                 </div>
 
@@ -37,16 +37,16 @@
                                 <tr>
                                     <th
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Name</th>
+                                        {{ __('messages.name') }}</th>
                                     <th
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Role</th>
+                                        {{ __('messages.role') }}</th>
                                     <th
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Joined Date</th>
+                                        {{ __('messages.joindate') }}</th>
                                     <th
                                         class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Actions</th>
+                                        {{ __('messages.action') }}</th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
@@ -59,7 +59,8 @@
                                                         src="{{ $u->photo_url }}">
                                                 </div>
                                                 <div class="ml-4">
-                                                    <div class="text-sm font-medium text-gray-900">{{ $u->full_name }}</div>
+                                                    <div class="text-sm font-medium text-gray-900">{{ $u->full_name }}
+                                                    </div>
                                                     <div class="text-sm text-gray-500">{{ $u->email }}</div>
                                                 </div>
                                             </div>
@@ -67,7 +68,7 @@
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <span
                                                 class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $u->role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-green-100 text-green-800' }}">
-                                                {{ ucfirst($u->role) }}
+                                                {{ __('roles.' . $u->role) }}
                                             </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -77,18 +78,19 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                             <div class="flex justify-end gap-3">
                                                 <a href="{{ route('admin.users.edit', $u->id) }}"
-                                                    class="text-indigo-600 hover:text-indigo-900 font-medium">Edit</a>
+                                                    class="text-indigo-600 hover:text-indigo-900 font-medium">{{ __('messages.edit') }}</a>
                                                 <button
                                                     @click="deleteUrl = '{{ route('admin.users.destroy', $u->id) }}'; showDeleteModal = true"
                                                     class="text-red-600 hover:text-red-900 font-medium">
-                                                    Delete
+                                                    {{ __('messages.delete') }}
                                                 </button>
                                             </div>
                                         </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="4" class="px-6 py-10 text-center text-gray-500">No users found.</td>
+                                        <td colspan="4" class="px-6 py-10 text-center text-gray-500">
+                                            {{ __('messages.nouserfound') }}.</td>
                                     </tr>
                                 @endforelse
                             </tbody>
@@ -127,9 +129,9 @@
                         </svg>
                     </div>
 
-                    <h3 class="text-xl font-bold text-gray-900">Delete User?</h3>
+                    <h3 class="text-xl font-bold text-gray-900">{{ __('messages.deleteuser') }}?</h3>
                     <p class="text-sm text-gray-500 mt-2">
-                        Are you sure you want to delete this user? This action cannot be undone.
+                        {{ __('messages.validatedelete') }}.
                     </p>
                 </div>
 
@@ -140,7 +142,7 @@
                     {{-- Tombol Cancel --}}
                     <button @click="showDeleteModal = false" type="button"
                         class="w-full sm:w-auto px-4 py-2 bg-white border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
-                        Cancel
+                        {{ __('messages.cancel') }}
                     </button>
 
                     {{-- Form Delete (Action-nya dinamis sesuai deleteUrl) --}}
@@ -149,7 +151,7 @@
                         @method('DELETE')
                         <button type="submit"
                             class="w-full sm:w-auto px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 font-medium transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                            Yes, Delete It
+                            {{ __('messages.submitdelete') }}
                         </button>
                     </form>
                 </div>

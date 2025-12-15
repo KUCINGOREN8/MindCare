@@ -18,7 +18,7 @@
     {{-- History --}}
     @include('components.psychologist.history-appointment', ['appointments' => $historyAppointments])
 
-    {{-- Reschedule --}}
-    @include('components.psychologist.reschedule-appointment', ['appointments' => $rescheduleAppointments])
+    {{-- Reschedule
+    @include('components.psychologist.reschedule-appointment', ['appointments' => $rescheduleAppointments]) --}}
 </div>
 @endsection

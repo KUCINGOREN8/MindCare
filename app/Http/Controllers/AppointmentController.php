@@ -7,6 +7,7 @@ use App\Models\Payment;
 use App\Services\MidtransService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 use Exception;
 
 class AppointmentController extends Controller
@@ -14,19 +15,19 @@ class AppointmentController extends Controller
     public function index()
     {
         $user = Auth::user();
+
         $this->autoCompletePastAppointments($user->id);
         $this->autoUpdateExpiredPayments($user->id);
 
-        $upcomingAppointments = Appointment::with(['psychologist' => function($query) {
-                $query->with('user');
-            }])
+        // UPCOMING
+        $upcomingAppointments = Appointment::with('psychologist.user')
             ->where('user_id', $user->id)
-            ->where('status', 'confirmed')
-            ->where(function($query) {
-                $query->whereDate('date', '>', now()->format('Y-m-d'))
-                    ->orWhere(function($q) {
-                        $q->whereDate('date', '=', now()->format('Y-m-d'))
-                            ->whereTime('end_time', '>', now()->format('H:i:s'));
+            ->whereNotIn('status', ['completed', 'cancelled'])
+            ->where(function ($query) {
+                $query->whereDate('date', '>', now())
+                    ->orWhere(function ($q) {
+                        $q->whereDate('date', now())
+                            ->whereTime('end_time', '>', now());
                     });
             })
             ->orderBy('date')
@@ -35,32 +36,26 @@ class AppointmentController extends Controller
 
         $upcomingIds = $upcomingAppointments->pluck('id')->toArray();
 
-        $history = Appointment::with(['psychologist' => function($query) {
-                $query->with('user');
-            }])
+        // HISTORY
+        $history = Appointment::with('psychologist.user')
             ->where('user_id', $user->id)
             ->whereNotIn('id', $upcomingIds)
             ->orderBy('date', 'desc')
             ->orderBy('start_time', 'desc')
             ->get();
 
-        $rescheduleRequests = Appointment::with(['psychologist' => function($query) {
-                $query->with('user');
-            }])
-            ->where('user_id', $user->id)
-            ->whereNotNull('reschedule_date')
-            ->where('status', '!=', 'cancelled')
-            ->orderBy('reschedule_date')
-            ->orderBy('reschedule_time')
-            ->get();
-
-        return view('patient.appointment.appointments', compact('upcomingAppointments', 'history', 'rescheduleRequests', 'user'));
+        return view(
+            'patient.appointment.appointments',
+            compact('upcomingAppointments', 'history', 'user')
+        );
     }
-
 
     private function autoCompletePastAppointments($userId)
     {
-       $appointments = Appointment::where('user_id', $userId)->where('status', 'confirmed')->past()->get();
+        $appointments = Appointment::where('user_id', $userId)
+            ->where('status', 'confirmed')
+            ->past()
+            ->get();
 
         foreach ($appointments as $appointment) {
             $appointment->markAsCompleted();
@@ -109,19 +104,6 @@ class AppointmentController extends Controller
         return back();
     }
 
-    // public function reschedule(Request $request, $id)
-    // {
-    //     $appointment = Appointment::findOrFail($id);
-
-    //     $appointment->reschedule_date = $request->reschedule_date;
-    //     $appointment->reschedule_time = $request->reschedule_time;
-    //     $appointment->reschedule_reason = $request->reschedule_reason;
-
-    //     $appointment->save();
-
-    //     return view('profile.appointments', compact('ongoing', 'history'));
-    // }
-
     public function showPaymentPage(Appointment $appointment)
     {
         if (auth()->id() !== $appointment->user_id) {
@@ -148,7 +130,7 @@ class AppointmentController extends Controller
         $expiryTime = $payment->expiry_at ?? $payment->created_at->addMinutes(15);
 
         if (now()->greaterThan($expiryTime)) {
-            $payment->update(['status' => 'expired']);
+            $appointment->markAsExpired();
             return redirect()->route('patient.appointments.index')->with('error', 'Payment time has expired. Please book a new appointment.');
         }
 
@@ -200,6 +182,32 @@ class AppointmentController extends Controller
         }
     }
 
+    public function reschedule(Request $request, $id)
+    {
+        $request->validate([
+            'reschedule_date' => 'required|date',
+            'reschedule_time' => 'required',
+        ]);
+
+        $appointment = Appointment::where('id', $id)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
+
+        if ($appointment->status === 'completed') {
+            return back()->with('error', 'Appointment already completed.');
+        }
+
+        $appointment->update([
+            'date'       => $request->reschedule_date,
+            'start_time' => $request->reschedule_time,
+            'status'     => 'confirmed',
+        ]);
+
+        return redirect()
+            ->route('patient.appointments.index')
+            ->with('success', 'Appointment successfully rescheduled.');
+    }
+
     public function psychologistAppointments()
     {
         $psychologist = Auth::user()->psychologist;
@@ -209,10 +217,10 @@ class AppointmentController extends Controller
             ->where('status', 'confirmed')
             ->where(function($q) {
                 $q->whereDate('date', '>', now())
-                ->orWhere(function($q2) {
-                    $q2->whereDate('date', '=', now())
-                        ->whereTime('end_time', '>', now()->format('H:i:s'));
-                });
+                    ->orWhere(function($q2) {
+                        $q2->whereDate('date', '=', now())
+                            ->whereTime('end_time', '>', now()->format('H:i:s'));
+                    });
             })
             ->orderBy('date')
             ->orderBy('start_time')

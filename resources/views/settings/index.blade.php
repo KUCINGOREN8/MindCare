@@ -302,16 +302,19 @@ const EditModeManager = {
         const inputs = form.querySelectorAll('input, select, textarea');
 
         inputs.forEach(input => {
-            if (input.hasAttribute('data-readonly')) {
+            if (input.hasAttribute('readonly')) {
+                input.removeAttribute('readonly');
+            }
+            
+            if (input.hasAttribute('data-password-field')) {
+                input.type = 'password';
                 input.removeAttribute('readonly');
                 input.classList.remove('read-only:text-[#A1AAB2]');
             }
+            
             if (input.hasAttribute('data-disabled')) {
                 input.removeAttribute('disabled');
                 input.classList.remove('disabled:text-[#A1AAB2]', 'disabled:opacity-100');
-            }
-            if (input.hasAttribute('data-password-field') && input.type === 'text') {
-                input.type = 'password';
             }
         });
 

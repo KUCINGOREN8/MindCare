@@ -45,13 +45,13 @@
                             @csrf
                             <button type="submit"
                                 class="bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-semibold px-4 py-2 rounded-full transition">
-                                Log Out
+                                {{ __('messages.logout') }}
                             </button>
                         </form>
                     @else
                         <a href="{{ route('signup') }}"
                             class="bg-[#00C3B3] hover:bg-[#33D1C2] active:bg-[#66DED0] text-white font-semibold px-4 py-2 rounded-full transition">
-                            Sign Up
+                            {{ __('messages.signup') }}
                         </a>
                     @endauth
 
@@ -91,7 +91,7 @@
                     class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-black/5 hover:text-black">About</a>
                 <a href="#testimonials"
                     class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-black/5 hover:text-black">Testimonial</a>
-                 @auth
+                @auth
                     <div class="border-t border-gray-200 pt-2 mt-2">
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
