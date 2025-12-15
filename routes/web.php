@@ -28,9 +28,11 @@ Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
 // Language switcher
 Route::get('/lang/{lang}', function ($lang) {
-    session(['locale' => $lang]);
+    if (in_array($lang, ['en', 'id'])) {
+        session(['locale' => $lang]);
+    }
     return back();
-})->name('switch.lang');
+})->name('switch.lang'); // <--- Nama route ini harus sama dengan di component
 
 // Public guest-only routes
 Route::middleware('guest')->group(function () {
@@ -79,7 +81,7 @@ Route::middleware(['auth', 'otp', 'role:patient'])
         // Patient Mood
         Route::post('/mood', [DashboardController::class, 'moodStore'])->name('mood.store');
         // Route::post('/mood/undo', [MoodController::class, 'undo'])->name('mood.undo');
-
+    
         // Psychologist
         Route::get('find-psychologist', [PsychologistController::class, 'showFindPsychologist'])->name('find.psychologist');
         Route::get('/search', [PsychologistController::class, 'showSearch'])->name('psychologist.search');
@@ -112,17 +114,17 @@ Route::middleware(['auth', 'otp', 'role:patient'])
             // Appointment Review
             Route::middleware(['review:create'])->group(function () {
                 Route::get('/{id}/review', [ReviewController::class, 'create'])->name('review.create');
-                Route::post('/{id}/review', [ReviewController::class, 'store'])->name('review.store');                
+                Route::post('/{id}/review', [ReviewController::class, 'store'])->name('review.store');
             });
-            Route::middleware(['review:edit'])->group(function () {          
+            Route::middleware(['review:edit'])->group(function () {
                 Route::get('/{id}/review/edit', [ReviewController::class, 'edit'])->name('review.edit');
                 Route::put('/{id}/review', [ReviewController::class, 'update'])->name('review.update');
             });
             Route::middleware(['review:delete'])->group(function () {
                 Route::delete('/{id}/review', [ReviewController::class, 'destroy'])->name('review.destroy');
             });
-            
-        }); 
+
+        });
 
         // Payment
         Route::prefix('payment')->name('payment.')->group(function () {
@@ -142,23 +144,23 @@ Route::middleware(['auth', 'otp', 'role:psychologist'])
         // Dashboard
         Route::get('/dashboard', [DashboardController::class, 'showPsychologistDashboard'])->name('dashboard');
 
-    // My Clients
-    Route::get('/clients' , [PsychologistController::class, 'showClients'])->name('clients');
-    Route::get('/clients/{client}/details', [PsychologistController::class, 'showClientDetails'])->name('clients.details');
-    Route::get('/clients/{client}/appointments', [PsychologistController::class, 'getClientAppointments'])->name('clients.appointments');
-    Route::get('/clients/{client}/general-notes', [PsychologistController::class, 'getGeneralNotes'])->name('clients.general-notes');
-    Route::post('/notes/general/store', [PsychologistController::class, 'storeGeneralNotes'])->name('notes.general.store');
-    Route::post('/notes/store', [PsychologistController::class, 'storeSessionNotes'])->name('notes.session.store');
+        // My Clients
+        Route::get('/clients', [PsychologistController::class, 'showClients'])->name('clients');
+        Route::get('/clients/{client}/details', [PsychologistController::class, 'showClientDetails'])->name('clients.details');
+        Route::get('/clients/{client}/appointments', [PsychologistController::class, 'getClientAppointments'])->name('clients.appointments');
+        Route::get('/clients/{client}/general-notes', [PsychologistController::class, 'getGeneralNotes'])->name('clients.general-notes');
+        Route::post('/notes/general/store', [PsychologistController::class, 'storeGeneralNotes'])->name('notes.general.store');
+        Route::post('/notes/store', [PsychologistController::class, 'storeSessionNotes'])->name('notes.session.store');
 
         // Appointments
         Route::prefix('appointments')
-        ->name('appointments.')
-        ->controller(AppointmentController::class)
-        ->group(function () {
+            ->name('appointments.')
+            ->controller(AppointmentController::class)
+            ->group(function () {
             Route::get('/', [PsychologistController::class, 'showSchedule'])->name('index');
             Route::get('/chat/session/{appointment}', [ChatController::class, 'startSession'])->name('chat.session');
+        });
     });
-});
 
 // ADMIN ROUTES => Auth + OTP + Role protected
 Route::middleware(['auth', 'otp', 'role:admin'])
@@ -183,7 +185,7 @@ Route::middleware(['auth', 'otp'])->group(function () {
         Route::get('/', 'showProfile')->name('index');
 
         // Profile 
-        Route::put('/update','updateProfile')->name('update');
+        Route::put('/update', 'updateProfile')->name('update');
         Route::post('/upload-photo', 'uploadPhoto')->name('upload-photo');
         Route::delete('/delete-photo', 'deletePhoto')->name('delete-photo');
 

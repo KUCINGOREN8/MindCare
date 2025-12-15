@@ -19,8 +19,8 @@
             {{-- Header Greeting --}}
             <div class="flex flex-col bg-white p-6 gap-4 rounded-md border-grey-border border">
                 <div class="flex flex-col">
-                    <h1 class="text-primary font-bold text-lg">Verification Center</h1>
-                    <h5 class="text-captiondark text-sm">Review incoming psychologist registration requests.</h5>
+                    <h1 class="text-primary font-bold text-lg">{{ __('messages.admincenter') }}</h1>
+                    <h5 class="text-captiondark text-sm">{{ __('messages.admincenterdesc') }}.</h5>
                 </div>
             </div>
 
@@ -30,8 +30,8 @@
                 {{-- Judul Halaman --}}
                 <div class="flex justify-between items-center">
                     <div class="flex flex-col gap-1 justify-between items-start">
-                        <h3 class="font-bold">Pending Requests</h3>
-                        <p class="text-xs text-caption-dark">Approve or reject psychologist applications.</p>
+                        <h3 class="font-bold">{{ __('messages.pendingreq') }}</h3>
+                        <p class="text-xs text-caption-dark">{{ __('messages.approverejectdesc') }}.</p>
                     </div>
                 </div>
 
@@ -50,19 +50,19 @@
                                 <tr>
                                     <th
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Psychologist Name
+                                        {{ __('messages.psychologistname') }}
                                     </th>
                                     <th
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        License & Spec
+                                        {{ __('messages.licenseandspec') }}
                                     </th>
                                     <th
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Register Date
+                                        {{ __('messages.registerdate') }}
                                     </th>
                                     <th
                                         class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Actions
+                                        {{ __('messages.action') }}
                                     </th>
                                 </tr>
                             </thead>
@@ -101,7 +101,8 @@
                                         {{-- Register Date --}}
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                             {{ $psy->created_at->format('d M Y') }}
-                                            <div class="text-xs text-orange-500 mt-1 font-medium">Pending Verification</div>
+                                            <div class="text-xs text-orange-500 mt-1 font-medium">
+                                                {{ __('messages.pendingverif') }}</div>
                                         </td>
 
                                         {{-- Actions --}}
@@ -119,7 +120,7 @@
                                                         modalBtnText = 'Yes, Reject It';
                                                     "
                                                     class="text-red-500 hover:text-red-700 font-medium hover:underline transition-all">
-                                                    Reject
+                                                    {{ __('messages.reject') }}
                                                 </button>
 
                                                 {{-- 2. TOMBOL APPROVE (Memicu Modal Hijau/Biru) --}}
@@ -134,7 +135,7 @@
                                                         modalBtnText = 'Yes, Approve';
                                                     "
                                                     class="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-md text-xs font-bold transition-colors shadow-sm">
-                                                    Approve
+                                                    {{ __('messages.approve') }}
                                                 </button>
                                             </div>
                                         </td>
@@ -152,10 +153,10 @@
                                                     </svg>
                                                 </div>
                                                 <div class="flex flex-col">
-                                                    <span class="text-gray-600 font-medium text-base">No pending requests
-                                                        found.</span>
-                                                    <span class="text-sm text-gray-400">All psychologist applications have
-                                                        been processed.</span>
+                                                    <span
+                                                        class="text-gray-600 font-medium text-base">{{ __('messages.nopendingfound') }}.</span>
+                                                    <span
+                                                        class="text-sm text-gray-400">{{ __('messages.nopendingfounddesc') }}.</span>
                                                 </div>
                                             </div>
                                         </td>
