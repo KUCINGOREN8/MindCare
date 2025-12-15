@@ -22,6 +22,7 @@ class UserSeeder extends Seeder
             'role' => 'admin',
             'otp_verified' => true,
             'status' => 'active',
+             
         ]);
 
             // Psychologist User
