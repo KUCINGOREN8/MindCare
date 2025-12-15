@@ -10,13 +10,13 @@ class NavigationHelper
             'patient' => [
                 [
                     'icon' => 'assets/icons/home.svg',
-                    'text' => 'Dashboard',
+                    'text' => __('nav.dashboard'), // <--- Ganti Ini
                     'route' => 'patient.dashboard',
                     'patterns' => ['patient.dashboard', 'profile.*']
                 ],
                 [
                     'icon' => 'assets/icons/find-user.svg',
-                    'text' => 'Find Psychologist',
+                    'text' => __('nav.find_psychologist'), // <--- Ganti Ini
                     'route' => 'patient.find.psychologist',
                     'patterns' => [
                         'patient.find.psychologist',
@@ -27,19 +27,19 @@ class NavigationHelper
                 ],
                 [
                     'icon' => 'assets/icons/book.svg',
-                    'text' => 'Book Appointment',
+                    'text' => __('nav.book_appointment'), // <--- Ganti Ini
                     'route' => 'patient.book.appointment',
                     'patterns' => ['patient.book.appointment', 'patient.payment.*']
                 ],
                 [
                     'icon' => 'assets/icons/calendar.svg',
-                    'text' => 'Appointments',
+                    'text' => __('nav.appointments'), // <--- Ganti Ini
                     'route' => 'patient.appointments.index',
                     'patterns' => ['patient.appointments.*']
                 ],
                 [
                     'icon' => 'assets/icons/messages.svg',
-                    'text' => 'Messages',
+                    'text' => __('nav.messages'), // <--- Ganti Ini
                     'route' => 'messages',
                     'patterns' => ['messages', 'chat.*']
                 ],
@@ -48,25 +48,25 @@ class NavigationHelper
             'psychologist' => [
                 [
                     'icon' => 'assets/icons/home.svg',
-                    'text' => 'Dashboard',
+                    'text' => __('nav.dashboard'), // <--- Ganti Ini
                     'route' => 'psychologist.dashboard',
                     'patterns' => ['psychologist.dashboard', 'profile.*']
                 ],
                 [
                     'icon' => 'assets/icons/users.svg',
-                    'text' => 'My Clients',
+                    'text' => __('nav.my_clients'), // <--- Ganti Ini
                     'route' => 'psychologist.clients',
                     'patterns' => ['psychologist.clients']
                 ],
                 [
                     'icon' => 'assets/icons/calendar.svg',
-                    'text' => 'Appointments',
+                    'text' => __('nav.appointments'), // <--- Ganti Ini
                     'route' => 'psychologist.appointments.index',
                     'patterns' => ['psychologist.appointments.*']
                 ],
                 [
                     'icon' => 'assets/icons/messages.svg',
-                    'text' => 'Messages',
+                    'text' => __('nav.messages'), // <--- Ganti Ini
                     'route' => 'messages',
                     'patterns' => ['messages', 'chat.*']
                 ],
@@ -75,13 +75,13 @@ class NavigationHelper
             'admin' => [
                 [
                     'icon' => 'assets/icons/home.svg',
-                    'text' => 'Dashboard',
+                    'text' => __('nav.dashboard'), // <--- Ganti Ini
                     'route' => 'admin.dashboard',
                     'patterns' => ['admin.dashboard', 'profile.*']
                 ],
                 [
                     'icon' => 'assets/icons/users.svg',
-                    'text' => 'Verify Psychologists',
+                    'text' => __('nav.verify_psychologists'), // <--- Ganti Ini
                     'route' => 'admin.verify.index',
                     'patterns' => ['admin.verify.*', 'profile.*']
                 ],

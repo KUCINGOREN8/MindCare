@@ -74,25 +74,42 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
 
+            // 1. Simpan bahasa saat ini sebelum session dihapus
+            $currentLocale = session('locale');
+
+            // --- CEK STATUS USER ---
             if ($user->status !== 'active') {
                 Auth::logout();
+
+                // Reset session (Logout paksa)
                 $request->session()->invalidate();
                 $request->session()->regenerateToken();
 
-                $message = 'Your account is currently ' . $user->status . '.';
+                if ($currentLocale) {
+                    session(['locale' => $currentLocale]);
+                }
+
+                $message = __('auth.account_status', ['status' => $user->status]);
+
                 if ($user->status === 'pending') {
-                    $message .= ' Please wait for Admin approval.';
+                    $message .= ' ' . __('auth.wait_approval');
                 }
 
                 return back()->withErrors(['email' => $message])->onlyInput('email');
             }
 
             if (!$user->otp_verified) {
-                return redirect()->route('otp.verify')->with('error', 'Please verify your email with OTP.');
+                return redirect()->route('otp.verify')
+                    ->with('error', __('auth.otp_required'));
             }
 
             $request->session()->regenerate();
 
+            if ($currentLocale) {
+                session(['locale' => $currentLocale]);
+            }
+
+            // Redirect sesuai Role
             if ($user->role === 'admin') {
                 return redirect()->route('admin.dashboard');
             } elseif ($user->role === 'psychologist') {
@@ -103,11 +120,9 @@ class AuthController extends Controller
         }
 
         return back()->withErrors([
-            'email' => 'Invalid email or password.',
+            'email' => __('auth.failed'),
         ])->onlyInput('email');
     }
-
-
 
     public function showForgotPassword()
     {
