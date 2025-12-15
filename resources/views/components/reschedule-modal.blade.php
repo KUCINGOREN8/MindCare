@@ -8,15 +8,20 @@
             @method('PUT')
 
             <div class="mb-3">
-                {{-- TRANSLATE LABEL DATE --}}
-                <label class="text-sm">{{ __('reschedule.new_date') }}</label>
-                <input type="date" name="reschedule_date" class="w-full border rounded px-3 py-2" required>
+                <label class="text-sm">New Date</label>
+                <select name="reschedule_date" id="reschedule_date_select" 
+                        class="w-full border rounded px-3 py-2" required 
+                        onchange="updateTimeSlots(this.value)">
+                    <option value="">Select New Date</option>
+                </select>
             </div>
 
             <div class="mb-4">
-                {{-- TRANSLATE LABEL TIME --}}
-                <label class="text-sm">{{ __('reschedule.new_time') }}</label>
-                <input type="time" name="reschedule_time" class="w-full border rounded px-3 py-2" required>
+                <label class="text-sm">New Time</label>
+                <select name="reschedule_time" id="reschedule_time_select" 
+                        class="w-full border rounded px-3 py-2" required>
+                    <option value="">Select New Time</option>
+                </select>
             </div>
 
             <div class="flex justify-end gap-2">
@@ -31,6 +36,9 @@
             </div>
         </form>
     </div>
+<<<<<<< HEAD
+</div>
+=======
 </div>
 
 <script>
@@ -51,3 +59,4 @@
         document.getElementById('rescheduleModal').classList.add('hidden');
     }
 </script>
+>>>>>>> cb38aab9389f379d7f57ea1b283097578ea8188b
