@@ -13,6 +13,7 @@ use App\Http\Controllers\UserController;
 // use App\Http\Controllers\MoodController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Middleware\OTPMiddleware;
 use App\Http\Middleware\CheckAppointmentReview;
@@ -78,10 +79,13 @@ Route::middleware(['auth', 'otp', 'role:patient'])
         // Dashboard
         Route::get('/dashboard', [DashboardController::class, 'showPatientDashboard'])->name('dashboard');
 
+        // Notifications
+        Route::get('/notifications', [NotificationController::class, 'getNotifications'])->name('notifications');
+
         // Patient Mood
         Route::post('/mood', [DashboardController::class, 'moodStore'])->name('mood.store');
         // Route::post('/mood/undo', [MoodController::class, 'undo'])->name('mood.undo');
-    
+
         // Psychologist
         Route::get('find-psychologist', [PsychologistController::class, 'showFindPsychologist'])->name('find.psychologist');
         Route::get('/search', [PsychologistController::class, 'showSearch'])->name('psychologist.search');
@@ -144,8 +148,11 @@ Route::middleware(['auth', 'otp', 'role:psychologist'])
         // Dashboard
         Route::get('/dashboard', [DashboardController::class, 'showPsychologistDashboard'])->name('dashboard');
 
+        // Notifications
+        Route::get('/notifications', [NotificationController::class, 'getNotifications'])->name('notifications');
+
         // My Clients
-        Route::get('/clients', [PsychologistController::class, 'showClients'])->name('clients');
+        Route::get('/clients' , [PsychologistController::class, 'showClients'])->name('clients');
         Route::get('/clients/{client}/details', [PsychologistController::class, 'showClientDetails'])->name('clients.details');
         Route::get('/clients/{client}/appointments', [PsychologistController::class, 'getClientAppointments'])->name('clients.appointments');
         Route::get('/clients/{client}/general-notes', [PsychologistController::class, 'getGeneralNotes'])->name('clients.general-notes');
@@ -184,8 +191,8 @@ Route::middleware(['auth', 'otp'])->group(function () {
     Route::prefix('profile')->name('profile.')->controller(UserController::class)->group(function () {
         Route::get('/', 'showProfile')->name('index');
 
-        // Profile 
-        Route::put('/update', 'updateProfile')->name('update');
+        // Profile
+        Route::put('/update','updateProfile')->name('update');
         Route::post('/upload-photo', 'uploadPhoto')->name('upload-photo');
         Route::delete('/delete-photo', 'deletePhoto')->name('delete-photo');
 

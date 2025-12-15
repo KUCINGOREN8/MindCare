@@ -12,6 +12,7 @@ use App\Models\Mood;
 use App\Models\Psychologist;
 use Illuminate\Validation\Rule;
 use Carbon\Carbon;
+use App\Http\Controllers\NotificationController;
 
 class DashboardController extends Controller
 {
@@ -31,6 +32,9 @@ class DashboardController extends Controller
             Auth::logout();
             return redirect()->route('login')->with('error', 'Please verify your email first or contact admin if your account is not active.');
         }
+
+        $notificationController = new NotificationController();
+        $notifications = $notificationController->getNotifications();
 
         $upcomingAppointments = Appointment::with(['psychologist' => function($query) {
                 $query->with('user');
@@ -57,7 +61,8 @@ class DashboardController extends Controller
             'user',
             'upcomingAppointments',
             'moodData',
-            'todayMood'
+            'todayMood',
+            'notifications'
         ));
     }
 
@@ -65,31 +70,31 @@ class DashboardController extends Controller
     {
         $request->validate([
         'mood' => ['required', Rule::in(['sad', 'flat', 'good', 'happy', 'blissful'])],
-    ]);
-
-    $userId = auth()->id();
-    $today = now()->format('Y-m-d');
-
-    $existingMood = Mood::where('user_id', $userId)
-        ->whereDate('created_at', $today)
-        ->first();
-
-    if ($existingMood) {
-        // Update mood yang sudah ada
-        $existingMood->update([
-            'mood' => $request->mood,
         ]);
 
-        return back()->with('success', 'Mood updated successfully!');
-    } else {
-        // Buat mood baru
-        $mood = Mood::create([
-            'user_id' => $userId,
-            'mood' => $request->mood,
-        ]);
+        $userId = auth()->id();
+        $today = now()->format('Y-m-d');
 
-        return back()->with('success', 'Mood saved successfully!');
-    }
+        $existingMood = Mood::where('user_id', $userId)
+            ->whereDate('created_at', $today)
+            ->first();
+
+        if ($existingMood) {
+            // Update mood yang sudah ada
+            $existingMood->update([
+                'mood' => $request->mood,
+            ]);
+
+            return back()->with('success', 'Mood updated successfully!');
+        } else {
+            // Buat mood baru
+            $mood = Mood::create([
+                'user_id' => $userId,
+                'mood' => $request->mood,
+            ]);
+
+            return back()->with('success', 'Mood saved successfully!');
+        }
     }
 
     private function getWeeklyMoodData($user)
@@ -206,6 +211,9 @@ class DashboardController extends Controller
             return redirect()->route('login');
         }
 
+        $notificationController = new NotificationController();
+        $notifications = $notificationController->getNotifications();
+
         $stats = $this->getPsychologistStats($user->psychologist);
 
         $upcomingAppointments = Appointment::with(['user' => function($query) {
@@ -223,7 +231,7 @@ class DashboardController extends Controller
             ->take(3)
             ->get();
 
-        return view('dashboard.psychologist.index', compact('user', 'upcomingAppointments', 'stats'));
+        return view('dashboard.psychologist.index', compact('user', 'upcomingAppointments', 'stats', 'notifications'));
     }
 
     protected function getPsychologistStats($psychologist)

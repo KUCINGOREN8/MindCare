@@ -18,7 +18,6 @@
             onclick="window.location.href='{{ route('patient.appointments.payment', $appointment->id) }}'"
         @endif
     >
-        //kepala yee
         {{-- Header --}}
         <div class="flex items-center justify-between gap-3">
             <div class="flex flex-col gap-0">

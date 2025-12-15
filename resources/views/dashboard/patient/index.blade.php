@@ -1,39 +1,5 @@
 @extends('layouts.dashboard')
 
-@php
-// ini dummy data, nnti sesuain dgn data di database
-$notifications = [
-    [
-        'icon' => 'assets/icons/calendar.svg',
-        'title' => 'Session Reminder',
-        'message' => 'Your session with Dr. Emily Chen starts in 2 hours',
-        'time' => '1 hour ago',
-        'type' => 'reminder',
-    ],
-    [
-        'icon' => 'assets/icons/check.svg',
-        'title' => 'Mood Entry Complete',
-        'message' => 'Great job logging your mood for 7 days straight!',
-        'time' => '3 hours ago',
-        'type' => 'achievement',
-    ],
-    [
-        'icon' => 'assets/icons/messages.svg',
-        'title' => 'New Message',
-        'message' => 'Dr. Rodriguez sent you a follow-up message',
-        'time' => '5 hours ago',
-        'type' => 'message',
-    ],
-    [
-        'icon' => 'assets/icons/tips.svg',
-        'title' => 'Daily Tip',
-        'message' => 'Try a 5-minute meditation to start your day',
-        'time' => '1 day ago',
-        'type' => 'tip',
-    ],
-];
-@endphp
-
 @section('title')
 Dashboard
 @endsection
@@ -46,7 +12,7 @@ Dashboard
                     <h1 class="text-primary font-bold text-lg">Good Day, {{ $user->full_name }}!</h1>
                     <h5 class="text-captiondark text-sm">How are you feeling today?</h5>
                 </div>
-                
+
                 <form action="{{ route('patient.mood.store') }}" method="POST" x-data="{ selected: '{{ optional($todayMood)->mood }}', hasSubmittedToday: {{ optional($todayMood)->mood ? 'true' : 'false' }} }">
                     @csrf
                     <input type="hidden" name="mood" :value="selected">
@@ -56,7 +22,7 @@ Dashboard
                             <span x-show="!hasSubmittedToday">Rate your mood:</span>
                             <span x-show="hasSubmittedToday" class="flex flex-col">
                                 <span>
-                                    Today's mood: 
+                                    Today's mood:
                                     <span class="font-medium capitalize" x-text="selected"></span>
                                 </span>
                                 <span class="text-sm text-gray-500">(click to update)</span>
@@ -91,7 +57,7 @@ Dashboard
 
             @include('components.upcoming-appointment')
 
-            <x-mood-chart 
+            <x-mood-chart
                 :chartData="$moodData['chartData']"
                 :averageMood="$moodData['averageMood']"
                 :note="$moodData['note']"
