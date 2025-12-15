@@ -25,7 +25,8 @@ class DashboardController extends Controller
 
     // === PATIENT DASHBOARD METHODS === //
 
-    public function showPatientDashboard() {
+    public function showPatientDashboard()
+    {
         $user = Auth::user();
 
         if (!$user->otp_verified || $user->status !== 'active') {
@@ -36,15 +37,17 @@ class DashboardController extends Controller
         $notificationController = new NotificationController();
         $notifications = $notificationController->getNotifications();
 
-        $upcomingAppointments = Appointment::with(['psychologist' => function($query) {
+        $upcomingAppointments = Appointment::with([
+            'psychologist' => function ($query) {
                 $query->with('user');
-            }])
+            }
+        ])
             ->where('user_id', $user->id)
             ->where('status', 'confirmed')
-            ->where(function($query) {
-                $query->where('date', '>', now()->format('Y-m-d'))->orWhere(function($q) {
-                        $q->where('date', '=', now()->format('Y-m-d'))->whereTime('end_time', '>', now()->format('H:i:s'));
-                    });
+            ->where(function ($query) {
+                $query->where('date', '>', now()->format('Y-m-d'))->orWhere(function ($q) {
+                    $q->where('date', '=', now()->format('Y-m-d'))->whereTime('end_time', '>', now()->format('H:i:s'));
+                });
             })
             ->orderBy('date')
             ->orderBy('start_time')
@@ -54,8 +57,8 @@ class DashboardController extends Controller
         $moodData = $this->getWeeklyMoodData($user);
 
         $todayMood = Mood::where('user_id', $user->id)
-        ->whereDate('created_at', now()->format('Y-m-d'))
-        ->first();
+            ->whereDate('created_at', now()->format('Y-m-d'))
+            ->first();
 
         return view('dashboard.patient.index', compact(
             'user',
@@ -69,12 +72,17 @@ class DashboardController extends Controller
     public function moodStore(Request $request)
     {
         $request->validate([
-        'mood' => ['required', Rule::in(['sad', 'flat', 'good', 'happy', 'blissful'])],
+            'mood' => ['required', Rule::in(['sad', 'flat', 'good', 'happy', 'blissful'])],
         ]);
 
         $userId = auth()->id();
         $today = now()->format('Y-m-d');
+        $userId = auth()->id();
+        $today = now()->format('Y-m-d');
 
+        $existingMood = Mood::where('user_id', $userId)
+            ->whereDate('created_at', $today)
+            ->first();
         $existingMood = Mood::where('user_id', $userId)
             ->whereDate('created_at', $today)
             ->first();
@@ -84,16 +92,22 @@ class DashboardController extends Controller
             $existingMood->update([
                 'mood' => $request->mood,
             ]);
+            if ($existingMood) {
+                // Update mood yang sudah ada
+                $existingMood->update([
+                    'mood' => $request->mood,
+                ]);
 
-            return back()->with('success', 'Mood updated successfully!');
-        } else {
-            // Buat mood baru
-            $mood = Mood::create([
-                'user_id' => $userId,
-                'mood' => $request->mood,
-            ]);
+                return back()->with('success', 'Mood updated successfully!');
+            } else {
+                // Buat mood baru
+                $mood = Mood::create([
+                    'user_id' => $userId,
+                    'mood' => $request->mood,
+                ]);
 
-            return back()->with('success', 'Mood saved successfully!');
+                return back()->with('success', 'Mood saved successfully!');
+            }
         }
     }
 
@@ -145,43 +159,52 @@ class DashboardController extends Controller
 
     private function generateMoodNote($averageMood, $moodValues)
     {
+        // KASUS 1: BELUM ADA DATA
         if (count($moodValues) === 0) {
             return [
-                'title' => 'No mood data yet',
-                'subtitle' => 'Log your mood to see insights',
+                'title' => __('chart.note_empty_title'),
+                'subtitle' => __('chart.note_empty_desc'),
                 'color' => 'gray',
                 'suggest_appointment' => false
             ];
         }
 
+        // KASUS 2: MOOD TINGGI (>= 4)
         if ($averageMood >= 4) {
             return [
-                'title' => '🌟 You\'ve been feeling calmer lately, great job!',
-                'subtitle' => 'Your emotional wellbeing is shining through',
+                'title' => __('chart.note_high_title'),
+                'subtitle' => __('chart.note_high_desc'),
                 'color' => 'green',
                 'suggest_appointment' => false
             ];
-        } elseif ($averageMood >= 2.5 && $averageMood < 4) {
+        }
+        // KASUS 3: MOOD SEDANG (2.5 - 4)
+        elseif ($averageMood >= 2.5 && $averageMood < 4) {
             $variation = $this->calculateMoodVariation($moodValues);
+
             if ($variation > 0) {
+                // Sedang Meningkat
                 return [
-                    'title' => '📈 Steady Progress!',
-                    'subtitle' => 'Your mood is getting better day by day',
+                    'title' => __('chart.note_progress_title'),
+                    'subtitle' => __('chart.note_progress_desc'),
                     'color' => 'yellow',
                     'suggest_appointment' => false
                 ];
             } else {
+                // Stabil
                 return [
-                    'title' => '⚖️ Finding Balance',
-                    'subtitle' => 'Your mood has been stable this week',
+                    'title' => __('chart.note_balance_title'),
+                    'subtitle' => __('chart.note_balance_desc'),
                     'color' => 'yellow',
                     'suggest_appointment' => false
                 ];
             }
-        } else {
+        }
+        // KASUS 4: MOOD RENDAH
+        else {
             return [
-                'title' => '💬 Let\'s Talk About It',
-                'subtitle' => 'Consider scheduling a session to discuss your feelings',
+                'title' => __('chart.note_low_title'),
+                'subtitle' => __('chart.note_low_desc'),
                 'color' => 'red',
                 'suggest_appointment' => true
             ];
@@ -190,10 +213,11 @@ class DashboardController extends Controller
 
     private function calculateMoodVariation($moodValues)
     {
-        if (count($moodValues) < 2) return 0;
+        if (count($moodValues) < 2)
+            return 0;
 
-        $firstHalf = array_slice($moodValues, 0, ceil(count($moodValues)/2));
-        $secondHalf = array_slice($moodValues, floor(count($moodValues)/2));
+        $firstHalf = array_slice($moodValues, 0, ceil(count($moodValues) / 2));
+        $secondHalf = array_slice($moodValues, floor(count($moodValues) / 2));
 
         $avgFirst = array_sum($firstHalf) / count($firstHalf);
         $avgSecond = array_sum($secondHalf) / count($secondHalf);
@@ -203,7 +227,8 @@ class DashboardController extends Controller
 
     // === PSYCHOLOGIST DASHBOARD METHODS === //
 
-    public function showPsychologistDashboard() {
+    public function showPsychologistDashboard()
+    {
         $user = Auth::user();
 
         if (!$user->otp_verified || $user->status !== 'active') {
@@ -216,15 +241,17 @@ class DashboardController extends Controller
 
         $stats = $this->getPsychologistStats($user->psychologist);
 
-        $upcomingAppointments = Appointment::with(['user' => function($query) {
+        $upcomingAppointments = Appointment::with([
+            'user' => function ($query) {
                 $query->with('psychologist');
-            }])
+            }
+        ])
             ->where('psychologist_id', $user->psychologist->id)
             ->where('status', 'confirmed')
-            ->where(function($query) {
-                $query->where('date', '>', now()->format('Y-m-d'))->orWhere(function($q) {
-                        $q->where('date', '=', now()->format('Y-m-d'))->whereTime('end_time', '>', now()->format('H:i:s'));
-                    });
+            ->where(function ($query) {
+                $query->where('date', '>', now()->format('Y-m-d'))->orWhere(function ($q) {
+                    $q->where('date', '=', now()->format('Y-m-d'))->whereTime('end_time', '>', now()->format('H:i:s'));
+                });
             })
             ->orderBy('date')
             ->orderBy('start_time')
@@ -272,7 +299,7 @@ class DashboardController extends Controller
 
         return $psychologist->appointments()
             ->whereBetween('date', [$startOfMonth, $endOfMonth])
-            ->whereNotIn('user_id', function($query) use ($psychologist, $startOfMonth) {
+            ->whereNotIn('user_id', function ($query) use ($psychologist, $startOfMonth) {
                 $query->select('user_id')
                     ->from('appointments')
                     ->where('psychologist_id', $psychologist->id)
@@ -301,16 +328,16 @@ class DashboardController extends Controller
             ->count();
     }
 
-        protected function getCompletedSessionsThisWeek($psychologist)
-        {
-            $startOfWeek = Carbon::now()->startOfWeek();
-            $endOfWeek = Carbon::now()->endOfWeek();
+    protected function getCompletedSessionsThisWeek($psychologist)
+    {
+        $startOfWeek = Carbon::now()->startOfWeek();
+        $endOfWeek = Carbon::now()->endOfWeek();
 
-            return $psychologist->appointments()
-                ->whereBetween('date', [$startOfWeek, $endOfWeek])
-                ->where('status', 'completed')
-                ->count();
-        }
+        return $psychologist->appointments()
+            ->whereBetween('date', [$startOfWeek, $endOfWeek])
+            ->where('status', 'completed')
+            ->count();
+    }
 
     protected function getPsychologistMonthlyRevenue($psychologist)
     {
@@ -319,12 +346,12 @@ class DashboardController extends Controller
 
         return $psychologist->appointments()
             ->whereBetween('date', [$startOfMonth, $endOfMonth])
-            ->whereHas('payment', function($query) {
+            ->whereHas('payment', function ($query) {
                 $query->where('status', 'success');
             })
             ->with('payment')
             ->get()
-            ->sum(function($appointment) {
+            ->sum(function ($appointment) {
                 return $appointment->payment->amount ?? 0;
             });
     }
@@ -354,7 +381,7 @@ class DashboardController extends Controller
 
         $currentRevenue = $psychologist->appointments()
             ->where('date', '>=', $currentMonth)
-            ->whereHas('payment', function($q) {
+            ->whereHas('payment', function ($q) {
                 $q->where('status', 'success');
             })
             ->with('payment')
@@ -363,7 +390,7 @@ class DashboardController extends Controller
 
         $lastMonthRevenue = $psychologist->appointments()
             ->whereBetween('date', [$lastMonth, $currentMonth->copy()->subDay()])
-            ->whereHas('payment', function($q) {
+            ->whereHas('payment', function ($q) {
                 $q->where('status', 'success');
             })
             ->with('payment')
