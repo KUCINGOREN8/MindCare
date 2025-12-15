@@ -38,4 +38,5 @@ return [
 
     'btn_confirm' => 'Confirm & Pay',
     'alert_complete_fields' => 'Please complete all fields: Date, Time, and Psychologist',
+    'view_summary' => 'View Summary',
 ];

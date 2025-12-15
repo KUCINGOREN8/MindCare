@@ -122,23 +122,22 @@
                     <p class="text-sm text-gray-500">{{ __('appointment.select_date_continue') }}</p>
                 </div>
 
-                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-                    <h2 class="font-semibold mb-4 text-lg">{{ __('appointment.step_2') }}</h2>
-                    <div class="grid grid-cols-4 gap-3">
-                        <template
-                            x-for="time in ['09:00','10:00','11:00', '12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00']"
-                            :key="time">
-                            <button @click="selectedTime = time; fetchAvailablePsychologists()"
-                                :class="selectedTime === time ?
-                                    'bg-primary text-white border-primary shadow' :
-                                    'bg-white border-gray-300 hover:border-primary hover:bg-gray-50'"
-                                class="px-4 py-2 rounded-lg border text-sm transition-all" x-text="time">
-                            </button>
-                        </template>
-                    </div>
-                    <p x-show="!selectedDate" class="text-sm text-gray-500 mt-2">{{ __('appointment.select_date_first') }}
-                    </p>
-                </div>
+        <!-- TIME CARD -->
+        <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+            <h2 class="font-semibold mb-4 text-lg">{{ __('appointment.step_2') }}</h2>
+            <div class="grid grid-cols-4 gap-3">
+                <template x-for="time in ['09:00','10:00','11:00', '12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00']" :key="time">
+                    <button @click="selectedTime = time; fetchAvailablePsychologists()"
+                            :class="selectedTime === time
+                                    ? 'bg-primary text-white border-primary shadow'
+                                    : 'bg-white border-gray-300 hover:border-primary hover:bg-gray-50'"
+                            class="md:px-4 md:py-2 rounded-lg border text-sm transition-all"
+                            x-text="time">
+                    </button>
+                </template>
+            </div>
+            <p x-show="!selectedDate" class="text-sm text-gray-500 mt-2">{{ __('appointment.select_date_first') }}
+        </div>
 
                 <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
                     <h2 class="font-semibold mb-4 text-lg">{{ __('appointment.step_3') }}</h2>
@@ -187,71 +186,100 @@
             @endif
         </div>
 
-        <div class="w-80 bg-white border border-gray-200 rounded-xl p-6 h-fit sticky top-6 shadow-sm">
-            <h3 class="font-semibold text-lg mb-4">{{ __('appointment.summary_title') }}</h3>
-            <div class="text-sm space-y-4">
-                <div class="flex justify-between">
-                    <span class="text-gray-500">{{ __('appointment.label_date') }}</span>
-                    <span class="font-medium" x-text="selectedDate ? formatDate(selectedDate) : '-'"></span>
-                </div>
-                <div class="flex justify-between">
-                    <span class="text-gray-500">{{ __('appointment.label_time') }}</span>
-                    <span class="font-medium"
-                        x-text="selectedTime ? selectedTime + ' - ' + calculateEndTime(selectedTime) : '-'"></span>
-                </div>
-                <div class="flex justify-between">
-                    <span class="text-gray-500">{{ __('appointment.label_psychologist') }}</span>
-                    <span class="font-medium text-right">
-                        @if ($isSpecific)
-                            <span>{{ $psychologists[0]->user->full_name }} - {{ $psychologists[0]->title }}</span>
-                        @else
-                            <template x-for="psych in availablePsychologists" :key="psych.id">
-                                <span x-show="selectedPsychologist == psych.id"
-                                    x-text="psych.user.full_name + ' - ' + psych.title"></span>
-                            </template>
-                            <span x-show="!selectedPsychologist" class="text-gray-400" x-text="trans.notSelected"></span>
-                        @endif
-                    </span>
-                </div>
-                <div class="flex justify-between">
-                    <span class="text-gray-500">{{ __('appointment.label_duration') }}</span>
-                    <span class="font-medium">{{ __('appointment.duration_val') }}</span>
-                </div>
-                <div class="flex justify-between border-t pt-4">
-                    <span class="text-gray-500 font-semibold">{{ __('appointment.label_fee') }}</span>
-                    <span class="font-bold text-lg">
-                        @if ($isSpecific)
-                            <span>Rp {{ number_format($psychologists[0]->consultation_fee, 0, ',', '.') }}</span>
-                        @else
-                            <template x-for="psych in availablePsychologists" :key="psych.id">
-                                <span x-show="selectedPsychologist == psych.id"
-                                    x-text="'Rp ' + formatCurrency(psych.consultation_fee)"></span>
-                            </template>
-                            <span x-show="!selectedPsychologist">-</span>
-                        @endif
-                    </span>
-                </div>
-            </div>
+    <!-- POPUP OVERLAY (MOBILE ONLY) -->
+<div x-show="showSummary"
+     x-cloak
+     @click="showSummary = false"
+     class="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity">
+</div>
 
-            <form method="POST" action="{{ route('patient.appointments.store') }}" class="mt-6"
-                id="appointmentForm">
-                @csrf
-                <input type="hidden" name="date" id="hiddenDate">
-                <input type="hidden" name="start_time" id="hiddenStartTime">
-                <input type="hidden" name="psychologist_id" id="hiddenPsychologistId">
-                <input type="hidden" name="end_time" id="hiddenEndTime">
-                <input type="hidden" name="consultation_fee" id="hiddenConsultationFee">
-                <input type="hidden" name="with" id="hiddenWith">
-                <input type="hidden" name="job_title" id="hiddenJobTitle">
+    <!-- RIGHT SIDEBAR / POPUP -->
+<div :class="showSummary ? 'translate-y-0' : 'translate-y-full'"
+     class="lg:translate-y-0 fixed lg:static bottom-0 right-0 lg:block w-full lg:w-80 bg-white border border-gray-200 lg:rounded-xl rounded-t-2xl lg:rounded-t-xl p-6 lg:h-fit lg:sticky lg:top-6 shadow-lg lg:shadow-sm z-50 ease-in-out transition-transform duration-300 max-h-[90vh] overflow-y-auto">
 
-                <button type="button" @click="submitForm()"
-                    class="w-full bg-primary text-white py-3 rounded-lg font-medium transition disabled:opacity-40 hover:bg-primary/90"
-                    :disabled="!selectedDate || !selectedTime || !selectedPsychologist">
-                    {{ __('appointment.btn_confirm') }}
-                </button>
-            </form>
+    <!-- Close Button (Mobile Only) -->
+    <button @click="showSummary = false"
+            class="lg:hidden absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+    </button>
+
+    <h3 class="font-semibold text-lg mb-4">{{ __('appointment.summary_title') }}</h3>
+    <div class="text-sm space-y-4">
+        <div class="flex justify-between">
+            <span class="text-gray-500">{{ __('appointment.label_date') }}</span>
+            <span class="font-medium" x-text="selectedDate ? formatDate(selectedDate) : '-'"></span>
+        </div>
+        <div class="flex justify-between">
+            <span class="text-gray-500">{{ __('appointment.label_time') }}</span>
+            <span class="font-medium" x-text="selectedTime ? selectedTime + ' - ' + calculateEndTime(selectedTime) : '-'"></span>
+        </div>
+        <div class="flex justify-between">
+            <span class="text-gray-500">{{ __('appointment.label_psychologist') }}</span>
+            <span class="font-medium text-right">
+                @if($isSpecific)
+                <span>{{ $psychologists[0]->user->full_name }} - {{ $psychologists[0]->title }}</span>
+                @else
+                <template x-for="psych in availablePsychologists" :key="psych.id">
+                    <span x-show="selectedPsychologist == psych.id" x-text="psych.user.full_name + ' - ' + psych.title"></span>
+                </template>
+                <span x-show="!selectedPsychologist" class="text-gray-400" x-text="trans.notSelected"></span>
+                @endif
+            </span>
+        </div>
+        <div class="flex justify-between">
+            <span class="text-gray-500">{{ __('appointment.label_duration') }}</span>
+            <span class="font-medium">{{ __('appointment.duration_val') }}</span>
+        </div>
+        <div class="flex justify-between border-t pt-4">
+            <span class="text-gray-500 font-semibold">{{ __('appointment.label_fee') }}</span>
+            <span class="font-bold text-lg">
+                @if($isSpecific)
+                <span>Rp {{ number_format($psychologists[0]->consultation_fee, 0, ',', '.') }}</span>
+                @else
+                <template x-for="psych in availablePsychologists" :key="psych.id">
+                    <span x-show="selectedPsychologist == psych.id" x-text="'Rp ' + formatCurrency(psych.consultation_fee)"></span>
+                </template>
+                <span x-show="!selectedPsychologist">-</span>
+                @endif
+            </span>
         </div>
     </div>
+
+    <!-- FORM -->
+    <form method="POST" action="{{ route('patient.appointments.store') }}" class="mt-6" id="appointmentForm">
+    @csrf
+    <input type="hidden" name="date" id="hiddenDate">
+    <input type="hidden" name="start_time" id="hiddenStartTime">
+    <input type="hidden" name="psychologist_id" id="hiddenPsychologistId">
+    <input type="hidden" name="end_time" id="hiddenEndTime">
+    <input type="hidden" name="consultation_fee" id="hiddenConsultationFee">
+    <input type="hidden" name="with" id="hiddenWith">
+    <input type="hidden" name="job_title" id="hiddenJobTitle">
+
+    <button type="button"
+            @click="submitForm()"
+            class="w-full bg-primary text-white py-3 rounded-lg font-medium transition disabled:opacity-40 hover:bg-primary/90"
+            :disabled="!selectedDate || !selectedTime || !selectedPsychologist">
+        {{ __('appointment.btn_confirm') }}
+    </button>
+    </form>
+</div>
+
+<!-- SIDEBAR POPUP BUTTON (MOBILE) -->
+<button @click="showSummary = true"
+        class="lg:hidden fixed z-30 shadow-lg rounded-xl bottom-4 right-4 bg-primary text-white px-5 py-3 font-bold hover:bg-primary/90 transition-all">
+    {{ __('appointment.view_summary') }}
+</button>
+
+</div>
+
+<!-- Tambah di CSS atau head -->
+<style>
+[x-cloak] { display: none !important; }
+</style>
+</div>
 
     <script>
         function appointmentFlow(translations) {
