@@ -107,18 +107,44 @@ class Appointment extends Model
         return $now >= $availableFrom && $now <= $sessionEnd;
     }
 
+    public function markAsExpired()
+    {
+        $this->update(['status' => 'expired']);
+        Payment::where('paymentable_id', $this->id)
+            ->where('paymentable_type', self::class)
+            ->update(['status' => 'expired']);
+    }
+
+    public function markAsCompleted()
+    {
+        if ($this->is_past && $this->status === 'confirmed') {
+            $this->update(['status' => 'completed']);
+        }
+    }
+
+    public function scopePast($query)
+    {
+        return $query->where(function($q) {
+            $q->whereDate('date', '<', now()->format('Y-m-d'))
+                ->orWhere(function($q2) {
+                    $q2->whereDate('date', '=', now()->format('Y-m-d'))->whereTime('end_time', '<=', now()->format('H:i:s'));
+                });
+        });
+    }
+
     public function getCanBeReviewedAttribute()
     {
-        return $this->status === 'completed' && 
-            auth()->check() && 
+        return $this->status === 'completed' &&
+            auth()->check() &&
             auth()->id() === $this->user_id;
     }
-//app       public function getHasBeenReviewedAttribute()
+
+    public function getHasBeenReviewedAttribute()
     {
         if (!$this->can_be_reviewed) {
             return false;
         }
-        
+
         return $this->psychologist->reviews()
             ->where('user_id', auth()->id())
             ->exists();

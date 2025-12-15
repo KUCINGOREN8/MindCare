@@ -145,6 +145,7 @@
             if (now()->greaterThan($expiryTime)) {
                 $payment->update(['status' => 'expired']);
                 return redirect()->route('patient.appointments.index')->with('error', 'Payment time has expired. Please book a new appointment.');
+                $appointment->markAsExpired();
             }
 
             $remainingMinutes = now()->diffInMinutes($expiryTime, false);
@@ -152,6 +153,13 @@
 
             return $this->redirectToMidtrans($payment, $remainingMinutes);
         }
+    public function cancel($id)
+    {
+        $appointment = Appointment::findOrFail($id);
+        $appointment->status = 'cancelled';
+        $appointment->save();
+        return back();
+    }
 
         private function redirectToMidtrans(Payment $payment, $remainingMinutes)
         {
@@ -258,3 +266,42 @@
 
 
     }
+
+    public function psychologistAppointments()
+    {
+        $psychologist = Auth::user()->psychologist;
+
+        $upcomingAppointments = $psychologist->appointments()
+            ->with('user')
+            ->where('status', 'confirmed')
+            ->where(function($q) {
+                $q->whereDate('date', '>', now())
+                ->orWhere(function($q2) {
+                    $q2->whereDate('date', '=', now())
+                        ->whereTime('end_time', '>', now()->format('H:i:s'));
+                });
+            })
+            ->orderBy('date')
+            ->orderBy('start_time')
+            ->get();
+
+        $todayAppointments = $psychologist->appointments()
+            ->with('user')
+            ->whereDate('date', now())
+            ->where('status', 'confirmed')
+            ->orderBy('start_time')
+            ->get();
+
+        $pendingAppointments = $psychologist->appointments()
+            ->with('user')
+            ->where('status', 'pending_payment')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('psychologist.appointment.index', compact(
+            'upcomingAppointments',
+            'todayAppointments',
+            'pendingAppointments'
+        ));
+    }
+}
