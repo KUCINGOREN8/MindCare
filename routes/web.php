@@ -101,9 +101,12 @@ Route::middleware(['auth', 'otp', 'role:patient'])
             ->controller(AppointmentController::class)
             ->group(function () {
             Route::get('/', 'index')->name('index');
-            Route::post('/{id}/confirm', 'confirm')->name('confirm');
-            Route::post('/{id}/cancel', 'cancel')->name('cancel');
-            Route::post('/{id}/reschedule', 'reschedule')->name('reschedule');
+            Route::get('/{appointment}/payment', 'showPaymentPage')->name('payment');
+
+            Route::put('/{appointment}/reschedule', 'reschedule')->name('reschedule');
+            Route::post('/{appointment}/confirm', 'confirm')->name('confirm');
+            Route::post('/{appointment}/cancel', 'cancel')->name('cancel');
+
             Route::get('/chat/session/{appointment}', [ChatController::class, 'startSession'])->name('chat.session');
 
             // Appointment Review
@@ -168,9 +171,10 @@ Route::middleware(['auth', 'otp', 'role:admin'])
         Route::post('/verify-psychologists/{id}/approve', [AdminController::class, 'approvePsychologist'])->name('verify.approve');
         Route::delete('/verify-psychologists/{id}/reject', [AdminController::class, 'rejectPsychologist'])->name('verify.reject');
 
-        // Manage User (CRUD)
+        // Manage User (CRUD)---
         Route::resource('users', AdminController::class);
     });
+    //huhuuhaskas;a
 
 // SHARED ROUTES -> Auth + OTP Protected
 Route::middleware(['auth', 'otp'])->group(function () {

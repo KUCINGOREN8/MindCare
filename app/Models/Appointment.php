@@ -21,7 +21,7 @@ class Appointment extends Model
         'notes',
         'reschedule_date',
         'reschedule_time',
-        'reschedule_reason',
+        'is_reschedule_pending',
     ];
 
     protected $casts = [
@@ -42,6 +42,11 @@ class Appointment extends Model
     public function payment()
     {
         return $this->morphOne(Payment::class, 'paymentable');
+    }
+
+    public function isRescheduled()
+    {
+        return $this->reschedule_date && $this->reschedule_time;
     }
 
     public function getPaymentStatusAttribute()
