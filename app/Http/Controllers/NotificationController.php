@@ -15,14 +15,22 @@ class NotificationController extends Controller
         $user = Auth::user();
         $notifications = [];
 
-        $appointmentReminders = $this->getAppointmentReminders($user);
-        if ($appointmentReminders) {
-            $notifications = array_merge($notifications, $appointmentReminders);
+        if ($user->role === 'admin') {
+            $adminNotifications = $this->getAdminNotifications($user);
+            if ($adminNotifications) {
+                $notifications = array_merge($notifications, $adminNotifications);
+            }
         }
+        else {
+            $appointmentReminders = $this->getAppointmentReminders($user);
+            if ($appointmentReminders) {
+                $notifications = array_merge($notifications, $appointmentReminders);
+            }
 
-        $messageReminders = $this->getMessageReminders($user);
-        if ($messageReminders) {
-            $notifications = array_merge($notifications, $messageReminders);
+            $messageReminders = $this->getMessageReminders($user);
+            if ($messageReminders) {
+                $notifications = array_merge($notifications, $messageReminders);
+            }
         }
 
         if (empty($notifications)) {
@@ -34,6 +42,7 @@ class NotificationController extends Controller
         });
 
         $notifications = array_slice($notifications, 0, 4);
+
         return $notifications;
     }
 
@@ -209,6 +218,39 @@ class NotificationController extends Controller
         ];
     }
 
+    private function getAdminNotifications(User $user)
+    {
+        if ($user->role !== 'admin') {
+            return [];
+        }
+
+        $notifications = [];
+
+        $pendingPsychologists = User::where('role', 'psychologist')
+            ->where('status', 'pending')
+            ->where('otp_verified', true)
+            ->orderBy('created_at', 'desc')
+            ->take(4)
+            ->get();
+
+        foreach ($pendingPsychologists as $psychologist) {
+            $timeAgo = $this->formatTimeAgo($psychologist->created_at);
+
+            $notifications[] = [
+                'icon' => 'assets/icons/calendar.svg',
+                'title' => 'New Psychologist Registration',
+                'message' => "{$psychologist->full_name} is waiting for verification",
+                'time' => $timeAgo,
+                'type' => 'reminder',
+                'timestamp' => $psychologist->created_at->toDateTimeString(),
+                'user_id' => $psychologist->id,
+                'psychologist_id' => $psychologist->psychologist->id ?? null,
+            ];
+        }
+
+        return $notifications;
+    }
+
     private function formatTimeAgo(Carbon $time)
     {
         $now = Carbon::now();
@@ -298,6 +340,26 @@ class NotificationController extends Controller
                     'time' => '',
                     'type' => 'tip',
                     'timestamp' => Carbon::now()->subDay()->toDateTimeString(),
+                ],
+            ];
+        }
+        elseif ($user->role === 'admin') {
+            return [
+                [
+                    'icon' => 'assets/icons/calendar.svg',
+                    'title' => 'All Users Verified',
+                    'message' => 'No pending psychologist registrations',
+                    'time' => 'Just now',
+                    'type' => 'reminder',
+                    'timestamp' => Carbon::now()->toDateTimeString(),
+                ],
+                [
+                    'icon' => 'assets/icons/check.svg',
+                    'title' => 'System Monitoring',
+                    'message' => 'All systems are running smoothly',
+                    'time' => 'Today',
+                    'type' => 'achievement',
+                    'timestamp' => Carbon::now()->toDateTimeString(),
                 ],
             ];
         }
