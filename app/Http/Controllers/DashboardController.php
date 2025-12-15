@@ -52,10 +52,10 @@ class DashboardController extends Controller
         $todayMood = Mood::where('user_id', $user->id)
         ->whereDate('created_at', now()->format('Y-m-d'))
         ->first();
-    
+
         return view('dashboard.patient.index', compact(
-            'user', 
-            'upcomingAppointments', 
+            'user',
+            'upcomingAppointments',
             'moodData',
             'todayMood'
         ));
@@ -79,37 +79,37 @@ class DashboardController extends Controller
         $existingMood->update([
             'mood' => $request->mood,
         ]);
-        
-        return back()->with('success', 'Mood berhasil diperbarui!');
+
+        return back()->with('success', 'Mood updated successfully!');
     } else {
         // Buat mood baru
         $mood = Mood::create([
             'user_id' => $userId,
             'mood' => $request->mood,
         ]);
-        
-        return back()->with('success', 'Mood berhasil disimpan!');
+
+        return back()->with('success', 'Mood saved successfully!');
     }
     }
 
-    private function getWeeklyMoodData($user) 
+    private function getWeeklyMoodData($user)
     {
         $startOfWeek = now()->startOfWeek();
         $endOfWeek = now()->endOfWeek();
-        
+
         $weeklyMoods = Mood::where('user_id', $user->id)
             ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
             ->orderBy('created_at')
             ->get();
-        
+
         $weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
         $chartData = [];
         $moodValues = [];
-        
+
         foreach ($weekDays as $index => $day) {
             $chartData[$day] = null;
         }
-        
+
         $moodValueMap = [
             'sad' => 1,
             'flat' => 2,
@@ -117,7 +117,7 @@ class DashboardController extends Controller
             'happy' => 4,
             'blissful' => 5
         ];
-        
+
         foreach ($weeklyMoods as $mood) {
             $dayName = $mood->created_at->format('D');
             if (in_array($dayName, $weekDays)) {
@@ -125,10 +125,10 @@ class DashboardController extends Controller
                 $moodValues[] = $moodValueMap[$mood->mood];
             }
         }
-        
+
         $averageMood = count($moodValues) > 0 ? array_sum($moodValues) / count($moodValues) : 0;
         $note = $this->generateMoodNote($averageMood, $moodValues);
-        
+
         return [
             'chartData' => $chartData,
             'averageMood' => $averageMood,
@@ -148,7 +148,7 @@ class DashboardController extends Controller
                 'suggest_appointment' => false
             ];
         }
-        
+
         if ($averageMood >= 4) {
             return [
                 'title' => '🌟 You\'ve been feeling calmer lately, great job!',
@@ -186,13 +186,13 @@ class DashboardController extends Controller
     private function calculateMoodVariation($moodValues)
     {
         if (count($moodValues) < 2) return 0;
-        
+
         $firstHalf = array_slice($moodValues, 0, ceil(count($moodValues)/2));
         $secondHalf = array_slice($moodValues, floor(count($moodValues)/2));
-        
+
         $avgFirst = array_sum($firstHalf) / count($firstHalf);
         $avgSecond = array_sum($secondHalf) / count($secondHalf);
-        
+
         return $avgSecond - $avgFirst;
     }
 
@@ -415,18 +415,18 @@ class DashboardController extends Controller
         $reviewColors = [];
         $totalRating = 0;
         $totalReviews = 0;
-        
+
         foreach ($ratingConfig as $rating => $config) {
             $count = isset($reviews[$rating]) ? $reviews[$rating]['count'] : 0;
-            
+
             $reviewLabels[] = $config['label'];
             $reviewData[] = $count;
             $reviewColors[] = $config['color'];
-            
+
             $totalRating += $rating * $count;
             $totalReviews += $count;
         }
-        
+
         return [
             'labels' => $reviewLabels,
             'data' => $reviewData,
