@@ -50,4 +50,9 @@ return [
     'all_verified_body' => 'No pending psychologist registrations',
     'system_monitoring_title' => 'System Monitoring',
     'system_monitoring_body' => 'All systems are running smoothly',
+
+    // AI
+    'achievement_title' => 'Achievement Unlocked!',
+    'wellness_tip_title' => 'Daily Wellness Tip',
+    'streak_message' => 'You\'re on a :day day streak! Keep going!',
 ];

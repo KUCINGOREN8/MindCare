@@ -1,39 +1,5 @@
 @extends('layouts.dashboard')
 
-{{-- @php
-    // ini dummy data, nnti sesuain dgn data di database
-    $notifications = [
-        [
-            'icon' => 'assets/icons/calendar.svg',
-            'title' => 'Session Reminder',
-            'message' => 'Your session with Dr. Emily Chen starts in 2 hours',
-            'time' => '1 hour ago',
-            'type' => 'reminder',
-        ],
-        [
-            'icon' => 'assets/icons/check.svg',
-            'title' => 'Mood Entry Complete',
-            'message' => 'Great job logging your mood for 7 days straight!',
-            'time' => '3 hours ago',
-            'type' => 'achievement',
-        ],
-        [
-            'icon' => 'assets/icons/messages.svg',
-            'title' => 'New Message',
-            'message' => 'Dr. Rodriguez sent you a follow-up message',
-            'time' => '5 hours ago',
-            'type' => 'message',
-        ],
-        [
-            'icon' => 'assets/icons/tips.svg',
-            'title' => 'Daily Tip',
-            'message' => 'Try a 5-minute meditation to start your day',
-            'time' => '1 day ago',
-            'type' => 'tip',
-        ],
-    ];
-@endphp --}}
-
 @section('title')
     Dashboard
 @endsection
@@ -48,7 +14,7 @@
                 </div>
 
                 {{-- FORM MOOD --}}
-                <form action="{{ route('patient.mood.store') }}" method="POST" {{-- 
+                <form action="{{ route('patient.mood.store') }}" method="POST" {{--
                         PERUBAHAN DI SINI:
                         Kita menyuntikkan array translation ke dalam Alpine.js (moodLabels)
                     --}} x-data="{

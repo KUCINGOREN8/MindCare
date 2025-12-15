@@ -50,4 +50,9 @@ return [
     'all_verified_body' => 'Tidak ada pendaftaran psikolog yang tertunda',
     'system_monitoring_title' => 'Pemantauan Sistem',
     'system_monitoring_body' => 'Semua sistem berjalan dengan lancar',
+
+    // AI
+    'achievement_title' => 'Pencapaian Terbuka!',
+    'wellness_tip_title' => 'Tips Kesehatan Harian',
+    'streak_message' => 'Anda berada di streak :day hari! Lanjutkan!',
 ];
