@@ -15,6 +15,7 @@ use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
+    //terimakasih
     public function index()
     {
         $testimonials = Testimonial::inRandomOrder()->take(3)->get();
