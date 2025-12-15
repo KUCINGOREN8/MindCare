@@ -174,7 +174,7 @@
             </div>
         </div>
 
-        <x-user-profile-card :user="$user" />
+        <x-user-profile-card :user="$user" :notifications="$notifications" />
 
         <div x-show="showModal" style="display: none;"
             class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm transition-opacity"

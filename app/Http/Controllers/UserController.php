@@ -13,7 +13,8 @@ use Illuminate\Validation\Rules\Password as RulesPassword;
 
 class UserController extends Controller
 {
-    public function showProfile() {
+    public function showProfile()
+    {
         $user = Auth::user();
 
         // Load psychologist data (only if user role is psychologist)
@@ -58,7 +59,7 @@ class UserController extends Controller
     public function deletePhoto()
     {
         $user = Auth::user();
-        
+
         // Delete photo from storage
         if ($user->photo_url && Storage::disk('public')->exists($user->photo_url)) {
             Storage::disk('public')->delete($user->photo_url);
@@ -164,9 +165,9 @@ class UserController extends Controller
             'educations.*.institution' => 'required|string|max:255',
             'educations.*.year' => 'required|digits:4',
         ]);
-        
+
         $psychologist = auth()->user()->psychologist;
-        
+
         foreach ($request->educations as $educationData) {
             if (isset($educationData['id'])) {
                 // Update existing
@@ -179,20 +180,20 @@ class UserController extends Controller
                 $psychologist->educations()->create($educationData);
             }
         }
-        
+
         return redirect()->route('profile.index', ['tab' => 'professional'])->with('success', 'Education updated successfully.');
     }
 
     public function destroyEducation($id)
     {
         $education = PsychologistEducation::findOrFail($id);
-        
+
         if ($education->psychologist_id !== auth()->user()->psychologist->id) {
             abort(403);
         }
-        
+
         $education->delete();
-        
+
         return response()->json(['success' => true]);
     }
 
@@ -204,9 +205,9 @@ class UserController extends Controller
             'experiences.*.start_year' => 'required|string|max:4',
             'experiences.*.end_year' => 'nullable|string|max:4',
         ]);
-        
+
         $psychologist = auth()->user()->psychologist;
-        
+
         foreach ($request->experiences as $experienceData) {
             if (isset($experienceData['id'])) {
                 // Update existing
@@ -219,20 +220,20 @@ class UserController extends Controller
                 $psychologist->experiences()->create($experienceData);
             }
         }
-        
+
         return redirect()->route('profile.index', ['tab' => 'professional'])->with('success', 'Experience updated successfully.');
     }
 
     public function destroyExperience($id)
     {
         $experience = PsychologistExperience::findOrFail($id);
-        
+
         if ($experience->psychologist_id !== auth()->user()->psychologist->id) {
             abort(403);
         }
-        
+
         $experience->delete();
-        
+
         return response()->json(['success' => true]);
     }
 
@@ -299,7 +300,7 @@ class UserController extends Controller
     public function updatePrivacy(Request $request)
     {
         $user = Auth::user();
-        
+
         $validator = Validator::make($request->all(), [
             'old_password' => [
                 'required',
