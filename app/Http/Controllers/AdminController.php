@@ -12,14 +12,17 @@ class AdminController extends Controller
     public function index()
     {
         $user = Auth::user();
-        // Hanya ambil user yang sudah active (atau semua terserah kebijakan)
-        $users = User::where('role', '!=', 'psychologist') // Contoh: List user biasa
+
+        $notificationController = new NotificationController();
+        $notifications = $notificationController->getNotifications();
+
+        $users = User::where('role', '!=', 'psychologist')
             ->orWhere(function ($q) {
                 $q->where('role', 'psychologist')->where('status', 'active');
             })
             ->latest()->paginate(10);
 
-        return view('dashboard.admin.index', compact('user', 'users'));
+        return view('dashboard.admin.index', compact('user', 'users', 'notifications'));
     }
 
     // --- FITUR BARU: VERIFIKASI PSIKOLOG ---

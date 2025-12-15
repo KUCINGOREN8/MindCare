@@ -182,8 +182,10 @@ Route::middleware(['auth', 'otp', 'role:admin'])
 
         // Manage User (CRUD)---
         Route::resource('users', AdminController::class);
+
+        // Notifications
+        Route::get('/notifications', [NotificationController::class, 'getNotifications'])->name('notifications');
     });
-    //huhuuhaskas;a
 
 // SHARED ROUTES -> Auth + OTP Protected
 Route::middleware(['auth', 'otp'])->group(function () {
