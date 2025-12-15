@@ -72,6 +72,7 @@
             />
 
             {{-- Reschedule (OPEN MODAL, NOT ROUTE) --}}
+            @if($appointment->status === 'confirmed' && $appointment->is_upcoming)
             <button
                 type="button"
                 onclick="openRescheduleModal(
@@ -83,6 +84,7 @@
             >
                 Reschedule
             </button>
+            @endif
 
         </div>
     </div>
