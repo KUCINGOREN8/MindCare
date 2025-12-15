@@ -166,7 +166,7 @@ return [
     'upcomingappt' => 'Upcoming Appointments',
     'upcomingnotfound' => 'No upcoming appointment found',
     'bookappointment' => 'Book your first session',
-    'seeall' => 'See All Appointments',
+    'seeall' => 'See All',
     'appointment' => 'Appointments',
     'appointmentdesc' => 'Manage your appointments and sessions',
     'historyappt' => 'Appointment History',

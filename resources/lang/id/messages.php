@@ -159,7 +159,7 @@ return [
     'upcomingappt' => 'Janji Temu Mendatang',
     'upcomingnotfound' => 'Tidak ada janji temu mendatang ditemukan',
     'bookappointment' => 'Pesan sesi pertama Anda',
-    'seeall' => 'Lihat Semua Janji Temu',
+    'seeall' => 'Lihat Semua',
     'appointment' => 'Janji Temu',
     'appointmentdesc' => 'Kelola janji temu dan sesi Anda',
     'historyappt' => 'Riwayat Janji Temu',
