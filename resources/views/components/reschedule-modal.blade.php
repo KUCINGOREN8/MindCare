@@ -36,9 +36,6 @@
             </div>
         </form>
     </div>
-<<<<<<< HEAD
-</div>
-=======
 </div>
 
 <script>
@@ -59,4 +56,3 @@
         document.getElementById('rescheduleModal').classList.add('hidden');
     }
 </script>
->>>>>>> cb38aab9389f379d7f57ea1b283097578ea8188b
