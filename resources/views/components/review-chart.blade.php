@@ -17,27 +17,34 @@
         </div>
     </div>
 
-    <div class="flex justify-center items-center">
-        <div class="flex flex-col items-center gap-8">
-            {{-- Chart --}}
-            <div class="w-full md:w-1/2">
-                <div class="chart-container" style="position: relative; height: 250px;">
-                    <canvas id="ratingDistributionChart"></canvas>
+    @if ($totalReviews > 0)
+        <div class="flex justify-center items-center">
+            <div class="flex flex-col items-center gap-8">
+                {{-- Chart --}}
+                <div class="w-full md:w-1/2">
+                    <div class="chart-container" style="position: relative; height: 250px;">
+                        <canvas id="ratingDistributionChart"></canvas>
+                    </div>
+                </div>
+
+                {{-- Legend --}}
+                <div class="flex flex-wrap justify-center gap-6">
+                    @foreach ($colors as $index => $color)
+                        <div class="flex items-center gap-2">
+                            <div class="w-2 h-2 rounded-full" style="background-color: {{ $color }}"></div>
+                            {{-- Pastikan $labels[$index] isinya sudah diterjemahkan dari Controller jika mengandung kata (misal: "5 Bintang") --}}
+                            <p class="text-xs">{{ $labels[$index] ?? 'Label' }}</p>
+                        </div>
+                    @endforeach
                 </div>
             </div>
-
-            {{-- Legend --}}
-            <div class="flex flex-wrap justify-center gap-6">
-                @foreach ($colors as $index => $color)
-                    <div class="flex items-center gap-2">
-                        <div class="w-2 h-2 rounded-full" style="background-color: {{ $color }}"></div>
-                        {{-- Pastikan $labels[$index] isinya sudah diterjemahkan dari Controller jika mengandung kata (misal: "5 Bintang") --}}
-                        <p class="text-xs">{{ $labels[$index] ?? 'Label' }}</p>
-                    </div>
-                @endforeach
-            </div>
         </div>
-    </div>
+    @else
+        <div class="bg-white p-6 text-center rounded-md border border-grey-border flex flex-col gap-6">
+            <p class="text-gray-500">{{ __('messages.reviewnotfound') }}</p>
+        </div>
+    @endif
+
 </div>
 
 {{-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> --}}

@@ -138,6 +138,7 @@ return [
 
     // JS MESSAGES
     'alert_min_edu' => 'Setidaknya satu entri pendidikan harus tersisa.',
+    'alert_min_exp' => 'Setidaknya satu entri pengalaman harus tersisa.',
     'confirm_remove_edu' => 'Apakah Anda yakin ingin menghapus pendidikan ini?',
     'confirm_remove_exp' => 'Apakah Anda yakin ingin menghapus pengalaman ini?',
 

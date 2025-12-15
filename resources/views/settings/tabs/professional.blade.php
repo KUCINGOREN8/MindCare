@@ -418,6 +418,7 @@
 
         // Alerts
         alertMinEdu: "{{ __('settings.alert_min_edu') }}",
+        alertMinExp: "{{ __('settings.alert_min_exp') }}",
         confirmRemoveEdu: "{{ __('settings.confirm_remove_edu') }}",
         confirmRemoveExp: "{{ __('settings.confirm_remove_exp') }}"
     };
@@ -566,10 +567,16 @@
         // Handle remove buttons for existing Experience entries
         experienceContainer.addEventListener('click', function(e) {
             if (e.target.classList.contains('remove-experience')) {
+                const totalExperience = experienceContainer.querySelectorAll('.experience-entry').length;
+                if (totalExperience <= 1) {
+                    alert(LANG_PROF.alertMinExp);
+                    return;
+                }
+
                 const experienceId = e.target.dataset.id;
                 if (experienceId) {
                     if (confirm(LANG_PROF.confirmRemoveExp)) {
-                        fetch(`/experience/${experienceId}`, { // Pastikan route ini sesuai dengan route delete experience kamu
+                        fetch(`/profile/experience/${experienceId}`, {
                                 method: 'DELETE',
                                 headers: {
                                     'X-CSRF-TOKEN': document.querySelector(

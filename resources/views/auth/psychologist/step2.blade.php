@@ -168,7 +168,7 @@
                     </div>
 
                     <div class="mt-8 flex justify-between">
-                        <a href="javascript:history.back()"
+                        <a href="{{ route('psychologist.signup.step1', $user) }}"
                             class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition">
                             ← {{ __('messages.back') }}
                         </a>
