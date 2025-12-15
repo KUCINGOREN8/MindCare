@@ -13,6 +13,7 @@ use App\Http\Controllers\UserController;
 // use App\Http\Controllers\MoodController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Middleware\OTPMiddleware;
 use App\Http\Middleware\CheckAppointmentReview;
@@ -76,6 +77,9 @@ Route::middleware(['auth', 'otp', 'role:patient'])
         // Dashboard
         Route::get('/dashboard', [DashboardController::class, 'showPatientDashboard'])->name('dashboard');
 
+        // Notifications
+        Route::get('/notifications', [NotificationController::class, 'getNotifications'])->name('notifications');
+
         // Patient Mood
         Route::post('/mood', [DashboardController::class, 'moodStore'])->name('mood.store');
         // Route::post('/mood/undo', [MoodController::class, 'undo'])->name('mood.undo');
@@ -112,17 +116,17 @@ Route::middleware(['auth', 'otp', 'role:patient'])
             // Appointment Review
             Route::middleware(['review:create'])->group(function () {
                 Route::get('/{id}/review', [ReviewController::class, 'create'])->name('review.create');
-                Route::post('/{id}/review', [ReviewController::class, 'store'])->name('review.store');                
+                Route::post('/{id}/review', [ReviewController::class, 'store'])->name('review.store');
             });
-            Route::middleware(['review:edit'])->group(function () {          
+            Route::middleware(['review:edit'])->group(function () {
                 Route::get('/{id}/review/edit', [ReviewController::class, 'edit'])->name('review.edit');
                 Route::put('/{id}/review', [ReviewController::class, 'update'])->name('review.update');
             });
             Route::middleware(['review:delete'])->group(function () {
                 Route::delete('/{id}/review', [ReviewController::class, 'destroy'])->name('review.destroy');
             });
-            
-        }); 
+
+        });
 
         // Payment
         Route::prefix('payment')->name('payment.')->group(function () {
@@ -142,13 +146,16 @@ Route::middleware(['auth', 'otp', 'role:psychologist'])
         // Dashboard
         Route::get('/dashboard', [DashboardController::class, 'showPsychologistDashboard'])->name('dashboard');
 
-    // My Clients
-    Route::get('/clients' , [PsychologistController::class, 'showClients'])->name('clients');
-    Route::get('/clients/{client}/details', [PsychologistController::class, 'showClientDetails'])->name('clients.details');
-    Route::get('/clients/{client}/appointments', [PsychologistController::class, 'getClientAppointments'])->name('clients.appointments');
-    Route::get('/clients/{client}/general-notes', [PsychologistController::class, 'getGeneralNotes'])->name('clients.general-notes');
-    Route::post('/notes/general/store', [PsychologistController::class, 'storeGeneralNotes'])->name('notes.general.store');
-    Route::post('/notes/store', [PsychologistController::class, 'storeSessionNotes'])->name('notes.session.store');
+        // Notifications
+        Route::get('/notifications', [NotificationController::class, 'getNotifications'])->name('notifications');
+
+        // My Clients
+        Route::get('/clients' , [PsychologistController::class, 'showClients'])->name('clients');
+        Route::get('/clients/{client}/details', [PsychologistController::class, 'showClientDetails'])->name('clients.details');
+        Route::get('/clients/{client}/appointments', [PsychologistController::class, 'getClientAppointments'])->name('clients.appointments');
+        Route::get('/clients/{client}/general-notes', [PsychologistController::class, 'getGeneralNotes'])->name('clients.general-notes');
+        Route::post('/notes/general/store', [PsychologistController::class, 'storeGeneralNotes'])->name('notes.general.store');
+        Route::post('/notes/store', [PsychologistController::class, 'storeSessionNotes'])->name('notes.session.store');
 
         // Appointments
         Route::prefix('appointments')
@@ -182,7 +189,7 @@ Route::middleware(['auth', 'otp'])->group(function () {
     Route::prefix('profile')->name('profile.')->controller(UserController::class)->group(function () {
         Route::get('/', 'showProfile')->name('index');
 
-        // Profile 
+        // Profile
         Route::put('/update','updateProfile')->name('update');
         Route::post('/upload-photo', 'uploadPhoto')->name('upload-photo');
         Route::delete('/delete-photo', 'deletePhoto')->name('delete-photo');

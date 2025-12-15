@@ -50,7 +50,7 @@ Dashboard
 
             <div class="flex flex-col md:flex-row gap-6">
                 <x-recent-clients :user="$user"/>
-                <x-review-chart 
+                <x-review-chart
                     :labels="$stats['review_stats']['labels']"
                     :data="$stats['review_stats']['data']"
                     :colors="$stats['review_stats']['colors']"
@@ -61,5 +61,5 @@ Dashboard
         </div>
     </div>
 
-    <x-user-profile-card :user="$user" />
+    <x-user-profile-card :user="$user" :notifications="$notifications" />
 @endsection
