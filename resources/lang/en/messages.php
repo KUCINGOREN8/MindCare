@@ -165,6 +165,7 @@ return [
     'updatemood' => 'click to update',
     'upcomingappt' => 'Upcoming Appointments',
     'upcomingnotfound' => 'No upcoming appointment found',
+    'reviewnotfound' => 'No review found',
     'bookappointment' => 'Book your first session',
     'seeall' => 'See All',
     'appointment' => 'Appointments',

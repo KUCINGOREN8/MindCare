@@ -158,6 +158,7 @@ return [
     'updatemood' => 'klik untuk memperbarui',
     'upcomingappt' => 'Janji Temu Mendatang',
     'upcomingnotfound' => 'Tidak ada janji temu mendatang ditemukan',
+    'reviewnotfound' => 'Tidak ada ulasan ditemukan',
     'bookappointment' => 'Pesan sesi pertama Anda',
     'seeall' => 'Lihat Semua',
     'appointment' => 'Janji Temu',
