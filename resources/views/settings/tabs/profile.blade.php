@@ -1,4 +1,7 @@
-{{-- PHOTO PROFILE SECTION --}}
+{{-- @php
+    dd($user->hasCustomPhoto());
+@endphp --}}
+
 <div class="grid grid-cols-[20%_80%]">
     <p class="text-[#4D4D4E]">{{ __('settings.label_photo') }}</p>
     <div class="flex justify-between">
@@ -9,8 +12,7 @@
             <input type="file" id="photoInput" accept="image/*" class="hidden" onchange="uploadPhoto()">
             <div class="flex gap-3 flex-col sm:flex-row">
                 <button id="deletePhotoBtn" type="button" onclick="deletePhoto()"
-                    class="text-red-600 hover:text-red-800 {{ !$user->photo_url ? 'disabled:cursor-not-allowed disabled:opacity-100' : '' }}"
-                    @disabled(!$user->photo_url)>
+                    class="text-red-600 hover:text-red-800 {{ !$user->hasCustomPhoto() ? 'disabled:cursor-not-allowed disabled:opacity-100' : '' }}" {{ !$user->hasCustomPhoto() ? 'disabled' : '' }} >
                     {{ __('settings.btn_delete') }}
                 </button>
                 <button id="uploadPhotoBtn" type="button" onclick="document.getElementById('photoInput').click()"
