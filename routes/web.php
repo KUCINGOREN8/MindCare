@@ -108,7 +108,7 @@ Route::middleware(['auth', 'otp', 'role:patient'])
             ->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/{appointment}/payment', 'showPaymentPage')->name('payment');
-
+            Route::get('/{appointment}/reschedule-times', 'getRescheduleTimes')->name('reschedule-times');
             Route::put('/{appointment}/reschedule', 'reschedule')->name('reschedule');
             Route::post('/{appointment}/confirm', 'confirm')->name('confirm');
             Route::post('/{appointment}/cancel', 'cancel')->name('cancel');
