@@ -10,13 +10,13 @@ class NavigationHelper
             'patient' => [
                 [
                     'icon' => 'assets/icons/home.svg',
-                    'text' => __('nav.dashboard'), // <--- Ganti Ini
+                    'text' => __('nav.dashboard'),
                     'route' => 'patient.dashboard',
                     'patterns' => ['patient.dashboard', 'profile.*']
                 ],
                 [
                     'icon' => 'assets/icons/find-user.svg',
-                    'text' => __('nav.find_psychologist'), // <--- Ganti Ini
+                    'text' => __('nav.find_psychologist'),
                     'route' => 'patient.find.psychologist',
                     'patterns' => [
                         'patient.find.psychologist',
@@ -27,19 +27,19 @@ class NavigationHelper
                 ],
                 [
                     'icon' => 'assets/icons/book.svg',
-                    'text' => __('nav.book_appointment'), // <--- Ganti Ini
+                    'text' => __('nav.book_appointment'),
                     'route' => 'patient.book.appointment',
                     'patterns' => ['patient.book.appointment', 'patient.payment.*']
                 ],
                 [
                     'icon' => 'assets/icons/calendar.svg',
-                    'text' => __('nav.appointments'), // <--- Ganti Ini
+                    'text' => __('nav.appointments'),
                     'route' => 'patient.appointments.index',
                     'patterns' => ['patient.appointments.*']
                 ],
                 [
                     'icon' => 'assets/icons/messages.svg',
-                    'text' => __('nav.messages'), // <--- Ganti Ini
+                    'text' => __('nav.messages'),
                     'route' => 'messages',
                     'patterns' => ['messages', 'chat.*']
                 ],
@@ -48,25 +48,25 @@ class NavigationHelper
             'psychologist' => [
                 [
                     'icon' => 'assets/icons/home.svg',
-                    'text' => __('nav.dashboard'), // <--- Ganti Ini
+                    'text' => __('nav.dashboard'),
                     'route' => 'psychologist.dashboard',
                     'patterns' => ['psychologist.dashboard', 'profile.*']
                 ],
                 [
                     'icon' => 'assets/icons/users.svg',
-                    'text' => __('nav.my_clients'), // <--- Ganti Ini
+                    'text' => __('nav.my_clients'),
                     'route' => 'psychologist.clients',
-                    'patterns' => ['psychologist.clients']
+                    'patterns' => ['psychologist.clients', 'psychologist.clients.*']
                 ],
                 [
                     'icon' => 'assets/icons/calendar.svg',
-                    'text' => __('nav.appointments'), // <--- Ganti Ini
+                    'text' => __('nav.appointments'),
                     'route' => 'psychologist.appointments.index',
                     'patterns' => ['psychologist.appointments.*']
                 ],
                 [
                     'icon' => 'assets/icons/messages.svg',
-                    'text' => __('nav.messages'), // <--- Ganti Ini
+                    'text' => __('nav.messages'),
                     'route' => 'messages',
                     'patterns' => ['messages', 'chat.*']
                 ],
@@ -75,13 +75,13 @@ class NavigationHelper
             'admin' => [
                 [
                     'icon' => 'assets/icons/home.svg',
-                    'text' => __('nav.dashboard'), // <--- Ganti Ini
+                    'text' => __('nav.dashboard'),
                     'route' => 'admin.dashboard',
                     'patterns' => ['admin.dashboard', 'profile.*']
                 ],
                 [
                     'icon' => 'assets/icons/users.svg',
-                    'text' => __('nav.verify_psychologists'), // <--- Ganti Ini
+                    'text' => __('nav.verify_psychologists'),
                     'route' => 'admin.verify.index',
                     'patterns' => ['admin.verify.*', 'profile.*']
                 ],

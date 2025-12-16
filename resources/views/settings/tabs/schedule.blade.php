@@ -1,59 +1,33 @@
-{{-- File: resources/views/settings/tabs/schedule.blade.php --}}
-
 <form id="scheduleForm" method="POST" action="{{ route('profile.schedule.update') }}" class="space-y-6">
     @csrf
     @method('PUT')
 
     @php
-        // Define days array for iteration (using English keys for database compatibility)
         $days = [
-            'monday' => 'monday',
-            'tuesday' => 'tuesday',
-            'wednesday' => 'wednesday',
-            'thursday' => 'thursday',
-            'friday' => 'friday',
-            'saturday' => 'saturday',
-            'sunday' => 'sunday',
+            'monday' => ['day' => 'Monday', 'abbr' => 'Mon'],
+            'tuesday' => ['day' => 'Tuesday', 'abbr' => 'Tue'],
+            'wednesday' => ['day' => 'Wednesday', 'abbr' => 'Wed'],
+            'thursday' => ['day' => 'Thursday', 'abbr' => 'Thu'],
+            'friday' => ['day' => 'Friday', 'abbr' => 'Fri'],
+            'saturday' => ['day' => 'Saturday', 'abbr' => 'Sat'],
+            'sunday' => ['day' => 'Sunday', 'abbr' => 'Sun']
         ];
 
         $existingSchedules = $psychologist->schedules->keyBy('day_of_week');
-        // $oldSchedules is used if validation fails to keep user input
         $oldSchedules = old('schedules', []);
     @endphp
 
     <div class="space-y-4">
-        @foreach ($days as $key => $dayValue)
+        @foreach ($days as $key => $day)
             @php
-                // Logic to retrieve schedule data: Old Input -> Database -> Default Null
                 $schedule = $existingSchedules[$key] ?? null;
-
-                // Determine if 'is_available' is checked
-                $isAvailable = false;
-                if (isset($oldSchedules[$key]['is_available'])) {
-                    $isAvailable = $oldSchedules[$key]['is_available'] == '1';
-                } elseif ($schedule) {
-                    $isAvailable = $schedule->is_active; // Assuming 'is_active' column in DB
-                }
-
-                // Determine Start & End Time
-                $startTime = '';
-                if (isset($oldSchedules[$key]['start_time'])) {
-                    $startTime = $oldSchedules[$key]['start_time'];
-                } elseif ($schedule && $schedule->start_time) {
-                    $startTime = \Carbon\Carbon::parse($schedule->start_time)->format('H:i');
-                }
-
-                $endTime = '';
-                if (isset($oldSchedules[$key]['end_time'])) {
-                    $endTime = $oldSchedules[$key]['end_time'];
-                } elseif ($schedule && $schedule->end_time) {
-                    $endTime = \Carbon\Carbon::parse($schedule->end_time)->format('H:i');
-                }
+                $startTime = $schedule ? \Carbon\Carbon::parse($schedule->start_time)->format('H:i') : '';
+                $endTime = $schedule ? \Carbon\Carbon::parse($schedule->end_time)->format('H:i') : '';
+                $isAvailable = $schedule !== null;
             @endphp
 
             <div class="grid grid-cols-1 md:grid-cols-[20%_80%] gap-4 schedule-day" data-day="{{ $key }}">
                 <div class="flex items-center">
-                    {{-- Translate Day Name using settings.php language file --}}
                     <label class="block text-[#4D4D4E] font-medium">{{ __('settings.day_' . $key) }}</label>
                 </div>
 
@@ -63,9 +37,7 @@
                             value="{{ $key }}">
 
                         <label class="inline-flex items-center cursor-pointer">
-                            {{-- Hidden input to ensure unchecked state sends '0' --}}
-                            <input type="hidden" name="schedules[{{ $key }}][is_available]" value="0"
-                                data-hidden-for="{{ $key }}">
+                            <input type="hidden" name="schedules[{{ $key }}][is_available]" value="0" data-hidden-for="{{ $key }}">
                             <input type="checkbox" name="schedules[{{ $key }}][is_available]" value="1"
                                 class="sr-only peer availability-toggle" data-day="{{ $key }}"
                                 {{ $isAvailable ? 'checked' : '' }} disabled data-disabled="true"
@@ -83,12 +55,10 @@
                         </label>
                     </div>
 
-                    {{-- Time Inputs (Hidden if not available) --}}
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3 time-inputs {{ !$isAvailable ? 'hidden' : '' }}"
                         data-day="{{ $key }}">
                         <div>
-                            <label
-                                class="block text-sm text-[#4D4D4E] mb-1">{{ __('settings.lbl_start_time') }}</label>
+                            <label class="block text-sm text-[#4D4D4E] mb-1">{{ __('settings.lbl_start_time') }}</label>
                             <div class="flex items-center rounded-lg px-4 py-3 shadow-sm"
                                 style="background-color: #FAFAFA;">
                                 <input type="time" name="schedules[{{ $key }}][start_time]"

@@ -138,6 +138,7 @@ return [
 
     // JS MESSAGES
     'alert_min_edu' => 'At least one education entry must remain.',
+    'alert_min_exp' => 'At least one experience entry must remain.', 
     'confirm_remove_edu' => 'Are you sure you want to remove this education?',
     'confirm_remove_exp' => 'Are you sure you want to remove this experience?',
 

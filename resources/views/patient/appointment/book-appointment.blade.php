@@ -284,6 +284,7 @@
     <script>
         function appointmentFlow(translations) {
             return {
+                showSummary: false,
                 selectedDate: null,
                 selectedTime: null,
                 trans: translations, // Simpan data translasi dari blade

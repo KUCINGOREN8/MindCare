@@ -77,12 +77,7 @@ class DashboardController extends Controller
 
         $userId = auth()->id();
         $today = now()->format('Y-m-d');
-        $userId = auth()->id();
-        $today = now()->format('Y-m-d');
 
-        $existingMood = Mood::where('user_id', $userId)
-            ->whereDate('created_at', $today)
-            ->first();
         $existingMood = Mood::where('user_id', $userId)
             ->whereDate('created_at', $today)
             ->first();
@@ -92,24 +87,19 @@ class DashboardController extends Controller
             $existingMood->update([
                 'mood' => $request->mood,
             ]);
-            if ($existingMood) {
-                // Update mood yang sudah ada
-                $existingMood->update([
-                    'mood' => $request->mood,
-                ]);
 
-                return back()->with('success', 'Mood updated successfully!');
-            } else {
-                // Buat mood baru
-                $mood = Mood::create([
-                    'user_id' => $userId,
-                    'mood' => $request->mood,
-                ]);
+            return back()->with('success', 'Mood updated successfully!');
+        } else {
+            // Buat mood baru
+            $mood = Mood::create([
+                'user_id' => $userId,
+                'mood' => $request->mood,
+            ]);
 
-                return back()->with('success', 'Mood saved successfully!');
-            }
+            return back()->with('success', 'Mood saved successfully!');
         }
     }
+
 
     private function getWeeklyMoodData($user)
     {
@@ -236,7 +226,7 @@ class DashboardController extends Controller
             return redirect()->route('login');
         }
 
-        $notificationController = new NotificationController();
+        $notificationController = app(NotificationController::class);
         $notifications = $notificationController->getNotifications();
 
         $stats = $this->getPsychologistStats($user->psychologist);
