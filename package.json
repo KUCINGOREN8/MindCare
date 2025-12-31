@@ -3,7 +3,7 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "node node_modules/vite/bin/vite.js build",
+        "build": "npx vite build",
         "dev": "vite"
     },
     "devDependencies": {
