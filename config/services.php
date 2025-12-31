@@ -42,8 +42,8 @@ return [
     ],
 
     'openai' => [
-        'api_key' => env('PUBLIC_OPENAI_API_KEY'),
-        'org_id' => env('PUBLIC_OPENAI_ORG_KEY'),
+        'api_key' => env('OPENAI_API_KEY'),
+        'org_id' => env('OPENAI_ORG_KEY'),
         'model' => 'gpt-4o',
     ],
 

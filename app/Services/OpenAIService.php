@@ -14,8 +14,8 @@ class OpenAIService
 
     public function __construct()
     {
-        $this->apiKey = config('services.openai.api_key') ?? env('PUBLIC_OPENAI_API_KEY');
-        $this->organizationId = config('services.openai.org_id') ?? env('PUBLIC_OPENAI_ORG_KEY');
+        $this->apiKey = config('services.openai.api_key') ?? env('OPENAI_API_KEY');
+        $this->organizationId = config('services.openai.org_id') ?? env('OPENAI_ORG_KEY');
 
         if (!$this->apiKey) {
             throw new \Exception('OpenAI API key not configured. Check .env file.');
