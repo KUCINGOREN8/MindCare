@@ -113,6 +113,4 @@
             </div>
         </div>
     </div>
-
-    <script src="{{ asset('js/step5.js') }}"></script>
 @endsection

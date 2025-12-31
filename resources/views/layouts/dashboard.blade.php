@@ -8,8 +8,6 @@
     <title>@yield('title')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
-    <link href="{{ asset('css/output.css') }}" rel="stylesheet">
-    <link rel="icon" href="/favicon.ico" type="image/x-icon">
     @stack('styles')
 </head>
 
@@ -22,7 +20,6 @@
         @yield('content')
     </main>
 
-    {{-- <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script> --}}
     <script>
         window.showSnackbar = function(message, type = 'success') {
             window.dispatchEvent(new CustomEvent('open-snackbar', {

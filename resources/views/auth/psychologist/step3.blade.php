@@ -139,6 +139,4 @@
             </div>
         </div>
     </div>
-
-    <script src="{{ asset('js/step3.js') }}"></script>
 @endsection
