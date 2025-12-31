@@ -21,7 +21,7 @@ class Appointment extends Model
         'notes',
         'reschedule_date',
         'reschedule_time',
-        'reschedule_reason',
+        'is_reschedule_pending',
     ];
 
     protected $casts = [
@@ -42,6 +42,11 @@ class Appointment extends Model
     public function payment()
     {
         return $this->morphOne(Payment::class, 'paymentable');
+    }
+
+    public function isRescheduled()
+    {
+        return $this->reschedule_date && $this->reschedule_time;
     }
 
     public function getPaymentStatusAttribute()
@@ -74,12 +79,18 @@ class Appointment extends Model
 
     public function getIsUpcomingAttribute()
     {
-        return $this->end_date_time > now();
+        $startDateTime = $this->start_date_time;
+        if (!$startDateTime) return false;
+
+        return $startDateTime->gt(now());
     }
 
     public function getIsPastAttribute()
     {
-        return $this->end_date_time < now();
+        $endDateTime = $this->end_date_time;
+        if (!$endDateTime) return false;
+
+        return $endDateTime->lt(now());
     }
 
     public function getIsOngoingAttribute()
@@ -120,15 +131,41 @@ class Appointment extends Model
     public function scopePast($query)
     {
         return $query->where(function($q) {
-            $q->whereDate('date', '<', now()->format('Y-m-d'))
-                ->orWhere(function($q2) {
-                    $q2->whereDate('date', '=', now()->format('Y-m-d'))->whereTime('end_time', '<=', now()->format('H:i:s'));
-                });
+            $q->where(function($q2) {
+                $q2->whereDate('date', '<', now()->format('Y-m-d'));
+            })->orWhere(function($q2) {
+                $q2->whereDate('date', '=', now()->format('Y-m-d'))
+                   ->whereTime('end_time', '<', now()->format('H:i:s'));
+            });
         });
+    }
+
+    public function scopeUpcoming($query)
+    {
+        return $query->where(function($q) {
+            $q->where(function($q2) {
+                $q2->whereDate('date', '>', now()->format('Y-m-d'));
+            })->orWhere(function($q2) {
+                $q2->whereDate('date', '=', now()->format('Y-m-d'))
+                   ->whereTime('end_time', '>', now()->format('H:i:s'));
+            });
+        });
+    }
+
+    public function scopeConfirmed($query)
+    {
+        return $query->where('status', 'confirmed');
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->whereIn('status', ['pending_payment', 'pending', 'confirmed']);
+    }
+
     public function getCanBeReviewedAttribute()
     {
-        return $this->status === 'completed' && 
-            auth()->check() && 
+        return $this->status === 'completed' &&
+            auth()->check() &&
             auth()->id() === $this->user_id;
     }
 
@@ -137,9 +174,27 @@ class Appointment extends Model
         if (!$this->can_be_reviewed) {
             return false;
         }
-        
+
         return $this->psychologist->reviews()
             ->where('user_id', auth()->id())
             ->exists();
+    }
+
+    public function getCanRescheduleAttribute()
+    {
+        return $this->status === 'confirmed' &&
+           $this->is_upcoming &&
+           !$this->is_ongoing &&
+           auth()->check() &&
+           auth()->id() === $this->user_id;
+    }
+
+    public function getFormattedDateTimeAttribute()
+    {
+        return Carbon::parse($this->date)->format('d M Y') .
+            ' at ' .
+            Carbon::parse($this->start_time)->format('H:i') .
+            ' - ' .
+            Carbon::parse($this->end_time)->format('H:i');
     }
 }

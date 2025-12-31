@@ -2,92 +2,117 @@
 @section('title', 'Sign Up as Psychologist')
 
 @section('content')
-<div class="min-h-screen bg-gray-50">
-    @include('auth.partials.progress')
+    <div class="min-h-screen bg-gray-50">
+        @include('auth.partials.progress')
 
-    <div class="max-w-4xl mx-auto px-4 py-8">
-        <div class="bg-white rounded-xl shadow-lg p-8">
-            <h2 class="text-3xl font-bold text-center mb-2" style="color: #009C8F;">Availability Schedule</h2>
-            <p class="text-gray-600 text-center mb-8">Step 5: Set your consultation hours</p>
+        <div class="max-w-4xl mx-auto px-4 py-8">
+            <div class="bg-white rounded-xl shadow-lg p-8">
+                <h2 class="text-3xl font-bold text-center mb-2" style="color: #009C8F;">{{ __('messages.schedule') }}</h2>
+                <p class="text-gray-600 text-center mb-8">Step 5: {{ __('messages.scheduledesc') }}</p>
 
-            <form method="POST" action="{{ route('psychologist.signup.storeStep5', $user) }}" id="scheduleForm">
-                @csrf
-                <div id="scheduleContainer">
-                    @php $days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']; @endphp
+                <form method="POST" action="{{ route('psychologist.signup.storeStep5', $user) }}" id="scheduleForm">
+                    @csrf
+                    <div id="scheduleContainer">
+                        @php
+                            $isId = app()->getLocale() == 'id';
+                            // $key = Value Database (monday)
+                            // $label = Tampilan (Senin)
+                            $days = [
+                                'monday' => $isId ? 'Senin' : 'Monday',
+                                'tuesday' => $isId ? 'Selasa' : 'Tuesday',
+                                'wednesday' => $isId ? 'Rabu' : 'Wednesday',
+                                'thursday' => $isId ? 'Kamis' : 'Thursday',
+                                'friday' => $isId ? 'Jumat' : 'Friday',
+                                'saturday' => $isId ? 'Sabtu' : 'Saturday',
+                                'sunday' => $isId ? 'Minggu' : 'Sunday',
+                            ];
+                        @endphp
 
-                    @foreach($days as $index => $day)
-                    @php
-                        $startTime = old('schedules.' . $index . '.start_time', '09:00');
-                        $endTime = old('schedules.' . $index . '.end_time', '17:00');
-                        $notAvailable = old('schedules.' . $index . '.not_available', '0') == '1';
-                    @endphp
+                        @foreach ($days as $key => $label)
+                            @php
+                                // PENTING: Gunakan $loop->index agar index tetap angka (0, 1, 2...)
+                                // Ini agar JS dan Controller tidak bingung
+                                $i = $loop->index;
 
-                    <div class="schedule-day bg-gray-50 p-6 rounded-lg mb-4 border border-gray-200">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-lg font-medium text-gray-800 capitalize">{{ $day }}</h3>
-                            <label class="flex items-center">
-                                <input type="hidden" name="schedules[{{ $index }}][not_available]" value="0">
+                                $startTime = old('schedules.' . $i . '.start_time', '09:00');
+                                $endTime = old('schedules.' . $i . '.end_time', '17:00');
+                                $notAvailable = old('schedules.' . $i . '.not_available', '0') == '1';
+                            @endphp
 
-                                <input type="checkbox" name="schedules[{{ $index }}][not_available]"
-                                    class="not-available-toggle mr-2"
-                                    style="accent-color: #dc2626;"
-                                    data-index="{{ $index }}"
-                                    value="1"
-                                    {{ $notAvailable ? 'checked' : '' }}>
-                                <span class="text-sm text-gray-600">Not available</span>
-                            </label>
-                        </div>
+                            <div class="schedule-day bg-gray-50 p-6 rounded-lg mb-4 border border-gray-200">
+                                <div class="flex items-center justify-between mb-4">
+                                    {{-- TAMPILAN: Pakai Label (Senin/Monday) --}}
+                                    <h3 class="text-lg font-medium text-gray-800 capitalize">{{ $label }}</h3>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 schedule-fields"
-                            id="schedule-fields-{{ $index }}"
-                            style="{{ $notAvailable ? 'display: none;' : '' }}">
-                            <input type="hidden" name="schedules[{{ $index }}][day_of_week]" value="{{ $day }}">
+                                    <label class="flex items-center">
+                                        {{-- NAME: Pakai Index Angka ($i) --}}
+                                        <input type="hidden" name="schedules[{{ $i }}][not_available]"
+                                            value="0">
+                                        <input type="checkbox" name="schedules[{{ $i }}][not_available]"
+                                            class="not-available-toggle mr-2" style="accent-color: #dc2626;"
+                                            data-index="{{ $i }}" value="1"
+                                            {{ $notAvailable ? 'checked' : '' }}>
 
-                            <div>
-                                <label class="block text-gray-700 mb-2">Start Time <span class="text-red-500">*</span></label>
-                                <input type="time" name="schedules[{{ $index }}][start_time]"
-                                    class="w-full outline-none text-black bg-white px-4 py-3 rounded-lg border border-gray-300 schedule-time"
-                                    value="{{ $startTime }}"
-                                    {{ $notAvailable ? 'disabled' : 'required' }}>
+                                        <span class="text-sm text-gray-600">{{ __('schedule.not_available') }}</span>
+                                    </label>
+                                </div>
+
+                                {{-- ID: Pakai Index Angka ($i) agar JS step5.js jalan --}}
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 schedule-fields"
+                                    id="schedule-fields-{{ $i }}"
+                                    style="{{ $notAvailable ? 'display: none;' : '' }}">
+
+                                    {{-- VALUE: Pakai Key Asli (monday) agar Database benar --}}
+                                    <input type="hidden" name="schedules[{{ $i }}][day_of_week]"
+                                        value="{{ $key }}">
+
+                                    <div>
+                                        <label class="block text-gray-700 mb-2">{{ __('schedule.start_time') }} <span
+                                                class="text-red-500">*</span></label>
+                                        <input type="time" name="schedules[{{ $i }}][start_time]"
+                                            class="w-full outline-none text-black bg-white px-4 py-3 rounded-lg border border-gray-300 schedule-time"
+                                            value="{{ $startTime }}" {{ $notAvailable ? 'disabled' : 'required' }}>
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-700 mb-2">{{ __('schedule.end_time') }} <span
+                                                class="text-red-500">*</span></label>
+                                        <input type="time" name="schedules[{{ $i }}][end_time]"
+                                            class="w-full outline-none text-black bg-white px-4 py-3 rounded-lg border border-gray-300 schedule-time"
+                                            value="{{ $endTime }}" {{ $notAvailable ? 'disabled' : 'required' }}>
+                                    </div>
+                                </div>
                             </div>
+                        @endforeach
+                    </div>
+
+                    <div class="mt-8 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                        <div class="flex items-start">
+                            <i class="fas fa-info-circle text-blue-500 mt-1 mr-3"></i>
                             <div>
-                                <label class="block text-gray-700 mb-2">End Time <span class="text-red-500">*</span></label>
-                                <input type="time" name="schedules[{{ $index }}][end_time]"
-                                    class="w-full outline-none text-black bg-white px-4 py-3 rounded-lg border border-gray-300 schedule-time"
-                                    value="{{ $endTime }}"
-                                    {{ $notAvailable ? 'disabled' : 'required' }}>
+                                <h4 class="font-medium text-blue-800 mb-1">{{ __('schedule.important_notes') }}</h4>
+                                <ul class="text-sm text-blue-700 space-y-1">
+                                    <li>• {{ __('schedule.note_1') }}</li>
+                                    <li>• {{ __('schedule.note_2') }}</li>
+                                    <li>• {{ __('schedule.note_3') }}</li>
+                                </ul>
                             </div>
                         </div>
                     </div>
-                    @endforeach
-                </div>
 
-                <div class="mt-8 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                    <div class="flex items-start">
-                        <i class="fas fa-info-circle text-blue-500 mt-1 mr-3"></i>
-                        <div>
-                            <h4 class="font-medium text-blue-800 mb-1">Important Notes</h4>
-                            <ul class="text-sm text-blue-700 space-y-1">
-                                <li>• Set start and end time for each day you're available</li>
-                                <li>• Check "Not available" for days you don't work</li>
-                                <li>• You can update your availability later from your profile</li>
-                            </ul>
-                        </div>
+                    <div class="mt-8 flex justify-between">
+                        <a href="{{ route('psychologist.signup.step4', $user) }}"
+                            class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition">
+                            ← {{ __('messages.back') }}
+                        </a>
+                        <button type="submit"
+                            class="px-8 py-3 bg-[#009C8F] text-white rounded-lg font-medium hover:opacity-90 transition shadow-md">
+                            {{ __('messages.completeregis') }} →
+                        </button>
                     </div>
-                </div>
-
-                <div class="mt-8 flex justify-between">
-                    <a href="{{ route('psychologist.signup.step4', $user) }}" class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition">
-                        ← Back
-                    </a>
-                    <button type="submit" class="px-8 py-3 bg-[#009C8F] text-white rounded-lg font-medium hover:opacity-90 transition shadow-md">
-                        Complete Registration →
-                    </button>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
-<script src="{{ asset('js/step5.js') }}"></script>
+    <script src="{{ asset('js/step5.js') }}"></script>
 @endsection

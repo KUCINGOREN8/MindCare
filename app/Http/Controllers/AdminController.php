@@ -6,20 +6,25 @@ use App\Models\User;
 use App\Models\User as UserModel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class AdminController extends Controller
 {
     public function index()
     {
         $user = Auth::user();
-        // Hanya ambil user yang sudah active (atau semua terserah kebijakan)
-        $users = User::where('role', '!=', 'psychologist') // Contoh: List user biasa
+
+        $notificationController = new NotificationController();
+        $notifications = $notificationController->getNotifications();
+
+        $users = User::where('role', '!=', 'psychologist')
             ->orWhere(function ($q) {
                 $q->where('role', 'psychologist')->where('status', 'active');
             })
             ->latest()->paginate(10);
 
-        return view('dashboard.admin.index', compact('user', 'users'));
+        return view('dashboard.admin.index', compact('user', 'users', 'notifications'));
     }
 
     // --- FITUR BARU: VERIFIKASI PSIKOLOG ---
@@ -30,12 +35,15 @@ class AdminController extends Controller
     public function verifyIndex()
     {
         $user = Auth::user();
+        $notificationController = new NotificationController();
+        $notifications = $notificationController->getNotifications();
+
         $pendingPsychologists = User::where('role', 'psychologist')
             ->where('status', 'pending')
             ->latest()
             ->paginate(10);
 
-        return view('dashboard.admin.verify', compact('user', 'pendingPsychologists'));
+        return view('dashboard.admin.verify', compact('user', 'pendingPsychologists', 'notifications'));
     }
 
     public function approvePsychologist($id)
@@ -59,7 +67,10 @@ class AdminController extends Controller
     public function create()
     {
         $user = Auth::user();
-        return view('admin.create', compact('user'));
+        $notificationController = new NotificationController();
+        $notifications = $notificationController->getNotifications();
+
+        return view('admin.create', compact('user', 'notifications'));
     }
 
     public function store(Request $request)
@@ -102,6 +113,8 @@ class AdminController extends Controller
             'gender' => $request->gender,
             'preferred_language' => $request->language,
             'agree_to_terms' => true,
+            'status' => 'active',
+            'otp_verified' => true,
         ]);
 
         return redirect()->route('admin.dashboard')->with('success', 'User created successfully!');
@@ -115,7 +128,10 @@ class AdminController extends Controller
     public function edit($id)
     {
         $user = User::findOrFail($id);
-        return view('admin.edit', compact('user'));
+        $notificationController = new NotificationController();
+        $notifications = $notificationController->getNotifications();
+
+        return view('admin.edit', compact('user', 'notifications'));
     }
 
     public function update(Request $request, $id)

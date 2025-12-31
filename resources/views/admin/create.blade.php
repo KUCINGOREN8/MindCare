@@ -7,7 +7,7 @@
             <div class="flex flex-col bg-white p-6 gap-4 rounded-md border-grey-border border">
                 <div class="flex flex-col">
                     <h1 class="text-primary font-bold text-lg">Good Day, {{ $user->full_name }}!</h1>
-                    <h5 class="text-captiondark text-sm">How are you feeling today?</h5>
+                    <h5 class="text-captiondark text-sm">{{ __('messages.mood') }}</h5>
                 </div>
             </div>
 
@@ -23,11 +23,11 @@
                 {{-- Judul Form --}}
                 <div class="flex justify-between items-center">
                     <div>
-                        <h1 class="text-2xl font-bold text-primary">Add New User</h1>
-                        <p class="text-sm text-caption-dark">Fill in the details below</p>
+                        <h1 class="text-2xl font-bold text-primary">{{ __('messages.adminadd') }}</h1>
+                        <p class="text-sm text-caption-dark">{{ __('messages.adminadddesc') }}</p>
                     </div>
                     <a href="{{ route('admin.dashboard') }}" class="text-sm text-gray-500 hover:text-primary">
-                        &larr; Back to List
+                        &larr; {{ __('messages.backdashboard') }}
                     </a>
                 </div>
 
@@ -39,7 +39,8 @@
 
                         {{-- Full Name --}}
                         <div class="col-span-2">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                            <label
+                                class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.fullname') }}</label>
                             <input type="text" name="full_name" value="{{ old('full_name') }}"
                                 class="w-full rounded-md border-gray-300 shadow-sm p-2 border focus:ring-primary focus:border-primary">
                             @error('full_name')
@@ -59,7 +60,7 @@
 
                         {{-- Date of Birth --}}
                         <div class="col-span-1">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.dob') }}</label>
                             <input type="date" name="date_of_birth" value="{{ old('date_of_birth') }}"
                                 class="w-full rounded-md border-gray-300 shadow-sm p-2 border focus:ring-primary focus:border-primary">
                             @error('date_of_birth')
@@ -79,18 +80,21 @@
 
                         {{-- Confirm Password --}}
                         <div class="col-span-1">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+                            <label
+                                class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.confirmpassword') }}</label>
                             <input type="password" name="password_confirmation"
                                 class="w-full rounded-md border-gray-300 shadow-sm p-2 border focus:ring-primary focus:border-primary">
                         </div>
 
                         {{-- Gender --}}
                         <div class="col-span-1">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.gender') }}</label>
                             <select name="gender" class="w-full rounded-md border-gray-300 shadow-sm p-2 border bg-white">
-                                <option value="" disabled selected>Select Gender</option>
-                                <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }}>Male</option>
-                                <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>Female
+                                <option value="" disabled selected>{{ __('messages.selectgender') }}</option>
+                                <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }}>
+                                    {{ __('messages.male') }}</option>
+                                <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>
+                                    {{ __('messages.female') }}
                                 </option>
                             </select>
                             @error('gender')
@@ -100,10 +104,13 @@
 
                         {{-- Language --}}
                         <div class="col-span-1">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Language</label>
+                            <label
+                                class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.preferlang') }}</label>
                             <select name="language" class="w-full rounded-md border-gray-300 shadow-sm p-2 border bg-white">
-                                <option value="en" {{ old('language') == 'en' ? 'selected' : '' }}>English</option>
-                                <option value="id" {{ old('language') == 'id' ? 'selected' : '' }}>Indonesia
+                                <option value="en" {{ old('language') == 'en' ? 'selected' : '' }}>
+                                    {{ __('messages.english') }}</option>
+                                <option value="id" {{ old('language') == 'id' ? 'selected' : '' }}>
+                                    {{ __('messages.indonesian') }}
                                 </option>
                             </select>
                             @error('language')
@@ -118,7 +125,7 @@
                                     class="rounded border-gray-300 text-primary shadow-sm focus:ring-primary"
                                     {{ old('terms') ? 'checked' : '' }}>
                                 <label for="terms" class="text-sm text-gray-600">
-                                    I agree to the Terms and Conditions
+                                    {{ __('messages.terms') }}
                                 </label>
                             </div>
                             @error('terms')
@@ -130,10 +137,9 @@
                     {{-- Buttons --}}
                     <div class="flex justify-end gap-4 mt-8 pt-6 border-t border-gray-100">
                         <a href="{{ route('admin.dashboard') }}"
-                            class="px-6 py-2 rounded-md border border-gray-300 text-gray-600 hover:bg-gray-50">Cancel</a>
+                            class="px-6 py-2 rounded-md border border-gray-300 text-gray-600 hover:bg-gray-50">{{ __('messages.cancel') }}</a>
                         <button type="submit"
-                            class="px-6 py-2 rounded-md bg-primary text-white hover:bg-primary-dark shadow-sm">Save
-                            User</button>
+                            class="px-6 py-2 rounded-md bg-primary text-white hover:bg-primary-dark shadow-sm">{{ __('messages.saveuser') }}</button>
                     </div>
                 </form>
                 {{-- FORM END --}}
@@ -141,5 +147,5 @@
         </div>
     </div>
 
-    <x-user-profile-card :user="$user" />
+    <x-user-profile-card :user="$user" :notifications="$notifications" />
 @endsection

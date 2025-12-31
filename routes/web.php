@@ -13,6 +13,7 @@ use App\Http\Controllers\UserController;
 // use App\Http\Controllers\MoodController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Middleware\OTPMiddleware;
 use App\Http\Middleware\CheckAppointmentReview;
@@ -28,9 +29,11 @@ Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
 // Language switcher
 Route::get('/lang/{lang}', function ($lang) {
-    session(['locale' => $lang]);
+    if (in_array($lang, ['en', 'id'])) {
+        session(['locale' => $lang]);
+    }
     return back();
-})->name('switch.lang');
+})->name('switch.lang'); // <--- Nama route ini harus sama dengan di component
 
 // Public guest-only routes
 Route::middleware('guest')->group(function () {
@@ -76,6 +79,9 @@ Route::middleware(['auth', 'otp', 'role:patient'])
         // Dashboard
         Route::get('/dashboard', [DashboardController::class, 'showPatientDashboard'])->name('dashboard');
 
+        // Notifications
+        Route::get('/notifications', [NotificationController::class, 'getNotifications'])->name('notifications');
+
         // Patient Mood
         Route::post('/mood', [DashboardController::class, 'moodStore'])->name('mood.store');
         // Route::post('/mood/undo', [MoodController::class, 'undo'])->name('mood.undo');
@@ -101,25 +107,28 @@ Route::middleware(['auth', 'otp', 'role:patient'])
             ->controller(AppointmentController::class)
             ->group(function () {
             Route::get('/', 'index')->name('index');
-            Route::post('/{id}/confirm', 'confirm')->name('confirm');
-            Route::post('/{id}/cancel', 'cancel')->name('cancel');
-            Route::post('/{id}/reschedule', 'reschedule')->name('reschedule');
+            Route::get('/{appointment}/payment', 'showPaymentPage')->name('payment');
+            Route::get('/{appointment}/reschedule-times', 'getRescheduleTimes')->name('reschedule-times');
+            Route::put('/{appointment}/reschedule', 'reschedule')->name('reschedule');
+            Route::post('/{appointment}/confirm', 'confirm')->name('confirm');
+            Route::post('/{appointment}/cancel', 'cancel')->name('cancel');
+
             Route::get('/chat/session/{appointment}', [ChatController::class, 'startSession'])->name('chat.session');
 
             // Appointment Review
             Route::middleware(['review:create'])->group(function () {
                 Route::get('/{id}/review', [ReviewController::class, 'create'])->name('review.create');
-                Route::post('/{id}/review', [ReviewController::class, 'store'])->name('review.store');                
+                Route::post('/{id}/review', [ReviewController::class, 'store'])->name('review.store');
             });
-            Route::middleware(['review:edit'])->group(function () {          
+            Route::middleware(['review:edit'])->group(function () {
                 Route::get('/{id}/review/edit', [ReviewController::class, 'edit'])->name('review.edit');
                 Route::put('/{id}/review', [ReviewController::class, 'update'])->name('review.update');
             });
             Route::middleware(['review:delete'])->group(function () {
                 Route::delete('/{id}/review', [ReviewController::class, 'destroy'])->name('review.destroy');
             });
-            
-        }); 
+
+        });
 
         // Payment
         Route::prefix('payment')->name('payment.')->group(function () {
@@ -139,23 +148,26 @@ Route::middleware(['auth', 'otp', 'role:psychologist'])
         // Dashboard
         Route::get('/dashboard', [DashboardController::class, 'showPsychologistDashboard'])->name('dashboard');
 
-    // My Clients
-    Route::get('/clients' , [PsychologistController::class, 'showClients'])->name('clients');
-    Route::get('/clients/{client}/details', [PsychologistController::class, 'showClientDetails'])->name('clients.details');
-    Route::get('/clients/{client}/appointments', [PsychologistController::class, 'getClientAppointments'])->name('clients.appointments');
-    Route::get('/clients/{client}/general-notes', [PsychologistController::class, 'getGeneralNotes'])->name('clients.general-notes');
-    Route::post('/notes/general/store', [PsychologistController::class, 'storeGeneralNotes'])->name('notes.general.store');
-    Route::post('/notes/store', [PsychologistController::class, 'storeSessionNotes'])->name('notes.session.store');
+        // Notifications
+        Route::get('/notifications', [NotificationController::class, 'getNotifications'])->name('notifications');
+
+        // My Clients
+        Route::get('/clients' , [PsychologistController::class, 'showClients'])->name('clients');
+        Route::get('/clients/{client}/details', [PsychologistController::class, 'showClientDetails'])->name('clients.details');
+        Route::get('/clients/{client}/appointments', [PsychologistController::class, 'getClientAppointments'])->name('clients.appointments');
+        Route::get('/clients/{client}/general-notes', [PsychologistController::class, 'getGeneralNotes'])->name('clients.general-notes');
+        Route::post('/notes/general/store', [PsychologistController::class, 'storeGeneralNotes'])->name('notes.general.store');
+        Route::post('/notes/store', [PsychologistController::class, 'storeSessionNotes'])->name('notes.session.store');
 
         // Appointments
         Route::prefix('appointments')
-        ->name('appointments.')
-        ->controller(AppointmentController::class)
-        ->group(function () {
+            ->name('appointments.')
+            ->controller(AppointmentController::class)
+            ->group(function () {
             Route::get('/', [PsychologistController::class, 'showSchedule'])->name('index');
             Route::get('/chat/session/{appointment}', [ChatController::class, 'startSession'])->name('chat.session');
+        });
     });
-});
 
 // ADMIN ROUTES => Auth + OTP + Role protected
 Route::middleware(['auth', 'otp', 'role:admin'])
@@ -168,8 +180,11 @@ Route::middleware(['auth', 'otp', 'role:admin'])
         Route::post('/verify-psychologists/{id}/approve', [AdminController::class, 'approvePsychologist'])->name('verify.approve');
         Route::delete('/verify-psychologists/{id}/reject', [AdminController::class, 'rejectPsychologist'])->name('verify.reject');
 
-        // Manage User (CRUD)
+        // Manage User (CRUD)---
         Route::resource('users', AdminController::class);
+
+        // Notifications
+        Route::get('/notifications', [NotificationController::class, 'getNotifications'])->name('notifications');
     });
 
 // SHARED ROUTES -> Auth + OTP Protected
@@ -178,7 +193,7 @@ Route::middleware(['auth', 'otp'])->group(function () {
     Route::prefix('profile')->name('profile.')->controller(UserController::class)->group(function () {
         Route::get('/', 'showProfile')->name('index');
 
-        // Profile 
+        // Profile
         Route::put('/update','updateProfile')->name('update');
         Route::post('/upload-photo', 'uploadPhoto')->name('upload-photo');
         Route::delete('/delete-photo', 'deletePhoto')->name('delete-photo');

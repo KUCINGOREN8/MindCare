@@ -9,10 +9,12 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\PsychologistEducation;
 use App\Models\PsychologistExperience;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rules\Password as RulesPassword;
 
 class UserController extends Controller
 {
-    public function showProfile() {
+    public function showProfile()
+    {
         $user = Auth::user();
 
         // Load psychologist data (only if user role is psychologist)
@@ -57,7 +59,7 @@ class UserController extends Controller
     public function deletePhoto()
     {
         $user = Auth::user();
-        
+
         // Delete photo from storage
         if ($user->photo_url && Storage::disk('public')->exists($user->photo_url)) {
             Storage::disk('public')->delete($user->photo_url);
@@ -77,10 +79,20 @@ class UserController extends Controller
     {
         $user = Auth::user();
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|min:3|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            'gender' => 'nullable|string|in:male,female,other',
-            'date_of_birth' => 'nullable|date|before:today',
+            'gender' => 'required|in:male,female,other',
+            'date_of_birth' => [
+                'required',
+                'date',
+                'before:today',
+                function ($attribute, $value, $fail) {
+                    $age = date_diff(date_create($value), date_create('today'))->y;
+                    if ($age < 18) {
+                        $fail('You must be at least 18 years old to register.');
+                    }
+                }
+            ],
         ], [
             'date_of_birth.date' => 'Please enter a valid date',
             'date_of_birth.before' => 'Date of birth must be in the past',
@@ -114,13 +126,13 @@ class UserController extends Controller
 
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
-            'specialization' => 'required|string|max:255',
-            'license_number' => 'required|string|max:100',
+            'specialization' => 'required|string|max:500',
+            'license_number' => 'required|string|unique:psychologists,license_number',
             'years_experience' => 'required|integer|min:0',
-            'consultation_fee' => 'required|numeric|min:0',
-            'short_bio' => 'nullable|string|max:500',
-            'about_me' => 'nullable|string',
-            'languages' => 'nullable|array',
+            'consultation_fee' => 'required|numeric|min:10000',
+            'short_bio' => 'required|string|min:5|max:500',
+            'about_me' => 'required|string|min:10',
+            'languages' => 'required|array|min:1',
             'languages.*' => 'string',
         ]);
 
@@ -151,11 +163,11 @@ class UserController extends Controller
         $request->validate([
             'educations.*.degree' => 'required|string|max:255',
             'educations.*.institution' => 'required|string|max:255',
-            'educations.*.year' => 'nullable|string|max:10',
+            'educations.*.year' => 'required|digits:4',
         ]);
-        
+
         $psychologist = auth()->user()->psychologist;
-        
+
         foreach ($request->educations as $educationData) {
             if (isset($educationData['id'])) {
                 // Update existing
@@ -168,20 +180,20 @@ class UserController extends Controller
                 $psychologist->educations()->create($educationData);
             }
         }
-        
+
         return redirect()->route('profile.index', ['tab' => 'professional'])->with('success', 'Education updated successfully.');
     }
 
     public function destroyEducation($id)
     {
         $education = PsychologistEducation::findOrFail($id);
-        
+
         if ($education->psychologist_id !== auth()->user()->psychologist->id) {
             abort(403);
         }
-        
+
         $education->delete();
-        
+
         return response()->json(['success' => true]);
     }
 
@@ -190,12 +202,12 @@ class UserController extends Controller
         $request->validate([
             'experiences.*.position' => 'required|string|max:255',
             'experiences.*.organization' => 'required|string|max:255',
-            'experiences.*.start_year' => 'nullable|string|max:10',
-            'experiences.*.end_year' => 'nullable|string|max:10',
+            'experiences.*.start_year' => 'required|string|max:4',
+            'experiences.*.end_year' => 'nullable|string|max:4',
         ]);
-        
+
         $psychologist = auth()->user()->psychologist;
-        
+
         foreach ($request->experiences as $experienceData) {
             if (isset($experienceData['id'])) {
                 // Update existing
@@ -208,20 +220,20 @@ class UserController extends Controller
                 $psychologist->experiences()->create($experienceData);
             }
         }
-        
+
         return redirect()->route('profile.index', ['tab' => 'professional'])->with('success', 'Experience updated successfully.');
     }
 
     public function destroyExperience($id)
     {
         $experience = PsychologistExperience::findOrFail($id);
-        
+
         if ($experience->psychologist_id !== auth()->user()->psychologist->id) {
             abort(403);
         }
-        
+
         $experience->delete();
-        
+
         return response()->json(['success' => true]);
     }
 
@@ -236,7 +248,7 @@ class UserController extends Controller
         $psychologist = $user->psychologist;
 
         $validator = Validator::make($request->all(), [
-            'schedules.*.day_of_week' => 'required|string|in:monday,tuesday,wednesday,thursday,friday,saturday,sunday',
+            'schedules.*.day_of_week' => 'required|in:monday,tuesday,wednesday,thursday,friday,saturday,sunday',
             'schedules.*.is_available' => 'nullable|in:1,0',
             'schedules.*.start_time' => 'required_if:schedules.*.is_available,1|nullable|date_format:H:i',
             'schedules.*.end_time' => 'required_if:schedules.*.is_available,1|nullable|date_format:H:i|after:schedules.*.start_time',
@@ -290,48 +302,34 @@ class UserController extends Controller
         $user = Auth::user();
 
         $validator = Validator::make($request->all(), [
-            'old_password' => 'required|string',
-        ], [
-            'old_password.required' => 'Old password is required',
-        ]);
-
-        if (!Hash::check($request->old_password, $user->password)) {
-            $validator->after(function ($validator) {
-                $validator->errors()->add('old_password', 'Old password is incorrect');
-            });
-
-            if ($validator->fails()) {
-                return redirect()->back()
-                    ->withErrors($validator)
-                    ->withInput()
-                    ->with('error', 'Please fix the errors.');
-            }
-        }
-
-        $validator = Validator::make($request->all(), [
-            'old_password' => 'required|string',
-            'new_password' => 'required|string|min:6|different:old_password',
-            'confirm_password' => 'required|string|same:new_password',
+            'old_password' => [
+                'required',
+                'string',
+                function ($attribute, $value, $fail) use ($user) {
+                    if (!Hash::check($value, $user->password)) {
+                        $fail('The old password is incorrect.');
+                    }
+                }
+            ],
+            'new_password' => [
+                'required',
+                'string',
+                'confirmed',
+                'different:old_password',
+                RulesPassword::min(6)->mixedCase()->numbers()
+            ],
         ], [
             'old_password.required' => 'Old password is required',
             'new_password.required' => 'New password is required',
-            'new_password.min' => 'Password must be at least 6 characters',
+            'new_password.confirmed' => 'Password confirmation does not match',
             'new_password.different' => 'New password must be different from old password',
-            'confirm_password.required' => 'Please confirm your new password',
-            'confirm_password.same' => 'Passwords do not match',
         ]);
-
-        $validator->after(function ($validator) use ($user, $request) {
-            if (!Hash::check($request->old_password, $user->password)) {
-                $validator->errors()->add('old_password', 'Old password is incorrect');
-            }
-        });
 
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
                 ->withInput()
-                ->with('error', 'Please fix the errors.');
+                ->with('error', 'Please fix the errors below.');
         }
 
         $user->update([
