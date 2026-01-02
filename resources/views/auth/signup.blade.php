@@ -51,7 +51,7 @@
                                 class="w-full outline-none text-black placeholder-gray-400 bg-transparent" id="password">
                             <button type="button" class="password-toggle" onclick="togglePassword('password')">
                                 <img src="{{ asset('assets/signup/eye-closed.svg') }}" alt="Show password"
-                                    class="w-5 h-5 opacity-50" id="password-eye"
+                                    class="w-5 h-5 opacity-50 eye-icon" id="password-eye"
                                     data-closed-icon="{{ asset('assets/signup/eye-closed.svg') }}"
                                     data-open-icon="{{ asset('assets/signup/eye-open.svg') }}">
                             </button>
@@ -74,7 +74,7 @@
                                 id="confirm-password">
                             <button type="button" class="password-toggle" onclick="togglePassword('confirm-password')">
                                 <img src="{{ asset('assets/signup/eye-closed.svg') }}" alt="Show password"
-                                    class="w-5 h-5 opacity-50" id="confirm-password-eye"
+                                    class="w-5 h-5 opacity-50 eye-icon" id="confirm-password-eye"
                                     data-closed-icon="{{ asset('assets/signup/eye-closed.svg') }}"
                                     data-open-icon="{{ asset('assets/signup/eye-open.svg') }}">
                             </button>

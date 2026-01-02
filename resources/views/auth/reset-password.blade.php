@@ -43,7 +43,7 @@
                                 required>
                             <button type="button" class="ml-2 focus:outline-none" onclick="togglePassword('password')">
                                 <img src="{{ asset('assets/signup/eye-closed.svg') }}" alt="Show password"
-                                    class="w-5 h-5 opacity-50" id="password-eye"
+                                    class="w-5 h-5 opacity-50 eye-icon" id="password-eye"
                                     data-closed-icon="{{ asset('assets/signup/eye-closed.svg') }}"
                                     data-open-icon="{{ asset('assets/signup/eye-open.svg') }}">
                             </button>
@@ -64,7 +64,7 @@
                             <button type="button" class="ml-2 focus:outline-none"
                                 onclick="togglePassword('confirm-password')">
                                 <img src="{{ asset('assets/signup/eye-closed.svg') }}" alt="Show password"
-                                    class="w-5 h-5 opacity-50" id="confirm-password-eye"
+                                    class="w-5 h-5 opacity-50 eye-icon" id="confirm-password-eye"
                                     data-closed-icon="{{ asset('assets/signup/eye-closed.svg') }}"
                                     data-open-icon="{{ asset('assets/signup/eye-open.svg') }}">
                             </button>
