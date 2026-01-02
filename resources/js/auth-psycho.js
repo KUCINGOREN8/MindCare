@@ -1,12 +1,14 @@
-function togglePassword(fieldId) {
+window.togglePassword = function(fieldId) {
     const field = document.getElementById(fieldId);
-    const eyeIcon = field.parentElement.querySelector('.eye-icon');
+    const eyeIcon = field.parentElement.querySelector(".eye-icon");
 
-    if (field.type === 'password') {
-        field.type = 'text';
-        eyeIcon.src = eyeIcon.src.replace('eye-closed.svg', 'eye-open.svg');
+    if (!field || !eyeIcon) return;
+
+    if (field.type === "password") {
+        field.type = "text";
+        eyeIcon.src = eyeIcon.src.replace("eye-closed.svg", "eye-open.svg");
     } else {
-        field.type = 'password';
-        eyeIcon.src = eyeIcon.src.replace('eye-open.svg', 'eye-closed.svg');
+        field.type = "password";
+        eyeIcon.src = eyeIcon.src.replace("eye-open.svg", "eye-closed.svg");
     }
-}
+};

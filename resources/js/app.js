@@ -1,19 +1,18 @@
 import "../css/app.css";
 
-import "../js/navbar.js";
-import "../js/auth.js";
-import "../js/otp.js";
-import "../js/auth-psycho.js";
-import "../js/step3.js";
-import "../js/step4.js";
-import "../js/step5.js";
-
 import Alpine from "alpinejs";
-
 import Chart from "chart.js/auto";
 
-window.Alpine = Alpine;
+import "./navbar";
+import "./auth";
+import "./otp";
+import "./auth-psycho";
+import "./step3";
+import "./step4";
+import "./step5";
 
-window.Chart = Chart;
-
-Alpine.start();
+document.addEventListener("DOMContentLoaded", () => {
+    window.Alpine = Alpine;
+    window.Chart = Chart;
+    Alpine.start();
+});
