@@ -145,7 +145,7 @@ class NotificationController extends Controller
             'icon' => 'assets/icons/calendar.svg',
             'title' => __('notifications.session_reminder_title'),
             'message' => $message,
-            'time' => $this->formatTimeAgo($startDateTime),
+            'time' => number_format((float) $this->formatTimeAgo($startDateTime), 1),
             'type' => 'reminder',
             'timestamp' => $startDateTime->toDateTimeString(),
             'appointment_id' => $appointment->id,
@@ -333,8 +333,7 @@ class NotificationController extends Controller
 
     private function formatTimeAgo(Carbon $time)
     {
-        $now = Carbon::now();
-
+        $now = now();
         $diffInMinutes = $now->diffInMinutes($time, false);
 
         if ($diffInMinutes > 0) {
@@ -345,13 +344,13 @@ class NotificationController extends Controller
             }
 
             if ($diffInMinutes < 1440) {
-                $hours = (int) ceil($diffInMinutes / 60);
+                $hours = round($diffInMinutes / 60);
                 return __('notifications.session_starts_hours', [
                     'count' => $hours
                 ]);
             }
 
-            $days = (int) ceil($diffInMinutes / 1440);
+            $days = ceil($diffInMinutes / 1440);
             return "in {$days} days";
         }
 
@@ -368,13 +367,13 @@ class NotificationController extends Controller
         }
 
         if ($diffInMinutes < 1440) {
-            $hours = (int) floor($diffInMinutes / 60);
+            $hours = round($diffInMinutes / 60);
             return __('notifications.hours_ago', [
                 'count' => $hours
             ]);
         }
 
-        $days = (int) floor($diffInMinutes / 1440);
+        $days = floor($diffInMinutes / 1440);
         return __('notifications.days_ago', [
             'count' => $days
         ]);
