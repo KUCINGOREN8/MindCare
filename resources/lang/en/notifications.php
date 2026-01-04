@@ -3,10 +3,10 @@
 return [
     // --- Appointment Reminders ---
     'session_reminder_title' => 'Session Reminder',
-    'session_starts_hours' => 'Your session starts in :count hours',
-    'session_starts_minutes' => 'Your session starts in :count minutes',
-    'session_tomorrow' => 'Your session is tomorrow at :time',
-    'session_date' => 'Your session is on :date at :time',
+    'session_starts_hours' => 'Your session with :name starts in :count hours',
+    'session_starts_minutes' => 'Your session with :name starts in :count minutes',
+    'session_tomorrow' => 'Your session with :name is tomorrow at :time',
+    'session_date' => 'Your session with :name is on :date at :time',
     'dr_prefix' => 'Dr. ',
 
     // --- Messages ---

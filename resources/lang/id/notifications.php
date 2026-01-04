@@ -3,10 +3,10 @@
 return [
     // --- Appointment Reminders (Pengingat Janji Temu) ---
     'session_reminder_title' => 'Pengingat Sesi',
-    'session_starts_hours' => 'Sesi Anda dimulai dalam :count jam',
-    'session_starts_minutes' => 'Sesi Anda dimulai dalam :count menit',
-    'session_tomorrow' => 'Sesi Anda adalah besok pukul :time',
-    'session_date' => 'Sesi Anda adalah pada :date pukul :time',
+    'session_starts_hours' => 'Sesi Anda dengan :name dimulai dalam :count jam',
+    'session_starts_minutes' => 'Sesi Anda dengan :name dimulai dalam :count menit',
+    'session_tomorrow' => 'Sesi Anda dengan :name adalah besok pukul :time',
+    'session_date' => 'Sesi Anda dengan :name adalah pada :date pukul :time',
     'dr_prefix' => 'Dr. ',
 
     // --- Messages (Pesan Chat) ---
