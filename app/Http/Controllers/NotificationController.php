@@ -124,11 +124,11 @@ class NotificationController extends Controller
         }
 
         if ($startDateTime->isToday()) {
-            $hoursToStart = $now->diffInHours($startDateTime);
             $minutesToStart = $now->diffInMinutes($startDateTime);
 
-            if ($hoursToStart > 0) {
-                $message = __('notifications.session_starts_hours', ['name' => $nameDisplay, 'count' => $hoursToStart]);
+            if ($minutesToStart >= 60) {
+                $hours = round($minutesToStart / 60, 1);
+                $message = __('notifications.session_starts_hours', ['name' => $nameDisplay, 'count' => $hours]);
             } else {
                 $message = __('notifications.session_starts_minutes', ['name' => $nameDisplay, 'count' => $minutesToStart]);
             }
