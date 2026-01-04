@@ -76,6 +76,10 @@ class ChatController extends Controller
             return false;
         }
 
+        if ($appointment->status === 'completed') {
+            return false;
+        }
+
         if ($appointment->status !== 'confirmed') {
             return false;
         }
