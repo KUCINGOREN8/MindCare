@@ -67,13 +67,13 @@ class ChatController extends Controller
     private function isWithinSessionTime($conversation)
     {
         if (!$conversation->appointment_id) {
-            return true;
+            return false;
         }
 
         $appointment = Appointment::find($conversation->appointment_id);
 
         if (!$appointment) {
-            return true;
+            return false;
         }
 
         if ($appointment->status !== 'confirmed') {
@@ -293,6 +293,16 @@ class ChatController extends Controller
 
     public function getMessages(Conversation $conversation)
     {
+        $user = Auth::user();
+
+        if (!$conversation->isParticipant($user->id)) {
+            abort(403);
+        }
+
+        if (!$this->isWithinSessionTime($conversation)) {
+            return response()->json([], 403);
+        }
+
         $messages = $conversation->messages()
             ->with(['sender'])
             ->orderBy('created_at')
