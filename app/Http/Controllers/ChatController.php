@@ -163,7 +163,7 @@ class ChatController extends Controller
 
         if (!$this->isWithinSessionTime($conversation)) {
             return redirect()
-                ->view('chat.index')
+                ->route('messages')
                 ->with('error', 'Chat session has ended.');
         }
 
