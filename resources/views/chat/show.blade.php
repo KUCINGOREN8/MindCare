@@ -492,7 +492,11 @@
                                     updateSidebarConversation(data.message);
                                 }
                             } else {
-                                throw new Error(data.message || LANG_CHAT.alertFailGeneric);
+                                if (data.session_expired) {
+                                        alert('Chat is only available during the scheduled session time.');
+                                    } else {
+                                        throw new Error(data.message || LANG_CHAT.alertFailGeneric);
+                                }
                             }
 
                         } catch (err) {
