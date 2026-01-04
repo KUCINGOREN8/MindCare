@@ -349,9 +349,7 @@ class NotificationController extends Controller
             }
 
             $days = (int) ceil($diffInMinutes / 1440);
-            return __('notifications.starts_in_days', [
-                'count' => $days
-            ]);
+            return "in {$days} days";
         }
 
         $diffInMinutes = abs($diffInMinutes);
