@@ -336,14 +336,14 @@ class NotificationController extends Controller
 
         if ($diffInMinutes > 0) {
             if ($diffInMinutes < 60) {
-                return __('notifications.starts_in_minutes', [
+                return __('notifications.session_starts_minutes', [
                     'count' => $diffInMinutes
                 ]);
             }
 
             if ($diffInMinutes < 1440) {
                 $hours = (int) ceil($diffInMinutes / 60);
-                return __('notifications.starts_in_hours', [
+                return __('notifications.session_starts_hours', [
                     'count' => $hours
                 ]);
             }
