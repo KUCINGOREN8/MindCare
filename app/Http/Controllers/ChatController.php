@@ -157,6 +157,12 @@ class ChatController extends Controller
             abort(403, 'Unauthorized access to this conversation');
         }
 
+        if (!$this->isWithinSessionTime($conversation)) {
+            return redirect()
+                ->route('chat.index')
+                ->with('error', 'Chat session has ended.');
+        }
+
         $messages = Message::where('conversation_id', $conversation->id)
             ->with(['sender', 'receiver'])
             ->orderBy('created_at', 'asc')
@@ -309,6 +315,11 @@ class ChatController extends Controller
                     'is_read' => $message->is_read,
                 ];
             });
+
+        if (!$this->isWithinSessionTime($conversation)) {
+            return response()->json([], 403);
+        }
+
         return response()->json($messages);
     }
 
