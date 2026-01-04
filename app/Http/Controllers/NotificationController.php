@@ -331,19 +331,52 @@ class NotificationController extends Controller
     private function formatTimeAgo(Carbon $time)
     {
         $now = Carbon::now();
-        $diffInMinutes = $now->diffInMinutes($time);
+
+        $diffInMinutes = $now->diffInMinutes($time, false);
+
+        if ($diffInMinutes > 0) {
+            if ($diffInMinutes < 60) {
+                return __('notifications.starts_in_minutes', [
+                    'count' => $diffInMinutes
+                ]);
+            }
+
+            if ($diffInMinutes < 1440) {
+                $hours = (int) ceil($diffInMinutes / 60);
+                return __('notifications.starts_in_hours', [
+                    'count' => $hours
+                ]);
+            }
+
+            $days = (int) ceil($diffInMinutes / 1440);
+            return __('notifications.starts_in_days', [
+                'count' => $days
+            ]);
+        }
+
+        $diffInMinutes = abs($diffInMinutes);
 
         if ($diffInMinutes < 1) {
             return __('notifications.just_now');
-        } elseif ($diffInMinutes < 60) {
-            return __('notifications.minutes_ago', ['count' => $diffInMinutes]);
-        } elseif ($diffInMinutes < 1440) {
-            $hours = floor($diffInMinutes / 60);
-            return __('notifications.hours_ago', ['count' => $hours]);
-        } else {
-            $days = floor($diffInMinutes / 1440);
-            return __('notifications.days_ago', ['count' => $days]);
         }
+
+        if ($diffInMinutes < 60) {
+            return __('notifications.minutes_ago', [
+                'count' => $diffInMinutes
+            ]);
+        }
+
+        if ($diffInMinutes < 1440) {
+            $hours = (int) floor($diffInMinutes / 60);
+            return __('notifications.hours_ago', [
+                'count' => $hours
+            ]);
+        }
+
+        $days = (int) floor($diffInMinutes / 1440);
+        return __('notifications.days_ago', [
+            'count' => $days
+        ]);
     }
 
     private function getEmptyNotifications(User $user)
