@@ -333,7 +333,8 @@ class NotificationController extends Controller
 
     private function formatTimeAgo(Carbon $time)
     {
-        $now = now();
+        $now = Carbon::now();
+
         $diffInMinutes = $now->diffInMinutes($time, false);
 
         if ($diffInMinutes > 0) {
@@ -344,13 +345,13 @@ class NotificationController extends Controller
             }
 
             if ($diffInMinutes < 1440) {
-                $hours = round($diffInMinutes / 60);
+                $hours = (int) ceil($diffInMinutes / 60);
                 return __('notifications.session_starts_hours', [
                     'count' => $hours
                 ]);
             }
 
-            $days = ceil($diffInMinutes / 1440);
+            $days = (int) ceil($diffInMinutes / 1440);
             return "in {$days} days";
         }
 
@@ -367,13 +368,13 @@ class NotificationController extends Controller
         }
 
         if ($diffInMinutes < 1440) {
-            $hours = round($diffInMinutes / 60);
+            $hours = (int) floor($diffInMinutes / 60);
             return __('notifications.hours_ago', [
                 'count' => $hours
             ]);
         }
 
-        $days = floor($diffInMinutes / 1440);
+        $days = (int) floor($diffInMinutes / 1440);
         return __('notifications.days_ago', [
             'count' => $days
         ]);

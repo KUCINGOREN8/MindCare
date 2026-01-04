@@ -42,7 +42,7 @@
             {{ $message }}
         </p>
        <p class="text-caption text-xs mt-1">
-            {{ $time }}
+            {{ preg_replace('/(\d+)\.\d+/', '$1', $time) }}
         </p>
 
     </div>
