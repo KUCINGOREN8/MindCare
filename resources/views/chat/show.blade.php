@@ -52,6 +52,11 @@
                 style="background-color: #f8fafc;">
                 <div class="max-w-3xl mx-auto">
                     @foreach ($messages as $message)
+                        @php
+                            $createdAt = is_array($message['created_at'])
+                                ? \Carbon\Carbon::parse($message['created_at']['date'] ?? $message['created_at'])
+                                : \Carbon\Carbon::parse($message['created_at']);
+                        @endphp
                         <div
                             class="flex {{ $message['sender_id'] == auth()->id() ? 'justify-end' : 'justify-start' }} mb-4 last:mb-0">
                             <div class="max-w-[70%] lg:max-w-[60%]">
