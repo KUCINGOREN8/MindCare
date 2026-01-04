@@ -47,9 +47,17 @@
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const ctx = document.getElementById('ratingDistributionChart').getContext('2d');
+        if (typeof Chart === 'undefined') {
+            return;
+        }
+        const canvas = document.getElementById('ratingDistributionChart');
+        if (!canvas) return;
+
+        const ctx = canvas.getContext('2d');
         new Chart(ctx, {
             type: 'doughnut',
             data: {
