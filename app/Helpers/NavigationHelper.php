@@ -83,7 +83,7 @@ class NavigationHelper
                     'icon' => 'assets/icons/users.svg',
                     'text' => __('nav.verify_psychologists'),
                     'route' => 'admin.verify.index',
-                    'patterns' => ['admin.verify.*', 'profile.*']
+                    'patterns' => ['admin.verify.*']
                 ],
             ]
         ];
