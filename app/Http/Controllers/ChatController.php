@@ -64,6 +64,30 @@ class ChatController extends Controller
         return view('chat.index', array_merge($viewData, ['user' => $user]));
     }
 
+    private function isWithinSessionTime($conversation)
+    {
+        if (!$conversation->appointment_id) {
+            return true;
+        }
+
+        $appointment = Appointment::find($conversation->appointment_id);
+
+        if (!$appointment) {
+            return true;
+        }
+
+        if ($appointment->status !== 'confirmed') {
+            return false;
+        }
+
+        $sessionStart = $appointment->start_date_time;
+        $sessionEnd = $appointment->end_date_time;
+        $now = now()->timezone(config('app.timezone'));
+        $availableFrom = $sessionStart->copy()->subMinutes(30);
+
+        return $now >= $availableFrom && $now <= $sessionEnd;
+    }
+
     public function startChat(User $otherUser)
     {
         $currentUser = Auth::user();
@@ -194,6 +218,17 @@ class ChatController extends Controller
 
         if (!$conversation->isParticipant($user->id)) {
             abort(403, 'Unauthorized');
+        }
+
+        if (!$this->isWithinSessionTime($conversation)) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Chat is only available during the scheduled session time.',
+                    'session_expired' => true
+                ], 403);
+            }
+            return back()->with('error', 'Chat is only available during the scheduled session time.');
         }
 
         $receiverId = ($conversation->patient_id == $user->id) ? $conversation->psychologist_id : $conversation->patient_id;
