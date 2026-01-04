@@ -161,12 +161,6 @@ class ChatController extends Controller
             abort(403, 'Unauthorized access to this conversation');
         }
 
-        if (!$this->isWithinSessionTime($conversation)) {
-            return redirect()
-                ->route('chat.show')
-                ->with('error', 'Chat session has ended.');
-        }
-
         $messages = Message::where('conversation_id', $conversation->id)
             ->with(['sender', 'receiver'])
             ->orderBy('created_at', 'asc')
