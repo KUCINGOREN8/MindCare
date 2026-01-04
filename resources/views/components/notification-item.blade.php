@@ -41,6 +41,9 @@
         <p class="text-caption-dark text-sm wrap-break-word whitespace-normal leading-snug">
             {{ $message }}
         </p>
-        <p class="text-caption text-xs mt-1">{{ $time }}</p>
+       <p class="text-caption text-xs mt-1">
+            {{ preg_replace('/(\d+)\.\d+/', '$1', $time) }}
+        </p>
+
     </div>
 </div>
