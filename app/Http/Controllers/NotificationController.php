@@ -145,7 +145,7 @@ class NotificationController extends Controller
             'icon' => 'assets/icons/calendar.svg',
             'title' => __('notifications.session_reminder_title'),
             'message' => $message,
-            'time' => number_format((float) $this->formatTimeAgo($startDateTime), 1),
+            'time' => $this->formatTimeAgo($startDateTime),
             'type' => 'reminder',
             'timestamp' => $startDateTime->toDateTimeString(),
             'appointment_id' => $appointment->id,
