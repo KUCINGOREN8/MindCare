@@ -30,6 +30,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'otp' => \App\Http\Middleware\OTPMiddleware::class,
             'role' => \App\Http\Middleware\CheckRole::class,
+            'review' => \App\Http\Middleware\CheckAppointmentReview::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
