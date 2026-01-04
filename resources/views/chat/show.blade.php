@@ -577,28 +577,28 @@
                             `<p class="text-sm break-words leading-relaxed">${messageData.message}</p>`;
                     }
 
-                    const statusText = messageData.is_read
-                        ? LANG_CHAT.statusRead
-                        : LANG_CHAT.statusSent;
-
-                    const metaHtml = `
-                    <div class="flex items-center gap-2 mt-1 text-xs ${isSent ? 'justify-end text-gray-400' : 'justify-start text-gray-500'}">
-                        <span>${time}</span>
-                        ${isSent ? `<span>${statusText}</span>` : ``}
-                    </div>
-                    `;
-
                     const messageHtml = `
                     <div class="flex ${isSent ? 'justify-end' : 'justify-start'} mb-4 last:mb-0">
-                        <div class="max-w-[70%] lg:max-w-[60%]">
-                            ${!isSent ? `<p class="text-xs text-gray-500 mb-1 ml-3 font-medium">${messageData.sender.full_name}</p>` : ''}
-                            <div class="flex items-start gap-2">
-                                ${!isSent ? `<img src="${messageData.sender.photo_url}" class="w-8 h-8 rounded-full flex-shrink-0 border border-gray-200 mt-1" />` : ''}
-                                <div class="flex-1">
-                                    <div class="${isSent ? 'bg-primary text-white' : 'bg-white text-gray-900'} rounded-2xl px-4 py-3 shadow-sm border border-gray-100">
-                                        ${messageContent}
+                        <div class="flex w-full ${isSent ? 'justify-end' : 'justify-start'}">
+                            <div class="max-w-[70%] lg:max-w-[60%]">
+                                ${!isSent ? `<p class="text-xs text-gray-500 mb-1 ml-3 font-medium">${messageData.sender.full_name}</p>` : ''}
+                                <div class="flex items-start gap-2">
+                                    ${!isSent ? `<img src="${messageData.sender.photo_url}" class="w-8 h-8 rounded-full flex-shrink-0 border border-gray-200 mt-1" />` : ''}
+                                    <div class="flex-1">
+                                        <div class="${isSent ? 'bg-primary text-white' : 'bg-white text-gray-900'} rounded-2xl px-4 py-3 shadow-sm border border-gray-100">
+                                            ${messageContent}
+                                        </div>
+                                        <div class="flex items-center gap-2 mt-1 ${isSent ? 'justify-end' : 'justify-start'}">
+                                            <span class="text-xs ${isSent ? 'text-gray-400' : 'text-gray-500'}">${time}</span>
+                                            ${isSent ? `
+                                            <span class="flex items-center gap-1 text-xs text-gray-500">
+                                                <span>
+                                                    ${messageData.is_read ? LANG_CHAT.statusRead : LANG_CHAT.statusSent}
+                                                </span>
+                                            </span>
+                                            ` : ''}
+                                        </div>
                                     </div>
-                                    ${metaHtml}
                                 </div>
                             </div>
                         </div>
