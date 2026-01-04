@@ -154,7 +154,6 @@ class NotificationController extends Controller
 
     private function getMessageReminders(User $user)
     {
-        $now = Carbon::now();
         $conversation = Conversation::where(function ($query) use ($user) {
             if ($user->role === 'patient') {
                 $query->where('patient_id', $user->id)
@@ -173,14 +172,18 @@ class NotificationController extends Controller
             return [];
         }
 
+        $latestMessage = $conversation->latestMessage;
+
+        if ($latestMessage->sender_id === $user->id) {
+            return [];
+        }
+
         if (
             ($user->role === 'patient' && (!$conversation->psychologist)) ||
             ($user->role === 'psychologist' && (!$conversation->patient))
         ) {
             return [];
         }
-
-        $latestMessage = $conversation->latestMessage;
 
         if ($user->role === 'patient') {
             $senderName = $conversation->psychologist->full_name ?? __('notifications.default_psychologist');

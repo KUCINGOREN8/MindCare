@@ -10,8 +10,8 @@ return [
     'msg_image' => '🖼️ Image',
     'msg_document' => '📄 Document',
     'msg_attachment' => '📎 Attachment',
-    'status_read' => '✓ Read',
-    'status_sent' => '✓ Sent',
+    'status_read' => 'Read',
+    'status_sent' => 'Sent',
 
     // Input Area
     'placeholder_message' => 'Type your message...',
