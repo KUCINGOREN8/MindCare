@@ -480,6 +480,11 @@
                                 body: formData
                             });
 
+                            if (!response.ok) {
+                                const err = await response.json();
+                                throw err;
+                            }
+
                             const data = await response.json();
 
                             if (response.ok && data.success) {
@@ -493,9 +498,17 @@
                                 }
                             } else {
                                 if (data.session_expired) {
-                                        alert('Chat is only available during the scheduled session time.');
-                                    } else {
-                                        throw new Error(data.message || LANG_CHAT.alertFailGeneric);
+                                    alert('Chat is only available during the scheduled session time.');
+
+                                    messageInput.disabled = true;
+                                    sendButton.disabled = true;
+                                    messageInput.placeholder = 'Session has ended';
+
+                                    chatClosed = true;
+                                    isPolling = false;
+                                    clearTimeout(pollingTimeout);
+
+                                    return;
                                 }
                             }
 
@@ -503,8 +516,10 @@
                             console.error('Error:', err);
                             alert(LANG_CHAT.alertFail);
                         } finally {
-                            sendButton.disabled = false;
-                            sendButton.innerHTML = originalHTML;
+                            if (!messageInput.disabled) {
+                                sendButton.disabled = false;
+                                sendButton.innerHTML = originalHTML;
+                            }
                         }
                     });
                 }
@@ -514,6 +529,7 @@
                     messageInput.addEventListener('keydown', function(e) {
                         if (e.key === 'Enter' && !e.shiftKey) {
                             e.preventDefault();
+                            if (messageInput.disabled) return;
                             if (messageForm) {
                                 messageForm.dispatchEvent(new Event('submit'));
                             }
@@ -591,7 +607,7 @@
                                         </div>
 
                                         <div class="flex items-center gap-2 mt-1 ${isSent ? 'justify-end' : 'justify-start'}">
-                                            <span class="text-xs ${isSent ? 'text-gray-400' : 'text-gray-500'}">
+                                            <span class="text-xs ${isSent ? 'text-gray-400' : 'text-gray-400'}">
                                                 ${time}
                                             </span>
 
@@ -622,9 +638,10 @@
                 let lastMessageId = {{ !empty($messages) && end($messages) ? end($messages)['id'] : 0 }};
                 let isPolling = false;
                 let pollingTimeout = null;
+                let chatClosed = false;
 
                 function pollForNewMessages() {
-                    if (isPolling) return;
+                    if (isPolling || chatClosed) return;
                     isPolling = true;
                     clearTimeout(pollingTimeout);
 
