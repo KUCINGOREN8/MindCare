@@ -181,9 +181,9 @@
                                     {{ old('terms', $user->agree_to_terms ?? false) ? 'checked' : '' }}>
                                 <label for="terms" class="text-sm text-gray-600">{{ __('messages.agree') }} <a
                                         href="#"
-                                        class="text-[#009C8F] hover:underline">{{ __('messages.term') }}</a> and <a
+                                        class="!text-[#009C8F] hover:underline bg-transparent">{{ __('messages.term') }}</a> and <a
                                         href="#"
-                                        class="text-[#009C8F] hover:underline">{{ __('messages.policy') }}</a></label>
+                                        class="!text-[#009C8F] hover:underline bg-transparent">{{ __('messages.policy') }}</a></label>
                             </div>
                             @error('terms')
                                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
