@@ -438,100 +438,72 @@
                     document.getElementById('file-preview').classList.add('hidden');
                 };
 
-if (messageForm) {
-    messageForm.addEventListener('submit', async function(e) {
-        e.preventDefault();
+                if (messageForm) {
+                    messageForm.addEventListener('submit', async function(e) {
+                        e.preventDefault();
 
-        console.log('📤 Submit form triggered');
+                        const messageInput = document.getElementById('message-input');
+                        const fileInput = document.getElementById('file-input');
+                        const message = messageInput.value.trim();
+                        const file = fileInput.files[0];
 
-        const messageInput = document.getElementById('message-input');
-        const fileInput = document.getElementById('file-input');
-        const message = messageInput.value.trim();
-        const file = fileInput.files[0];
+                        if (!message && !file) {
+                            alert(LANG_CHAT.alertEmpty);
+                            return;
+                        }
 
-        console.log('📝 Message:', message);
-        console.log('📎 File:', file);
+                        const sendButton = document.getElementById('send-button');
+                        sendButton.disabled = true;
+                        const originalHTML = sendButton.innerHTML;
+                        sendButton.innerHTML =
+                            `<svg class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>`;
 
-        if (!message && !file) {
-            alert(LANG_CHAT.alertEmpty);
-            return;
-        }
+                        try {
+                            const formData = new FormData(this);
 
-        const sendButton = document.getElementById('send-button');
-        sendButton.disabled = true;
-        const originalHTML = sendButton.innerHTML;
-        sendButton.innerHTML =
-            `<svg class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>`;
+                            if (!message && file) {
+                                const fileExt = file.name.split('.').pop().toLowerCase();
+                                const isImage = ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(fileExt);
+                                const isDoc = ['pdf', 'doc', 'docx'].includes(fileExt);
 
-        try {
-            const formData = new FormData(this);
-            console.log('📦 FormData created');
+                                if (isImage) formData.set('message', LANG_CHAT.msgImage);
+                                else if (isDoc) formData.set('message', LANG_CHAT.msgDoc);
+                                else formData.set('message', LANG_CHAT.msgAttach);
+                            }
 
-            if (!message && file) {
-                const fileExt = file.name.split('.').pop().toLowerCase();
-                const isImage = ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(fileExt);
-                const isDoc = ['pdf', 'doc', 'docx'].includes(fileExt);
+                            const response = await fetch(this.action, {
+                                method: 'POST',
+                                headers: {
+                                    'X-Requested-With': 'XMLHttpRequest',
+                                    'X-CSRF-TOKEN': csrfToken
+                                },
+                                body: formData
+                            });
 
-                console.log('📁 File extension:', fileExt, 'isImage:', isImage, 'isDoc:', isDoc);
+                            const data = await response.json();
 
-                if (isImage) {
-                    formData.set('message', LANG_CHAT.msgImage);
-                    console.log('🖼️ Set message to image placeholder');
+                            if (response.ok && data.success) {
+                                messageInput.value = '';
+                                messageInput.style.height = 'auto';
+                                removeFile();
+
+                                if (data.message) {
+                                    addNewMessageToUI(data.message);
+                                    updateSidebarConversation(data.message);
+                                }
+                            } else {
+                                throw new Error(data.message || LANG_CHAT.alertFailGeneric);
+                            }
+
+                        } catch (err) {
+                            console.error('Error:', err);
+                            alert(LANG_CHAT.alertFail);
+                        } finally {
+                            sendButton.disabled = false;
+                            sendButton.innerHTML = originalHTML;
+                        }
+                    });
                 }
-                else if (isDoc) {
-                    formData.set('message', LANG_CHAT.msgDoc);
-                    console.log('📄 Set message to doc placeholder');
-                }
-                else {
-                    formData.set('message', LANG_CHAT.msgAttach);
-                    console.log('📎 Set message to attachment placeholder');
-                }
-            }
-
-            console.log('🚀 Sending request to:', this.action);
-
-            const response = await fetch(this.action, {
-                method: 'POST',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'X-CSRF-TOKEN': csrfToken
-                },
-                body: formData
-            });
-
-            console.log('✅ Response received, status:', response.status);
-
-            const data = await response.json();
-            console.log('📊 Response data:', data);
-
-            if (response.ok && data.success) {
-                console.log('🎉 Message sent successfully!');
-                messageInput.value = '';
-                messageInput.style.height = 'auto';
-                removeFile();
-
-                if (data.message) {
-                    console.log('🔄 Adding message to UI:', data.message);
-                    addNewMessageToUI(data.message);
-                    updateSidebarConversation(data.message);
-                }
-            } else {
-                console.error('❌ Server responded with error:', data);
-                throw new Error(data.message || LANG_CHAT.alertFailGeneric);
-            }
-
-        } catch (err) {
-            console.error('💥 Error caught in catch block:', err);
-            console.error('💥 Error message:', err.message);
-            console.error('💥 Error stack:', err.stack);
-            alert(LANG_CHAT.alertFail);
-        } finally {
-            console.log('🏁 Finally block executed');
-            sendButton.disabled = false;
-            sendButton.innerHTML = originalHTML;
-        }
-    });
-}
 
                 // Enter to send
                 if (messageInput) {
@@ -547,23 +519,6 @@ if (messageForm) {
 
                 // Function to add new message
                 window.addNewMessageToUI = function(messageData) {
-  console.log('🎯 addNewMessageToUI called with:', messageData);
-
-    // Safety check
-    if (!messageData) {
-        console.error('❌ messageData is undefined or null');
-        return;
-    }
-
-    if (!messageData.sender) {
-        console.error('❌ messageData.sender is missing:', messageData);
-        return;
-    }
-
-    const isSent = {{ auth()->id() }} === messageData.sender_id;
-    console.log('👤 isSent:', isSent, 'auth id:', {{ auth()->id() }}, 'sender_id:', messageData.sender_id);
-
-
                     const isSent = {{ auth()->id() }} === messageData.sender_id;
                     const time = new Date(messageData.created_at).toLocaleTimeString('en-US', {
                         hour: '2-digit',
