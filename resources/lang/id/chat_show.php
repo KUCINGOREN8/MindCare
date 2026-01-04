@@ -10,8 +10,8 @@ return [
     'msg_image' => '🖼️ Gambar',
     'msg_document' => '📄 Dokumen',
     'msg_attachment' => '📎 Lampiran',
-    'status_read' => 'Dibaca',
-    'status_sent' => 'Terkirim',
+    'status_read' => '✓✓ Dibaca',
+    'status_sent' => '✓ Terkirim',
 
     // Input Area
     'placeholder_message' => 'Ketik pesan Anda...',
