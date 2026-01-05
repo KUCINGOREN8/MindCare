@@ -42,7 +42,7 @@
                             @endphp
 
                             <div class="schedule-day bg-gray-50 p-4 md:p-6 rounded-lg mb-4 border border-gray-200">
-                                <div class="flex items-center justify-between mb-4">
+                                <div class="flex flex-wrap items-center justify-between mb-4 gap-2">
                                     {{-- TAMPILAN: Pakai Label (Senin/Monday) --}}
                                     <h3 class="text-lg font-medium text-gray-800 capitalize">{{ $label }}</h3>
 
@@ -60,7 +60,7 @@
                                 </div>
 
                                 {{-- ID: Pakai Index Angka ($i) agar JS step5.js jalan --}}
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 schedule-fields"
+                                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 schedule-fields"
                                     id="schedule-fields-{{ $i }}"
                                     style="{{ $notAvailable ? 'display: none;' : '' }}">
 
@@ -68,7 +68,7 @@
                                     <input type="hidden" name="schedules[{{ $i }}][day_of_week]"
                                         value="{{ $key }}">
 
-                                    <div>
+                                    <div class="w-full min-w-0">
                                         <label
                                             class="block text-gray-700 mb-2 text-sm md:text-base">{{ __('schedule.start_time') }}
                                             <span class="text-red-500">*</span></label>
@@ -76,7 +76,7 @@
                                             class="w-full outline-none text-black bg-white px-4 py-3 rounded-lg border border-gray-300 schedule-time text-sm md:text-base"
                                             value="{{ $startTime }}" {{ $notAvailable ? 'disabled' : 'required' }}>
                                     </div>
-                                    <div>
+                                    <div class="w-full min-w-0">
                                         <label
                                             class="block text-gray-700 mb-2 text-sm md:text-base">{{ __('schedule.end_time') }}
                                             <span class="text-red-500">*</span></label>

@@ -151,7 +151,7 @@
                         </div>
 
                         <!-- Preferred Language -->
-                        <div class="col-span-1 md:col-span-2">
+                        <div class="col-span-2">
                             <label
                                 class="block text-gray-700 mb-2 text-sm md:text-base">{{ __('messages.preferlang') }}</label>
                             <div class="flex items-center rounded-lg px-4 py-3 shadow-sm"
