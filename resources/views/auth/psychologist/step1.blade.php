@@ -65,7 +65,7 @@
                                     placeholder="Password" {{ $user ? '' : 'required' }}>
                                 <button type="button" class="password-toggle" onclick="togglePassword('password')">
                                     <img src="{{ asset('assets/signup/eye-closed.svg') }}" alt="Show password"
-                                        class="w-5 h-5 opacity-50" data-field="password">
+                                        class="w-5 h-5 opacity-50 eye-icon" data-field="password">
                                 </button>
                             </div>
                             @error('password')
@@ -88,7 +88,7 @@
                                     placeholder="{{ __('messages.confirmpassword') }}" {{ $user ? '' : 'required' }}>
                                 <button type="button" class="password-toggle" onclick="togglePassword('confirm-password')">
                                     <img src="{{ asset('assets/signup/eye-closed.svg') }}" alt="Show password"
-                                        class="w-5 h-5 opacity-50" data-field="confirm-password">
+                                        class="w-5 h-5 opacity-50 eye-icon" data-field="confirm-password">
                                 </button>
                             </div>
                         </div>
