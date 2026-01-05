@@ -148,7 +148,7 @@
                     </div>
 
                     <div x-show="!loadingPsychologists">
-                        <div x-show="availablePsychologists.length > 0" class="grid grid-cols-3 gap-6">
+                        <div x-show="availablePsychologists.length > 0" class="grid grid-cols-1 gap-6">
                             <template x-for="psych in availablePsychologists" :key="psych.id">
                                 <div class="border rounded-xl p-5 text-center cursor-pointer transition-all hover:shadow-md"
                                     @click="selectedPsychologist = psych.id"
