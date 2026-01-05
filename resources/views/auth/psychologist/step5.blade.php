@@ -2,13 +2,15 @@
 @section('title', 'Sign Up as Psychologist')
 
 @section('content')
-    <div class="min-h-screen bg-gray-50">
+    <div class="min-h-screen bg-gray-50 w-full overflow-x-hidden">
         @include('auth.partials.progress')
 
         <div class="max-w-4xl mx-auto px-4 py-8">
-            <div class="bg-white rounded-xl shadow-lg p-8">
-                <h2 class="text-3xl font-bold text-center mb-2" style="color: #009C8F;">{{ __('messages.schedule') }}</h2>
-                <p class="text-gray-600 text-center mb-8">Step 5: {{ __('messages.scheduledesc') }}</p>
+            <div class="bg-white rounded-xl shadow-lg p-6 md:p-8">
+                <h2 class="text-2xl md:text-3xl font-bold text-center mb-2" style="color: #009C8F;">
+                    {{ __('messages.schedule') }}</h2>
+                <p class="text-gray-600 text-center mb-8 text-sm md:text-base">Step 5:
+                    {{ __('messages.scheduledesc') }}</p>
 
                 <form method="POST" action="{{ route('psychologist.signup.storeStep5', $user) }}" id="scheduleForm">
                     @csrf
@@ -39,7 +41,7 @@
                                 $notAvailable = old('schedules.' . $i . '.not_available', '0') == '1';
                             @endphp
 
-                            <div class="schedule-day bg-gray-50 p-6 rounded-lg mb-4 border border-gray-200">
+                            <div class="schedule-day bg-gray-50 p-4 md:p-6 rounded-lg mb-4 border border-gray-200">
                                 <div class="flex items-center justify-between mb-4">
                                     {{-- TAMPILAN: Pakai Label (Senin/Monday) --}}
                                     <h3 class="text-lg font-medium text-gray-800 capitalize">{{ $label }}</h3>
@@ -67,17 +69,19 @@
                                         value="{{ $key }}">
 
                                     <div>
-                                        <label class="block text-gray-700 mb-2">{{ __('schedule.start_time') }} <span
-                                                class="text-red-500">*</span></label>
+                                        <label
+                                            class="block text-gray-700 mb-2 text-sm md:text-base">{{ __('schedule.start_time') }}
+                                            <span class="text-red-500">*</span></label>
                                         <input type="time" name="schedules[{{ $i }}][start_time]"
-                                            class="w-full outline-none text-black bg-white px-4 py-3 rounded-lg border border-gray-300 schedule-time"
+                                            class="w-full outline-none text-black bg-white px-4 py-3 rounded-lg border border-gray-300 schedule-time text-sm md:text-base"
                                             value="{{ $startTime }}" {{ $notAvailable ? 'disabled' : 'required' }}>
                                     </div>
                                     <div>
-                                        <label class="block text-gray-700 mb-2">{{ __('schedule.end_time') }} <span
-                                                class="text-red-500">*</span></label>
+                                        <label
+                                            class="block text-gray-700 mb-2 text-sm md:text-base">{{ __('schedule.end_time') }}
+                                            <span class="text-red-500">*</span></label>
                                         <input type="time" name="schedules[{{ $i }}][end_time]"
-                                            class="w-full outline-none text-black bg-white px-4 py-3 rounded-lg border border-gray-300 schedule-time"
+                                            class="w-full outline-none text-black bg-white px-4 py-3 rounded-lg border border-gray-300 schedule-time text-sm md:text-base"
                                             value="{{ $endTime }}" {{ $notAvailable ? 'disabled' : 'required' }}>
                                     </div>
                                 </div>
@@ -87,10 +91,11 @@
 
                     <div class="mt-8 p-4 bg-blue-50 rounded-lg border border-blue-200">
                         <div class="flex items-start">
-                            <i class="fas fa-info-circle text-blue-500 mt-1 mr-3"></i>
+                            <i class="fas fa-info-circle text-blue-500 mt-1 mr-3 flex-shrink-0"></i>
                             <div>
-                                <h4 class="font-medium text-blue-800 mb-1">{{ __('schedule.important_notes') }}</h4>
-                                <ul class="text-sm text-blue-700 space-y-1">
+                                <h4 class="font-medium text-blue-800 mb-1 text-sm md:text-base">
+                                    {{ __('schedule.important_notes') }}</h4>
+                                <ul class="text-xs md:text-sm text-blue-700 space-y-1">
                                     <li>• {{ __('schedule.note_1') }}</li>
                                     <li>• {{ __('schedule.note_2') }}</li>
                                     <li>• {{ __('schedule.note_3') }}</li>
@@ -101,11 +106,11 @@
 
                     <div class="mt-8 flex justify-between">
                         <a href="{{ route('psychologist.signup.step4', $user) }}"
-                            class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition">
+                            class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition text-center text-sm md:text-base">
                             ← {{ __('messages.back') }}
                         </a>
                         <button type="submit"
-                            class="px-8 py-3 bg-[#009C8F] text-white rounded-lg font-medium hover:opacity-90 transition shadow-md">
+                            class="px-8 py-3 bg-[#009C8F] text-white rounded-lg font-medium hover:opacity-90 transition shadow-md text-sm md:text-base">
                             {{ __('messages.completeregis') }} →
                         </button>
                     </div>

@@ -139,18 +139,18 @@ class AuthPsychologistController extends Controller
             'educations.*.degree' => 'required|string|max:255',
             'educations.*.institution' => 'required|string|max:255',
             'educations.*.year' => [
-            'required',
-            'digits:4',
-            function ($attribute, $value, $fail) {
-                $currentYear = date('Y');
-                if ($value > $currentYear) {
-                    $fail('The year cannot be in the future.');
+                'required',
+                'digits:4',
+                function ($attribute, $value, $fail) {
+                    $currentYear = date('Y');
+                    if ($value > $currentYear) {
+                        $fail('The year cannot be in the future.');
+                    }
+                    if ($value < 1900) {
+                        $fail('The year must be after 1900.');
+                    }
                 }
-                if ($value < 1900) {
-                    $fail('The year must be after 1900.');
-                }
-            }
-        ],
+            ],
         ], [
             'educations.*.year.digits' => 'Year must be exactly 4 digits',
         ]);
@@ -178,47 +178,47 @@ class AuthPsychologistController extends Controller
             'experiences.*.position' => 'required|string|max:255',
             'experiences.*.organization' => 'required|string|max:255',
             'experiences.*.start_year' => [
-            'required',
-            'digits:4',
-            function ($attribute, $value, $fail) {
-                $currentYear = date('Y');
-                if ($value > $currentYear) {
-                    $fail('Start year cannot be in the future.');
-                }
-                if ($value < 1900) {
-                    $fail('Start year must be after 1900.');
-                }
-            }
-        ],
-            'experiences.*.end_year' => [
-            'nullable',
-            'digits:4',
-            function ($attribute, $value, $fail) use ($request) {
-                if ($value) {
+                'required',
+                'digits:4',
+                function ($attribute, $value, $fail) {
                     $currentYear = date('Y');
-                    $index = explode('.', $attribute)[1];
-                    $startYear = $request->input("experiences.{$index}.start_year");
-
                     if ($value > $currentYear) {
-                        $fail('End year cannot be in the future.');
+                        $fail('Start year cannot be in the future.');
                     }
                     if ($value < 1900) {
-                        $fail('End year must be after 1900.');
-                    }
-                    if ($value < $startYear) {
-                        $fail('End year must be after start year.');
+                        $fail('Start year must be after 1900.');
                     }
                 }
-            }
-        ],
-        ], [
-        'experiences.*.start_year.digits' => 'Start year must be exactly 4 digits',
-        'experiences.*.end_year.digits' => 'End year must be exactly 4 digits',
-    ]);
+            ],
+            'experiences.*.end_year' => [
+                'nullable',
+                'digits:4',
+                function ($attribute, $value, $fail) use ($request) {
+                    if ($value) {
+                        $currentYear = date('Y');
+                        $index = explode('.', $attribute)[1];
+                        $startYear = $request->input("experiences.{$index}.start_year");
 
-    if ($validator->fails()) {
-        return back()->withErrors($validator)->withInput()->with('error', 'Please correct the experience information.');
-    }
+                        if ($value > $currentYear) {
+                            $fail('End year cannot be in the future.');
+                        }
+                        if ($value < 1900) {
+                            $fail('End year must be after 1900.');
+                        }
+                        if ($value < $startYear) {
+                            $fail('End year must be after start year.');
+                        }
+                    }
+                }
+            ],
+        ], [
+            'experiences.*.start_year.digits' => 'Start year must be exactly 4 digits',
+            'experiences.*.end_year.digits' => 'End year must be exactly 4 digits',
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput()->with('error', 'Please correct the experience information.');
+        }
         $user->psychologist->experiences()->delete();
         $user->psychologist->experiences()->createMany($request->experiences);
         return redirect()->route('psychologist.signup.step5', $user);

@@ -151,7 +151,7 @@ return [
     'endyear' => 'End Year',
     'addexperience' => 'Add Another Experience',
     'leaveblankendyear' => 'Leave blank if currently working',
-    'schedule' => 'Availabality Schedule',
+    'schedule' => 'Availability Schedule',
     'scheduledesc' => 'Define your available consultation hours',
     'completeregis' => 'Complete Registration',
     'modal_reject_title' => 'Reject Application?',
