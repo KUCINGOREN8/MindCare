@@ -153,7 +153,7 @@ return [
     'leaveblankendyear' => 'Leave blank if currently working',
     'schedule' => 'Availability Schedule',
     'scheduledesc' => 'Define your available consultation hours',
-    'completeregis' => 'Complete Registration',
+    'completeregis' => 'Register',
     'modal_reject_title' => 'Reject Application?',
     'modal_reject_msg' => 'Are you sure you want to REJECT this application? This will remove the request permanently.',
     'btn_yes_reject' => 'Yes, Reject It',

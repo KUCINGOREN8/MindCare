@@ -70,18 +70,18 @@
 
                                     <div class="w-full min-w-0">
                                         <label
-                                            class="block text-gray-700 mb-2 text-sm md:text-base">{{ __('schedule.start_time') }}
+                                            class="block text-gray-700 mb-2 text-sm md:text-base whitespace-nowrap">{{ __('schedule.start_time') }}
                                             <span class="text-red-500">*</span></label>
                                         <input type="time" name="schedules[{{ $i }}][start_time]"
-                                            class="w-full outline-none text-black bg-white px-4 py-3 rounded-lg border border-gray-300 schedule-time text-sm md:text-base"
+                                            class="block w-full min-w-0 max-w-full box-border outline-none text-black bg-white px-4 py-3 rounded-lg border border-gray-300 schedule-time text-sm md:text-base"
                                             value="{{ $startTime }}" {{ $notAvailable ? 'disabled' : 'required' }}>
                                     </div>
                                     <div class="w-full min-w-0">
                                         <label
-                                            class="block text-gray-700 mb-2 text-sm md:text-base">{{ __('schedule.end_time') }}
+                                            class="block text-gray-700 mb-2 text-sm md:text-base whitespace-nowrap">{{ __('schedule.end_time') }}
                                             <span class="text-red-500">*</span></label>
                                         <input type="time" name="schedules[{{ $i }}][end_time]"
-                                            class="w-full outline-none text-black bg-white px-4 py-3 rounded-lg border border-gray-300 schedule-time text-sm md:text-base"
+                                            class="block w-full min-w-0 max-w-full box-border outline-none text-black bg-white px-4 py-3 rounded-lg border border-gray-300 schedule-time text-sm md:text-base"
                                             value="{{ $endTime }}" {{ $notAvailable ? 'disabled' : 'required' }}>
                                     </div>
                                 </div>
