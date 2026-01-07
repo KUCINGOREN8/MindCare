@@ -1,9 +1,9 @@
 @props(['upcomingAppointments', 'user', 'showSeeAll' => true])
 
-<div class="bg-white p-6 flex flex-col gap-6 rounded-md border border-grey-border">
+<div class="bg-white p-4 sm:p-6 flex flex-col gap-4 sm:gap-6 rounded-md border border-grey-border">
 
     {{-- Header --}}
-    <div class="flex flex-1 gap-4 justify-between items-start">
+    <div class="flex flex-1 gap-4 justify-between items-center">
         <div class="flex items-center gap-2">
             @if ($upcomingAppointments->count() > 0)
                 <span class="relative flex h-3 w-3 ml-1">
@@ -12,11 +12,12 @@
                     <span class="relative inline-flex rounded-full h-3 w-3 bg-teal-500"></span>
                 </span>
             @endif
-            <h3 class="font-bold">{{ __('messages.upcomingappt') }}</h3>
+            <h3 class="font-bold text-base sm:text-lg">{{ __('messages.upcomingappt') }}</h3>
         </div>
 
         @if ($showSeeAll)
-            <a href="{{ route('patient.appointments.index') }}" class="underline hover:text-primary text-caption text-sm">
+            <a href="{{ route('patient.appointments.index') }}"
+                class="underline hover:text-primary text-caption text-xs sm:text-sm whitespace-nowrap">
                 {{ __('messages.seeall') }}
             </a>
         @endif
@@ -24,18 +25,21 @@
 
     {{-- Appointment Cards --}}
     @if ($upcomingAppointments->count() > 0)
-        @foreach ($showSeeAll ? $upcomingAppointments->take(2) : $upcomingAppointments as $appointment)
-            <x-appointment-card :appointment="$appointment" />
-        @endforeach
+        <div class="flex flex-col gap-4">
+            @foreach ($showSeeAll ? $upcomingAppointments->take(2) : $upcomingAppointments as $appointment)
+                <x-appointment-card :appointment="$appointment" />
+            @endforeach
+        </div>
     @else
-        <div class="bg-white p-6 text-center rounded-md border border-grey-border flex flex-col gap-6">
-            <p class="text-gray-500">{{ __('messages.upcomingnotfound') }}</p>
+        <div
+            class="bg-white p-6 text-center rounded-md border border-grey-border flex flex-col gap-4 sm:gap=6 items-center justify-center">
+            <p class="text-gray-500 text-sm sm:text-base">{{ __('messages.upcomingnotfound') }}</p>
 
             {{-- Button only for patient --}}
             @if ($user->role === 'patient')
-                <div>
+                <div class="w-full sm:w-auto">
                     <a href="{{ route('patient.book.appointment') }}"
-                        class="px-4 py-2 bg-[#00C3B3] hover:bg-[#179990] text-white rounded-md">
+                        class="block w-full sm:w-auto px-4 py-2 bg-[#00C3B3] hover:bg-[#179990] text-white rounded-md font-medium transition-colors text-center text-sm sm:text-base">
                         {{ __('messages.bookappointment') }}
                     </a>
                 </div>

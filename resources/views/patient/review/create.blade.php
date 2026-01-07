@@ -3,16 +3,18 @@
 @section('title', __('rate_session.title'))
 
 @section('content')
-    <div class="flex flex-1 flex-col gap-6">
-        <div class="flex flex-col gap-6">
-            <div class="flex bg-white p-6 rounded-md border-grey-border border justify-between">
+    <div class="flex flex-1 flex-col gap-4 sm:gap-6 w-full">
+        <div class="flex flex-col gap-4 sm:gap-6">
+            <div
+                class="flex flex-col sm:flex-row bg-white p-4 sm:p-6 rounded-md border-grey-border border justify-between items-start sm:items-center gap-4 sm:gap-0">
                 <div class="flex flex-col">
-                    <h1 class="font-bold text-lg text-primary">{{ __('rate_session.header_title') }}</h1>
-                    <h5 class="text-captiondark text-sm">
+                    <h1 class="font-bold text-[#00C3B3] text-lg">{{ __('rate_session.header_title') }}</h1>
+                    <h5 class="text-captiondark text-sm sm:text-base">
                         {{ __('rate_session.header_subtitle', ['name' => $appointment->psychologist->user->full_name]) }}
                     </h5>
                 </div>
-                <button onclick="window.history.back()" type="submit" class="px-4 py-2 bg-primary text-white rounded-md">
+                <button onclick="window.history.back()" type="submit"
+                    class="w-full sm:w-auto px-4 py-2 bg-[#00C3B3] hover:bg-[#179990] text-white rounded-md flex items-center justify-center text-sm font-medium transition-colors">
                     {{ __('rate_session.back') }}
                 </button>
             </div>
