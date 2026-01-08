@@ -146,7 +146,7 @@ return [
     'leaveblankendyear' => 'Biarkan kosong jika masih bekerja',
     'schedule' => 'Jadwal Ketersediaan',
     'scheduledesc' => 'Atur jam konsultasi Anda',
-    'completeregis' => 'Selesaikan Pendaftaran',
+    'completeregis' => 'Daftar',
     'modal_reject_title' => 'Tolak Pengajuan?',
     'modal_reject_msg' => 'Apakah Anda yakin ingin MENOLAK pengajuan ini? Tindakan ini akan menghapus permintaan secara permanen.',
     'btn_yes_reject' => 'Ya, Tolak',

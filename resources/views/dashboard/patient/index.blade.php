@@ -5,9 +5,9 @@
 @endsection
 
 @section('content')
-    <div class="flex flex-1">
-        <div class="flex flex-col flex-1 gap-6">
-            <div class="flex flex-col bg-white p-6 gap-4 rounded-md border-grey-border border">
+    <div class="flex flex-col lg:flex-row flex-1 gap-6">
+        <div class="w-full flex-1 flex flex-col gap-6 order-1">
+            <div class="flex flex-col bg-white p-4 sm:p-6 gap-4 rounded-md border-grey-border border">
                 <div class="flex flex-col">
                     <h1 class="text-[#00C3B3] font-bold text-lg">Good Day, {{ $user->full_name }}!</h1>
                     <h5 class="text-captiondark text-sm">{{ __('messages.mood') }}</h5>
@@ -29,19 +29,20 @@
                     @csrf
                     <input type="hidden" name="mood" :value="selected">
 
-                    <div class="flex items-center gap-4">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                         <p class="text-caption-dark">
                             <span x-show="!hasSubmittedToday">{{ __('messages.ratemood') }}:</span>
                             <span x-show="hasSubmittedToday" class="flex flex-col">
                                 <span>
                                     {{ __('messages.todaymood') }}:
-                                    <span class="font-medium capitalize text-[#00C3B3]" x-text="moodLabels[selected]"></span>
+                                    <span class="font-medium capitalize text-[#00C3B3]"
+                                        x-text="moodLabels[selected]"></span>
                                 </span>
                                 <span class="text-sm text-gray-500">({{ __('messages.updatemood') }})</span>
                             </span>
                         </p>
 
-                        <div class="flex gap-4">
+                        <div class="flex flex-wrap gap-3 sm:gap-4">
                             @php
                                 $moodOptions = [
                                     ['id' => 'sad', 'img' => 'sad.png'],
@@ -80,108 +81,111 @@
             ])
 
             {{-- MOOD CHART --}}
-            <x-mood-chart
-                :chartData="$moodData['chartData']"
-                :averageMood="$moodData['averageMood']"
-                :note="$moodData['note']"
-                height="250px"
-                id="patientMoodChart"
-            />
+            <div class="w-full overflow-x-auto">
+                <x-mood-chart :chartData="$moodData['chartData']" :averageMood="$moodData['averageMood']" :note="$moodData['note']" height="250px" id="patientMoodChart" />
+            </div>
+        </div>
+
+
+        {{-- USER PROFILE CARD --}}
+        <div class="w-full lg:w-80 flex-none order-2">
+            <x-user-profile-card :user="$user" :notifications="$notifications" />
         </div>
     </div>
 
-    {{-- USER PROFILE CARD --}}
-    <x-user-profile-card :user="$user" :notifications="$notifications" />
 
     {{-- RESCHEDULE --}}
     <div id="rescheduleModal"
-        class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-[9999] items-center justify-center p-4 transition-opacity duration-300">
+        class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-[9999] items-end sm:items-center justify-center p-0 sm:p-4 transition-opacity duration-300">
     </div>
 @endsection
 
 @push('styles')
-<style>
-    .modal-enter {
-        opacity: 0;
-        transform: scale(0.95);
-    }
-    .modal-enter-active {
-        opacity: 1;
-        transform: scale(1);
-        transition: opacity 200ms ease-out, transform 200ms ease-out;
-    }
-    .modal-exit {
-        opacity: 1;
-        transform: scale(1);
-    }
-    .modal-exit-active {
-        opacity: 0;
-        transform: scale(0.95);
-        transition: opacity 200ms ease-in, transform 200ms ease-in;
-    }
-</style>
+    <style>
+        .modal-enter {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+
+        .modal-enter-active {
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 200ms ease-out, transform 200ms ease-out;
+        }
+
+        .modal-exit {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .modal-exit-active {
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 200ms ease-in, transform 200ms ease-in;
+        }
+    </style>
 @endpush
 
 @push('scripts')
-<script>
-let currentAppointmentId = null;
-let currentPsychologistId = null;
+    <script>
+        let currentAppointmentId = null;
+        let currentPsychologistId = null;
 
-window.openRescheduleModal = function(data) {
-    if (typeof data === 'string') {
-        try {
-            data = JSON.parse(data);
-        } catch (e) {
-            return;
-        }
-    }
+        window.openRescheduleModal = function(data) {
+            if (typeof data === 'string') {
+                try {
+                    data = JSON.parse(data);
+                } catch (e) {
+                    return;
+                }
+            }
 
-    if (typeof data !== 'object' || data === null) {
-        return;
-    }
+            if (typeof data !== 'object' || data === null) {
+                return;
+            }
 
-    currentAppointmentId = data.id;
-    currentPsychologistId = data.psychologist_id;
+            currentAppointmentId = data.id;
+            currentPsychologistId = data.psychologist_id;
 
-    const modal = document.getElementById('rescheduleModal');
+            const modal = document.getElementById('rescheduleModal');
 
-    if (!modal) {
-        return;
-    }
+            if (!modal) {
+                return;
+            }
 
-    const formatDate = (dateStr) => {
-        try {
-            if (!dateStr) return 'Date not set';
-            const date = new Date(dateStr);
-            if (isNaN(date.getTime())) return 'Invalid date';
+            const formatDate = (dateStr) => {
+                try {
+                    if (!dateStr) return 'Date not set';
+                    const date = new Date(dateStr);
+                    if (isNaN(date.getTime())) return 'Invalid date';
 
-            return date.toLocaleDateString('en-GB', {
-                weekday: 'long',
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric'
-            });
-        } catch (e) {
-            return 'Date error';
-        }
-    };
+                    return date.toLocaleDateString('en-GB', {
+                        weekday: 'long',
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric'
+                    });
+                } catch (e) {
+                    return 'Date error';
+                }
+            };
 
-    const formatTime = (timeStr) => {
-        if (!timeStr) return 'N/A';
-        if (timeStr.includes(':')) {
-            return timeStr.substring(0, 5);
-        }
-        return timeStr;
-    };
+            const formatTime = (timeStr) => {
+                if (!timeStr) return 'N/A';
+                if (timeStr.includes(':')) {
+                    return timeStr.substring(0, 5);
+                }
+                return timeStr;
+            };
 
-    const formatStatus = (status) => {
-        if (!status) return 'Confirmed';
-        return status.charAt(0).toUpperCase() + status.slice(1).replace('_', ' ');
-    };
+            const formatStatus = (status) => {
+                if (!status) return 'Confirmed';
+                return status.charAt(0).toUpperCase() + status.slice(1).replace('_', ' ');
+            };
 
-    const modalHTML = `
-        <div class="bg-white rounded-xl border border-gray-200 shadow-sm w-full max-w-lg">
-            <div class="p-6">
+            const modalHTML = `
+        <div class="bg-white w-full max-w-lg rounded-t-xl sm:rounded-xl border border-gray-200 shadow-xl max-h-[90vh] flex flex-col">
+            <div class="p-6 overflow-y-auto">
                 <div class="flex justify-between items-center mb-6">
                     <div>
                         <h1 class="text-[#00C3B3] font-bold text-lg">Reschedule Appointment</h1>
@@ -196,10 +200,10 @@ window.openRescheduleModal = function(data) {
 
                 <div class="bg-gray-50 rounded-lg p-4 mb-6 border border-gray-200">
                     <h3 class="font-medium text-gray-700 mb-2">Current Appointment</h3>
-                    <div class="flex items-center justify-between">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                         <div>
                             <p class="text-sm text-gray-600">Date & Time</p>
-                            <p class="font-semibold">${formatDate(data.date)} at ${formatTime(data.start_time)} - ${formatTime(data.end_time)}</p>
+                            <p class="font-semibold text-sm sm:text-base">${formatDate(data.date)} at ${formatTime(data.start_time)} - ${formatTime(data.end_time)}</p>
                             <p class="text-sm text-gray-600 mt-1">Psychologist</p>
                             <p class="font-medium">${data.psychologist_name || 'Psychologist'}</p>
                         </div>
@@ -235,7 +239,7 @@ window.openRescheduleModal = function(data) {
                                 <p>No available times for selected date.</p>
                             </div>
                         </div>
-                        <div id="timeOptions" class="grid grid-cols-3 gap-3"></div>
+                        <div id="timeOptions" class="grid grid-cols-2 sm:grid-cols-3 gap-3"></div>
                         <input type="hidden" id="selectedTime" name="reschedule_time" required>
                     </div>
 
@@ -245,7 +249,7 @@ window.openRescheduleModal = function(data) {
                 </form>
             </div>
 
-            <div class="flex justify-end gap-3 p-6 border-t border-gray-200">
+            <div class="flex flex-col-reverse sm:flex-row justify-end gap-3 p-6 border-t border-gray-200 bg-gray-50 rounded-b-xl">
                 <button type="button" onclick="closeRescheduleModal()"
                         class="px-5 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition-colors">
                     Cancel
@@ -259,195 +263,197 @@ window.openRescheduleModal = function(data) {
         </div>
     `;
 
-    modal.innerHTML = modalHTML;
+            modal.innerHTML = modalHTML;
 
-    const form = document.getElementById('rescheduleForm');
-    if (form && data.id) {
-        form.action = `/patient/appointments/${data.id}/reschedule`;
-    }
-    
-    setupDateInput();
+            const form = document.getElementById('rescheduleForm');
+            if (form && data.id) {
+                form.action = `/patient/appointments/${data.id}/reschedule`;
+            }
 
-    modal.classList.remove('hidden');
-    modal.classList.add('flex');
-    document.body.style.overflow = 'hidden';
+            setupDateInput();
 
-}
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
 
-function closeRescheduleModal() {
-    const modal = document.getElementById('rescheduleModal');
-    if (!modal) return;
-
-    modal.classList.add('hidden');
-    modal.classList.remove('flex');
-    document.body.style.overflow = 'auto';
-    currentAppointmentId = null;
-    currentPsychologistId = null;
-}
-
-function getTomorrowDate() {
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    return tomorrow.toISOString().split('T')[0];
-}
-
-function setupDateInput() {
-    const dateInput = document.getElementById('rescheduleDate');
-    if (!dateInput) {
-        return;
-    }
-
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    dateInput.min = tomorrow.toISOString().split('T')[0];
-    dateInput.value = '';
-
-    const elements = {
-        selectedTime: document.getElementById('selectedTime'),
-        timeOptions: document.getElementById('timeOptions'),
-        noTimesMessage: document.getElementById('noTimesMessage'),
-        rescheduleError: document.getElementById('rescheduleError'),
-        submitButton: document.getElementById('submitButton'),
-        timeSection: document.getElementById('timeSection')
-    };
-
-    if (elements.selectedTime) elements.selectedTime.value = '';
-    if (elements.timeOptions) elements.timeOptions.innerHTML = '';
-    if (elements.noTimesMessage) elements.noTimesMessage.classList.add('hidden');
-    if (elements.rescheduleError) elements.rescheduleError.classList.add('hidden');
-    if (elements.submitButton) elements.submitButton.disabled = true;
-    if (elements.timeSection) elements.timeSection.classList.add('hidden');
-}
-
-async function loadAvailableTimes() {
-    const dateInput = document.getElementById('rescheduleDate');
-    if (!dateInput) {
-        return;
-    }
-
-    const date = dateInput.value;
-    if (!date || !currentAppointmentId) {
-        return;
-    }
-
-    const elements = {
-        timeSection: document.getElementById('timeSection'),
-        timeLoading: document.getElementById('timeLoading'),
-        timeOptions: document.getElementById('timeOptions'),
-        noTimesMessage: document.getElementById('noTimesMessage'),
-        submitButton: document.getElementById('submitButton')
-    };
-
-    if (elements.timeSection) elements.timeSection.classList.remove('hidden');
-    if (elements.timeLoading) elements.timeLoading.classList.remove('hidden');
-    if (elements.timeOptions) elements.timeOptions.innerHTML = '';
-    if (elements.noTimesMessage) elements.noTimesMessage.classList.add('hidden');
-    if (elements.submitButton) elements.submitButton.disabled = true;
-
-    const selectedTime = document.getElementById('selectedTime');
-    if (selectedTime) selectedTime.value = '';
-
-    try {
-        const url = `/patient/appointments/${currentAppointmentId}/reschedule-times?date=${date}`;
-        const response = await fetch(url, {
-            headers: {
-                'Accept': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
-            },
-            credentials: 'same-origin'
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        const times = await response.json();
-        if (times && Array.isArray(times) && times.length > 0 && elements.timeOptions) {
-            let html = '';
-            times.forEach(time => {
-                const safeTime = time.replace(/'/g, "\\'");
-                html += `<button type="button" onclick="selectTime('${safeTime}')"
+        function closeRescheduleModal() {
+            const modal = document.getElementById('rescheduleModal');
+            if (!modal) return;
+
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = 'auto';
+            currentAppointmentId = null;
+            currentPsychologistId = null;
+        }
+
+        function getTomorrowDate() {
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            return tomorrow.toISOString().split('T')[0];
+        }
+
+        function setupDateInput() {
+            const dateInput = document.getElementById('rescheduleDate');
+            if (!dateInput) {
+                return;
+            }
+
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            dateInput.min = tomorrow.toISOString().split('T')[0];
+            dateInput.value = '';
+
+            const elements = {
+                selectedTime: document.getElementById('selectedTime'),
+                timeOptions: document.getElementById('timeOptions'),
+                noTimesMessage: document.getElementById('noTimesMessage'),
+                rescheduleError: document.getElementById('rescheduleError'),
+                submitButton: document.getElementById('submitButton'),
+                timeSection: document.getElementById('timeSection')
+            };
+
+            if (elements.selectedTime) elements.selectedTime.value = '';
+            if (elements.timeOptions) elements.timeOptions.innerHTML = '';
+            if (elements.noTimesMessage) elements.noTimesMessage.classList.add('hidden');
+            if (elements.rescheduleError) elements.rescheduleError.classList.add('hidden');
+            if (elements.submitButton) elements.submitButton.disabled = true;
+            if (elements.timeSection) elements.timeSection.classList.add('hidden');
+        }
+
+        async function loadAvailableTimes() {
+            const dateInput = document.getElementById('rescheduleDate');
+            if (!dateInput) {
+                return;
+            }
+
+            const date = dateInput.value;
+            if (!date || !currentAppointmentId) {
+                return;
+            }
+
+            const elements = {
+                timeSection: document.getElementById('timeSection'),
+                timeLoading: document.getElementById('timeLoading'),
+                timeOptions: document.getElementById('timeOptions'),
+                noTimesMessage: document.getElementById('noTimesMessage'),
+                submitButton: document.getElementById('submitButton')
+            };
+
+            if (elements.timeSection) elements.timeSection.classList.remove('hidden');
+            if (elements.timeLoading) elements.timeLoading.classList.remove('hidden');
+            if (elements.timeOptions) elements.timeOptions.innerHTML = '';
+            if (elements.noTimesMessage) elements.noTimesMessage.classList.add('hidden');
+            if (elements.submitButton) elements.submitButton.disabled = true;
+
+            const selectedTime = document.getElementById('selectedTime');
+            if (selectedTime) selectedTime.value = '';
+
+            try {
+                const url = `/patient/appointments/${currentAppointmentId}/reschedule-times?date=${date}`;
+                const response = await fetch(url, {
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute(
+                            'content') || ''
+                    },
+                    credentials: 'same-origin'
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const times = await response.json();
+                if (times && Array.isArray(times) && times.length > 0 && elements.timeOptions) {
+                    let html = '';
+                    times.forEach(time => {
+                        const safeTime = time.replace(/'/g, "\\'");
+                        html += `<button type="button" onclick="selectTime('${safeTime}')"
                         class="time-option px-4 py-2 rounded-lg border text-sm transition-all border-gray-300 hover:border-[#00C3B3] hover:bg-[#00C3B3]/10"
                         data-time="${safeTime}">${time}</button>`;
-            });
-            elements.timeOptions.innerHTML = html;
-            if (elements.noTimesMessage) elements.noTimesMessage.classList.add('hidden');
-        } else {
-            if (elements.timeOptions) elements.timeOptions.innerHTML = '';
-            if (elements.noTimesMessage) elements.noTimesMessage.classList.remove('hidden');
-        }
-    } catch (err) {
-        if (elements.timeOptions) elements.timeOptions.innerHTML = '';
-        if (elements.noTimesMessage) {
-            elements.noTimesMessage.innerHTML = '<p class="text-red-600">Error loading times. Please try again.</p>';
-            elements.noTimesMessage.classList.remove('hidden');
-        }
-    } finally {
-        if (elements.timeLoading) elements.timeLoading.classList.add('hidden');
-    }
-}
-
-function selectTime(time) {
-    document.querySelectorAll('.time-option').forEach(btn => {
-        btn.classList.remove('bg-[#00C3B3]', 'text-white', 'border-[#00C3B3]');
-        btn.classList.add('border-gray-300', 'text-gray-700');
-    });
-    const selectedBtn = document.querySelector(`[data-time="${time}"]`);
-
-    if (selectedBtn) {
-        selectedBtn.classList.remove('border-gray-300', 'text-gray-700');
-        selectedBtn.classList.add('bg-[#00C3B3]', 'text-white', 'border-[#00C3B3]');
-    }
-
-    const selectedTime = document.getElementById('selectedTime');
-
-    if (selectedTime) {
-        selectedTime.value = time;
-    }
-
-    const submitButton = document.getElementById('submitButton');
-
-    if (submitButton) {
-        submitButton.disabled = false;
-    }
-}
-
-function submitReschedule() {
-    const form = document.getElementById('rescheduleForm');
-    const errorEl = document.getElementById('rescheduleError');
-    const date = document.getElementById('rescheduleDate')?.value;
-    const time = document.getElementById('selectedTime')?.value;
-
-    if (!date || !time) {
-        if (errorEl) {
-            errorEl.classList.remove('hidden');
-            const errorMessage = document.getElementById('errorMessage');
-            if (errorMessage) {
-                errorMessage.textContent = 'Please select both date and time';
+                    });
+                    elements.timeOptions.innerHTML = html;
+                    if (elements.noTimesMessage) elements.noTimesMessage.classList.add('hidden');
+                } else {
+                    if (elements.timeOptions) elements.timeOptions.innerHTML = '';
+                    if (elements.noTimesMessage) elements.noTimesMessage.classList.remove('hidden');
+                }
+            } catch (err) {
+                if (elements.timeOptions) elements.timeOptions.innerHTML = '';
+                if (elements.noTimesMessage) {
+                    elements.noTimesMessage.innerHTML =
+                        '<p class="text-red-600">Error loading times. Please try again.</p>';
+                    elements.noTimesMessage.classList.remove('hidden');
+                }
+            } finally {
+                if (elements.timeLoading) elements.timeLoading.classList.add('hidden');
             }
         }
-        return;
-    }
 
-    if (form) {
-        form.submit();
-    }
-}
+        function selectTime(time) {
+            document.querySelectorAll('.time-option').forEach(btn => {
+                btn.classList.remove('bg-[#00C3B3]', 'text-white', 'border-[#00C3B3]');
+                btn.classList.add('border-gray-300', 'text-gray-700');
+            });
+            const selectedBtn = document.querySelector(`[data-time="${time}"]`);
 
-document.addEventListener('DOMContentLoaded', function() {
-    document.addEventListener('click', function(e) {
-        const modal = document.getElementById('rescheduleModal');
-        if (e.target === modal) {
-            closeRescheduleModal();
+            if (selectedBtn) {
+                selectedBtn.classList.remove('border-gray-300', 'text-gray-700');
+                selectedBtn.classList.add('bg-[#00C3B3]', 'text-white', 'border-[#00C3B3]');
+            }
+
+            const selectedTime = document.getElementById('selectedTime');
+
+            if (selectedTime) {
+                selectedTime.value = time;
+            }
+
+            const submitButton = document.getElementById('submitButton');
+
+            if (submitButton) {
+                submitButton.disabled = false;
+            }
         }
-    });
 
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            closeRescheduleModal();
+        function submitReschedule() {
+            const form = document.getElementById('rescheduleForm');
+            const errorEl = document.getElementById('rescheduleError');
+            const date = document.getElementById('rescheduleDate')?.value;
+            const time = document.getElementById('selectedTime')?.value;
+
+            if (!date || !time) {
+                if (errorEl) {
+                    errorEl.classList.remove('hidden');
+                    const errorMessage = document.getElementById('errorMessage');
+                    if (errorMessage) {
+                        errorMessage.textContent = 'Please select both date and time';
+                    }
+                }
+                return;
+            }
+
+            if (form) {
+                form.submit();
+            }
         }
-    });
-});
-</script>
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('click', function(e) {
+                const modal = document.getElementById('rescheduleModal');
+                if (e.target === modal) {
+                    closeRescheduleModal();
+                }
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeRescheduleModal();
+                }
+            });
+        });
+    </script>
 @endpush

@@ -1,6 +1,6 @@
-<div class="bg-white p-6 flex flex-col gap-6 rounded-md border-grey-border border">
+<div class="bg-white p-4 sm:p-6 flex flex-col gap-4 sm:gap-6 rounded-md border-grey-border border">
     <div class="flex flex-1 items-start">
-        <h3 class="font-bold">{{ __('messages.historyappt') }}</h3>
+        <h3 class="font-bold text-base sm:text-lg">{{ __('messages.historyappt') }}</h3>
     </div>
 
     @forelse($history ?? [] as $item)
@@ -13,7 +13,7 @@
             $canMakePayment = $isPendingPayment && $payment && $payment->status === 'pending';
         @endphp
 
-        <div class="bg-white p-4 rounded-xl border border-grey-border hover:shadow-md transition flex items-center justify-between group {{ $isPendingPayment ? 'cursor-pointer' : '' }}"
+        <div class="bg-white p-4 rounded-xl border border-grey-border hover:shadow-md transition flex flex-col sm:flex-row sm:items-center justify-between gap-4 group {{ $isPendingPayment ? 'cursor-pointer' : '' }}"
             @if ($isPendingPayment) onclick="window.location.href='{{ route('patient.appointments.payment', $item->id) }}'"
             @elseif($isPaymentExpired)
                 onclick="showExpiredMessage()" @endif>
@@ -57,70 +57,74 @@
                 }
             @endphp
 
-            <div class="flex flex-col flex-1 gap-5">
-                <div class="flex items-center gap-4">
-                    <div
-                        class="w-10 h-10 rounded-full {{ $iconBgColor }} {{ $iconTextColor }} flex items-center justify-center group-hover:bg-green-500 group-hover:text-white transition">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
-                            </path>
-                        </svg>
-                    </div>
-                    <div>
-                        <p class="font-bold text-gray-800 text-sm">
-                            {{ $item->psychologist->user->full_name ?? ($item->with ?? 'Psychologist') }}
-                        </p>
-                        <p class="text-xs text-gray-500">
-                            {{ isset($item->date) ? \Carbon\Carbon::parse($item->date)->format('d F Y') : '-' }} •
-                            {{ $item->start_time }} - {{ $item->end_time }}
-                            @if ($item->psychologist->specialization ?? false)
-                                <br><span class="text-gray-400">Specialization:
-                                    {{ $item->psychologist->specialization }}</span>
-                            @endif
-                        </p>
-                    </div>
+            <div class="flex flex-1 gap-3 sm:gap-4 items-start w-full min-w-0">
+                <div
+                    class="w-10 h-10 rounded-full {{ $iconBgColor }} {{ $iconTextColor }} flex-shrink-0 flex items-center justify-center group-hover:bg-green-500 group-hover:text-white transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
+                        </path>
+                    </svg>
                 </div>
-
-                <div class="">
-                    @if ($item->has_been_reviewed)
-                        <a
-                            href="{{ route('patient.appointments.review.edit', $item->id) }}"class="px-4 py-2 bg-[#00C3B3] hover:bg-[#179990] text-white rounded-md items-center justify-center">
-                            {{ __('messages.editreview') }}
-                        </a>
-                    @else
-                        <a href="{{ route('patient.appointments.review.create', $item->id) }}"
-                            class="px-4 py-2 bg-[#00C3B3] hover:bg-[#179990] text-white rounded-md items-center justify-center">
-                            {{ __('messages.givereview') }}
-                        </a>
-                    @endif
+                <div class="flex flex-col min-w-0 w-full">
+                    <p class="font-bold text-gray-800 text-sm sm:text-base break-words">
+                        {{ $item->psychologist->user->full_name ?? ($item->with ?? 'Psychologist') }}
+                    </p>
+                    <p class="text-xs sm:text-sm text-gray-500 mt-1">
+                        {{ isset($item->date) ? \Carbon\Carbon::parse($item->date)->format('d F Y') : '-' }} •
+                        {{ $item->start_time }} - {{ $item->end_time }}
+                        @if ($item->psychologist->specialization ?? false)
+                            <br><span
+                                class="text-xs sm:text-sm text-gray-400 mt-1 break-words text-wrap leading-tight">Specialization:
+                                {{ $item->psychologist->specialization }}</span>
+                        @endif
+                    </p>
                 </div>
             </div>
 
-            <div class="flex items-center gap-3">
-                <span
-                    class="px-3 py-1 rounded-full text-[10px] font-bold {{ $badgeBgColor }} {{ $badgeTextColor }} uppercase tracking-wide">
-                    @if ($isPaymentExpired)
-                        {{ __('messages.paymentexpired') }}
-                    @elseif($canMakePayment)
-                        {{ __('messages.makepayment') }}
-                    @elseif($isPendingPayment)
-                        {{ __('messages.paymentexpired') }}
-                    @else
-                        {{ ucfirst(str_replace('_', ' ', $item->status)) }}
-                    @endif
-                </span>
+            <div class="flex flex-col gap-3 w-full sm:w-auto sm:items-end mt-2 sm:mt-0 sm:pl-4">
+                <div class="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto">
+                    <span
+                        class="px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-bold {{ $badgeBgColor }} {{ $badgeTextColor }} uppercase tracking-wide whitespace-nowrap">
+                        @if ($isPaymentExpired)
+                            {{ __('messages.paymentexpired') }}
+                        @elseif($canMakePayment)
+                            {{ __('messages.makepayment') }}
+                        @elseif($isPendingPayment)
+                            {{ __('messages.paymentexpired') }}
+                        @else
+                            {{ ucfirst(str_replace('_', ' ', $item->status)) }}
+                        @endif
+                    </span>
 
-                @if ($item->status === 'confirmed')
-                    <button
-                        onclick="event.stopPropagation(); openRescheduleModal(
+                    @if ($item->status === 'confirmed')
+                        <button
+                            onclick="event.stopPropagation(); openRescheduleModal(
                             '{{ $item->id }}',
                             '{{ $item->date }}',
                             '{{ $item->start_time }}'
                         )"
-                        class="px-3 py-1 text-xs rounded bg-yellow-500 text-white hover:bg-yellow-600 transition">
-                        {{ __('messages.reschedule') }}
-                    </button>
-                @endif
+                            class="px-3 py-1 text-[10px] sm:text-xs rounded bg-yellow-500 text-white hover:bg-yellow-600 transition whitespace-nowrap">
+                            {{ __('messages.reschedule') }}
+                        </button>
+                    @endif
+                </div>
+
+                <div
+                    class="flex flex-row sm:flex-col items-center sm:items-end justify-end gap-3 sm:gap-2 w-full sm:w-auto mt-2 sm:mt-0">
+                    <div class="order-2 sm:order-1">
+                        @if ($item->has_been_reviewed)
+                            <a
+                                href="{{ route('patient.appointments.review.edit', $item->id) }}"class="px-4 py-1.5 bg-[#00C3B3] hover:bg-[#179990] text-white text-xs sm:text-sm rounded-md flex items-center justify-center transition-colors whitespace-nowrap">
+                                {{ __('messages.editreview') }}
+                            </a>
+                        @else
+                            <a href="{{ route('patient.appointments.review.create', $item->id) }}"
+                                class="px-4 py-1.5 bg-[#00C3B3] hover:bg-[#179990] text-white text-xs sm:text-sm rounded-md flex items-center justify-center transition-colors whitespace-nowrap">
+                                {{ __('messages.givereview') }}
+                            </a>
+                        @endif
+                    </div>
+                </div>
             </div>
 
         </div>

@@ -2,21 +2,22 @@
     dd($user->hasCustomPhoto());
 @endphp --}}
 
-<div class="grid grid-cols-[20%_80%]">
-    <p class="text-[#4D4D4E]">{{ __('settings.label_photo') }}</p>
-    <div class="flex justify-between">
-        <img id="profileImage" src="{{ $user->photo_url }}" class="object-cover rounded-full w-16 h-16 lg:mx-0 mx-auto"
-            alt="Profile Picture">
+<div class="flex flex-col sm:grid sm:grid-cols-[20%_80%] gap-4 sm:gap-0">
+    <p class="text-[#4D4D4E] font-medium sm:font-normal mb-2 sm:mb-0">{{ __('settings.label_photo') }}</p>
+    <div class="flex items-center justify-between sm:gap-6">
+        <img id="profileImage" src="{{ $user->photo_url }}"
+            class="object-cover rounded-full w-16 h-16 border border-gray-200" alt="Profile Picture">
 
-        <div class="flex flex-col items-end justify-end">
+        <div class="flex flex-col items-end sm:items-start justify-end gap-2">
             <input type="file" id="photoInput" accept="image/*" class="hidden" onchange="uploadPhoto()">
-            <div class="flex gap-3 flex-col sm:flex-row">
+            <div class="flex gap-3">
                 <button id="deletePhotoBtn" type="button" onclick="deletePhoto()"
-                    class="text-red-600 hover:text-red-800 {{ !$user->hasCustomPhoto() ? 'disabled:cursor-not-allowed disabled:opacity-100' : '' }}" {{ !$user->hasCustomPhoto() ? 'disabled' : '' }} >
+                    class="text-red-600 hover:text-red-800 text-sm font-medium transition-colors {{ !$user->hasCustomPhoto() ? 'disabled:cursor-not-allowed disabled:opacity-100' : '' }}"
+                    {{ !$user->hasCustomPhoto() ? 'disabled' : '' }}>
                     {{ __('settings.btn_delete') }}
                 </button>
                 <button id="uploadPhotoBtn" type="button" onclick="document.getElementById('photoInput').click()"
-                    class="text-primary hover:text-primary-dark">
+                    class="text-primary hover:text-primary-dark text-sm font-medium transition-colors">
                     {{ __('settings.btn_upload') }}
                 </button>
             </div>
@@ -25,7 +26,7 @@
     </div>
 </div>
 
-<div class="flex flex-1 h-[1px] mt-5 mb-5 bg-[#ECECEC]"></div>
+<div class="flex flex-1 h-[1px] mt-6 mb-6 bg-[#ECECEC]"></div>
 
 {{-- PROFILE FORM --}}
 <form id="profileForm" method="POST" action="{{ route('profile.update') }}" class="space-y-6">
@@ -33,55 +34,57 @@
     @method('PUT')
 
     {{-- FULL NAME --}}
-    <div class="grid grid-cols-[20%_80%]">
-        <label class="block text-[#4D4D4E]">{{ __('settings.label_fullname') }}</label>
-        <div class="flex flex-1 items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
+    <div class="flex flex-col sm:grid sm:grid-cols-[20%_80%] gap-2 sm:gap-0 sm:items-center">
+        <label class="text-[#4D4D4E] font-medium sm:font-normal">{{ __('settings.label_fullname') }}</label>
+        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm border border-transparent focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/50 transition-all"
+            style="background-color: #FAFAFA;">
             <input type="text" name="name" placeholder="{{ __('settings.placeholder_fullname') }}"
-                class="w-full outline-none text-black placeholder-gray-400 bg-transparent read-only:text-[#A1AAB2]"
+                class="w-full outline-none text-black placeholder-gray-400 bg-transparent read-only:text-[#A1AAB2] text-sm sm:text-base"
                 value="{{ old('name', $user->full_name) }}" readonly data-readonly="true"
                 data-original-value="{{ $user->full_name }}">
         </div>
         @error('name')
-            <p class="text-red-500 mt-2 ml-1">{{ $message }}</p>
+            <p class="text-red-500 text-xs mt-1 ml-1">{{ $message }}</p>
         @enderror
     </div>
 
     {{-- EMAIL --}}
-    <div class="grid grid-cols-[20%_80%]">
-        <label class="block text-[#4D4D4E]">{{ __('settings.label_email') }}</label>
-        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
+    <div class="flex flex-col sm:grid sm:grid-cols-[20%_80%] gap-2 sm:gap-0 sm:items-center">
+        <label class="text-[#4D4D4E] font-medium sm:font-normal">{{ __('settings.label_email') }}</label>
+        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm border border-transparent focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/50 transition-all"
+            style="background-color: #FAFAFA;">
             <input type="email" name="email" placeholder="{{ __('settings.placeholder_email') }}"
-                class="w-full outline-none text-black placeholder-gray-400 bg-transparent read-only:text-[#A1AAB2]"
+                class="w-full outline-none text-black placeholder-gray-400 bg-transparent read-only:text-[#A1AAB2] text-sm sm:text-base"
                 value="{{ old('email', $user->email) }}" readonly data-readonly="true"
                 data-original-value="{{ $user->email }}">
         </div>
         @error('email')
-            <p class="text-red-500 mt-2 ml-1">{{ $message }}</p>
+            <p class="text-red-500 text-xs mt-1 ml-1">{{ $message }}</p>
         @enderror
     </div>
 
     {{-- DATE OF BIRTH --}}
-    <div class="grid grid-cols-[20%_80%]">
-        <label class="block text-[#4D4D4E]">{{ __('settings.label_dob') }}</label>
+    <div class="flex flex-col sm:grid sm:grid-cols-[20%_80%] gap-2 sm:gap-0 sm:items-center">
+        <label class="text-[#4D4D4E] font-medium sm:font-normal">{{ __('settings.label_dob') }}</label>
         <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
             <input type="date" name="date_of_birth" placeholder="{{ __('settings.placeholder_dob') }}"
-                class="w-full outline-none text-black placeholder-gray-400 bg-transparent read-only:text-[#A1AAB2]"
+                class="w-full outline-none text-black placeholder-gray-400 bg-transparent read-only:text-[#A1AAB2] text-sm sm:text-base"
                 value="{{ old('date_of_birth', $user->date_of_birth ? \Carbon\Carbon::parse($user->date_of_birth)->format('Y-m-d') : '') }}"
                 readonly data-readonly="true"
                 data-original-value="{{ $user->date_of_birth ? \Carbon\Carbon::parse($user->date_of_birth)->format('Y-m-d') : '' }}"
                 max="{{ date('Y-m-d') }}">
         </div>
         @error('date_of_birth')
-            <p class="text-red-500 mt-2 ml-1">{{ $message }}</p>
+            <p class="text-red-500 text-xs mt-1 ml-1">{{ $message }}</p>
         @enderror
     </div>
 
     {{-- GENDER --}}
-    <div class="grid grid-cols-[20%_80%]">
-        <label class="block text-[#4D4D4E]">{{ __('settings.label_gender') }}</label>
+    <div class="flex flex-col sm:grid sm:grid-cols-[20%_80%] gap-2 sm:gap-0 sm:items-center">
+        <label class="text-[#4D4D4E] font-medium sm:font-normal">{{ __('settings.label_gender') }}</label>
         <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
             <select name="gender"
-                class="w-full outline-none text-black bg-transparent appearance-none disabled:text-[#A1AAB2] disabled:opacity-100"
+                class="w-full outline-none text-black bg-transparent appearance-none disabled:text-[#A1AAB2] disabled:opacity-100 text-sm sm:text-base"
                 disabled data-disabled="true" data-original-value="{{ $user->gender }}">
                 <option value="male" {{ $user->gender == 'male' ? 'selected' : '' }}>
                     {{ __('settings.gender_male') }}</option>
@@ -90,26 +93,27 @@
                 <option value="other" {{ $user->gender == 'other' ? 'selected' : '' }}>
                     {{ __('settings.gender_other') }}</option>
             </select>
-            <svg id="genderArrow" class="w-5 h-5 text-black opacity-0 transition-opacity duration-200" fill="none"
-                stroke="currentColor" viewBox="0 0 24 24">
+            <svg id="genderArrow" class="w-5 h-5 text-black opacity-0 transition-opacity duration-200 flex-shrink-0"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
             </svg>
         </div>
         @error('gender')
-            <p class="text-red-500 mt-2 ml-1">{{ $message }}</p>
+            <p class="text-red-500 text-xs mt-1 ml-1">{{ $message }}</p>
         @enderror
     </div>
 
     {{-- ACTION BUTTONS --}}
-    <div class="pt-6 flex space-x-4 justify-end">
+    <div class="pt-6 flex flex-col-reverse sm:flex-row sm:justify-end gap-3 sm:gap-4">
         <button type="button" data-cancel-form="profileForm"
-            class="px-4 py-2 bg-[#FF383C] hover:bg-[#C9282B] text-white rounded-md hidden"
+            class="w-full sm:w-auto px-4 py-2 bg-[#FF383C] hover:bg-[#C9282B] text-white rounded-md text-sm font-medium transition-colors hidden"
             onclick="cancelEdit('profileForm')">
             {{ __('settings.btn_cancel') }}
         </button>
 
         <button type="button" data-edit-form="profileForm"
-            class="px-4 py-2 bg-[#00C3B3] hover:bg-[#179990] text-white rounded-md" onclick="toggleEdit('profileForm')">
+            class="w-full sm:w-auto px-4 py-2 bg-[#00C3B3] hover:bg-[#179990] text-white rounded-md text-sm font-medium transition-colors"
+            onclick="toggleEdit('profileForm')">
             {{ __('settings.btn_edit') }}
         </button>
     </div>

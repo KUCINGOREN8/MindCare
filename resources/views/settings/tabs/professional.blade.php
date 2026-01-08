@@ -8,82 +8,87 @@
     <h3 class="text-lg font-semibold mt-0">{{ __('settings.section_general') }}</h3>
 
     {{-- Professional Title --}}
-    <div class="grid grid-cols-[20%_80%]">
-        <label class="block text-[#4D4D4E]">{{ __('settings.label_title') }}</label>
-        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
+    <div class="flex flex-col sm:grid sm:grid-cols-[20%_80%] gap-2 sm:gap-0 sm:items-center">
+        <label class="block text-[#4D4D4E] font-medium sm:font-normal">{{ __('settings.label_title') }}</label>
+        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm border border-transparent focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/50 transition-all"
+            style="background-color: #FAFAFA;">
             <input type="text" name="title" placeholder="{{ __('settings.placeholder_title') }}"
-                class="w-full outline-none text-black placeholder-gray-400 bg-transparent read-only:text-[#A1AAB2]"
+                class="w-full outline-none text-black placeholder-gray-400 bg-transparent read-only:text-[#A1AAB2] text-sm sm:text-base"
                 value="{{ old('title', $psychologist->title ?? '') }}" readonly
                 data-original-value="{{ $psychologist->title ?? '' }}">
         </div>
         @error('title')
-            <p class="text-red-500 mt-2 ml-1">{{ $message }}</p>
+            <p class="text-red-500 text-xs mt-1 ml-1">{{ $message }}</p>
         @enderror
     </div>
 
     {{-- Specialization --}}
-    <div class="grid grid-cols-[20%_80%]">
-        <label class="block text-[#4D4D4E]">{{ __('settings.label_spec') }}</label>
-        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
+    <div class="flex flex-col sm:grid sm:grid-cols-[20%_80%] gap-2 sm:gap-0 sm:items-center">
+        <label class="block text-[#4D4D4E] font-medium sm:font-normal">{{ __('settings.label_spec') }}</label>
+        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm border border-transparent focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/50 transition-all"
+            style="background-color: #FAFAFA;">
             <input type="text" name="specialization" placeholder="{{ __('settings.placeholder_spec') }}"
-                class="w-full outline-none text-black placeholder-gray-400 bg-transparent read-only:text-[#A1AAB2]"
+                class="w-full outline-none text-black placeholder-gray-400 bg-transparent read-only:text-[#A1AAB2] text-sm sm:text-base"
                 value="{{ old('specialization', $psychologist->specialization ?? '') }}" readonly data-readonly="true"
                 data-original-value="{{ $psychologist->specialization ?? '' }}">
         </div>
         @error('specialization')
-            <p class="text-red-500 mt-2 ml-1">{{ $message }}</p>
+            <p class="text-red-500 text-xs mt-1 ml-1">{{ $message }}</p>
         @enderror
     </div>
 
     {{-- License Number --}}
-    <div class="grid grid-cols-[20%_80%]">
-        <label class="block text-[#4D4D4E]">{{ __('settings.label_license') }}</label>
-        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
+    <div class="flex flex-col sm:grid sm:grid-cols-[20%_80%] gap-2 sm:gap-0 sm:items-center">
+        <label class="block text-[#4D4D4E] font-medium sm:font-normal">{{ __('settings.label_license') }}</label>
+        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm border border-transparent focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/50 transition-all"
+            style="background-color: #FAFAFA;">
             <input type="text" name="license_number" placeholder="{{ __('settings.placeholder_license') }}"
-                class="w-full outline-none text-black placeholder-gray-400 bg-transparent read-only:text-[#A1AAB2]"
+                class="w-full outline-none text-black placeholder-gray-400 bg-transparent read-only:text-[#A1AAB2] text-sm sm:text-base"
                 value="{{ old('license_number', $psychologist->license_number ?? '') }}" readonly data-readonly="true"
                 data-original-value="{{ $psychologist->license_number ?? '' }}">
         </div>
         @error('license_number')
-            <p class="text-red-500 mt-2 ml-1">{{ $message }}</p>
+            <p class="text-red-500 text-xs mt-1 ml-1">{{ $message }}</p>
         @enderror
     </div>
 
     {{-- Years of Experience --}}
-    <div class="grid grid-cols-[20%_80%]">
-        <label class="block text-[#4D4D4E]">{{ __('settings.label_exp_years') }}</label>
-        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
+    <div class="flex flex-col sm:grid sm:grid-cols-[20%_80%] gap-2 sm:gap-0 sm:items-center">
+        <label class="block text-[#4D4D4E] font-medium sm:font-normal">{{ __('settings.label_exp_years') }}</label>
+        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm border border-transparent focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/50 transition-all"
+            style="background-color: #FAFAFA;">
             <input type="number" name="years_experience" placeholder="{{ __('settings.placeholder_exp_years') }}"
-                class="w-full outline-none text-black placeholder-gray-400 bg-transparent read-only:text-[#A1AAB2]"
+                class="w-full outline-none text-black placeholder-gray-400 bg-transparent read-only:text-[#A1AAB2] text-sm sm:text-base"
                 value="{{ old('years_experience', $psychologist->years_experience ?? 0) }}" readonly
                 data-readonly="true" data-original-value="{{ $psychologist->years_experience ?? 0 }}" min="0">
         </div>
         @error('years_experience')
-            <p class="text-red-500 mt-2 ml-1">{{ $message }}</p>
+            <p class="text-red-500 text-xs mt-1 ml-1">{{ $message }}</p>
         @enderror
     </div>
 
     {{-- Consultation Fee --}}
-    <div class="grid grid-cols-[20%_80%]">
-        <label class="block text-[#4D4D4E]">{{ __('settings.label_fee') }}</label>
-        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
+    <div class="flex flex-col sm:grid sm:grid-cols-[20%_80%] gap-2 sm:gap-0 sm:items-center">
+        <label class="block text-[#4D4D4E] font-medium sm:font-normal">{{ __('settings.label_fee') }}</label>
+        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm border border-transparent focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/50 transition-all"
+            style="background-color: #FAFAFA;">
             <input type="number" name="consultation_fee" placeholder="{{ __('settings.placeholder_fee') }}"
-                class="w-full outline-none text-black placeholder-gray-400 bg-transparent read-only:text-[#A1AAB2]"
+                class="w-full outline-none text-black placeholder-gray-400 bg-transparent read-only:text-[#A1AAB2] text-sm sm:text-base"
                 value="{{ old('consultation_fee', $psychologist->consultation_fee ?? 0) }}" readonly
                 data-readonly="true" data-original-value="{{ $psychologist->consultation_fee ?? 0 }}" min="0"
                 step="10000">
         </div>
         @error('consultation_fee')
-            <p class="text-red-500 mt-2 ml-1">{{ $message }}</p>
+            <p class="text-red-500 text-xs mt-1 ml-1">{{ $message }}</p>
         @enderror
     </div>
 
     {{-- Languages --}}
-    <div class="grid grid-cols-[20%_80%]">
-        <label class="block text-[#4D4D4E]">{{ __('settings.label_languages') }}</label>
+    <div class="flex flex-col sm:grid sm:grid-cols-[20%_80%] gap-2 sm:gap-0 sm:items-center">
+        <label class="block text-[#4D4D4E] font-medium sm:font-normal">{{ __('settings.label_languages') }}</label>
         <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
             <select name="languages[]" multiple
-                class="w-full outline-none text-black bg-transparent appearance-none disabled:text-[#A1AAB2] disabled:opacity-50"
+                class="w-full outline-none text-black bg-transparent appearance-none disabled:text-[#A1AAB2] disabled:opacity-50 text-sm sm:text-base cursor-pointer disabled:cursor-default"
                 disabled data-disabled="true" data-original-value="{{ json_encode($psychologist->languages ?? []) }}">
                 <option value="indonesian"
                     {{ in_array('indonesian', old('languages', $psychologist->languages ?? [])) ? 'selected' : '' }}>
@@ -98,51 +103,54 @@
                     {{ in_array('sundanese', old('languages', $psychologist->languages ?? [])) ? 'selected' : '' }}>
                     {{ __('settings.lang_sundanese') }}</option>
             </select>
-            <svg id="languagesArrow" class="w-5 h-5 text-black opacity-0 transition-opacity duration-200" fill="none"
-                stroke="currentColor" viewBox="0 0 24 24">
+            <svg id="languagesArrow"
+                class="w-5 h-5 text-black opacity-0 transition-opacity duration-200 flex-shrink-0 pointer-events-none"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
             </svg>
         </div>
         @error('languages')
-            <p class="text-red-500 mt-2 ml-1">{{ $message }}</p>
+            <p class="text-red-500 text-xs mt-1 ml-1">{{ $message }}</p>
         @enderror
     </div>
 
     {{-- Short Bio --}}
-    <div class="grid grid-cols-[20%_80%]">
-        <label class="block text-[#4D4D4E]">{{ __('settings.label_short_bio') }}</label>
-        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
+    <div class="flex flex-col sm:grid sm:grid-cols-[20%_80%] gap-2 sm:gap-0 sm:items-center">
+        <label class="block text-[#4D4D4E] font-medium sm:font-normal">{{ __('settings.label_short_bio') }}</label>
+        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm border border-transparent focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/50 transition-all"
+            style="background-color: #FAFAFA;">
             <textarea name="short_bio" id="shortBioInput" placeholder="{{ __('settings.placeholder_short_bio') }}"
-                class="w-full outline-none text-black placeholder-gray-400 bg-transparent read-only:text-[#A1AAB2] resize-none h-32"
+                class="w-full outline-none text-black placeholder-gray-400 bg-transparent read-only:text-[#A1AAB2] resize-none h-32 text-sm sm:text-base"
                 readonly data-original-value="{{ $psychologist->short_bio ?? '' }}" maxlength="500">{{ old('short_bio', $psychologist->short_bio ?? '') }}</textarea>
         </div>
         @error('short_bio')
-            <p class="text-red-500 mt-2 ml-1">{{ $message }}</p>
+            <p class="text-red-500 text-xs mt-1 ml-1">{{ $message }}</p>
         @enderror
     </div>
 
     {{-- About Me --}}
-    <div class="grid grid-cols-[20%_80%]">
-        <label class="block text-[#4D4D4E]">{{ __('settings.label_about_me') }}</label>
-        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
+    <div class="flex flex-col sm:grid sm:grid-cols-[20%_80%] gap-2 sm:gap-0 sm:items-center">
+        <label class="block text-[#4D4D4E] font-medium sm:font-normal">{{ __('settings.label_about_me') }}</label>
+        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm border border-transparent focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/50 transition-all"
+            style="background-color: #FAFAFA;">
             <textarea name="about_me" id="aboutMeInput" placeholder="{{ __('settings.placeholder_about_me') }}"
-                class="w-full outline-none text-black placeholder-gray-400 bg-transparent read-only:text-[#A1AAB2] resize-none h-64"
+                class="w-full outline-none text-black placeholder-gray-400 bg-transparent read-only:text-[#A1AAB2] resize-none h-64 text-sm sm:text-base"
                 readonly data-original-value="{{ $psychologist->about_me ?? '' }}">{{ old('about_me', $psychologist->about_me ?? '') }}</textarea>
         </div>
         @error('about_me')
-            <p class="text-red-500 mt-2 ml-1">{{ $message }}</p>
+            <p class="text-red-500 text-xs mt-1 ml-1">{{ $message }}</p>
         @enderror
     </div>
 
-    <div class="pt-6 flex space-x-4 justify-end">
+    <div class="pt-6 flex flex-col-reverse sm:flex-row sm:justify-end gap-3 sm:gap-4">
         <button type="button" data-cancel-form="professionalForm"
-            class="px-4 py-2 bg-[#FF383C] hover:bg-[#C9282B] text-white rounded-md hidden"
+            class="w-full sm:w-auto px-4 py-2 bg-[#FF383C] hover:bg-[#C9282B] text-white rounded-md text-sm font-medium transition-colors hidden"
             onclick="cancelEdit('professionalForm')">
             {{ __('settings.btn_cancel') }}
         </button>
 
         <button type="button" data-edit-form="professionalForm"
-            class="px-4 py-2 bg-[#00C3B3] hover:bg-[#179990] text-white rounded-md"
+            class="w-full sm:w-auto px-4 py-2 bg-[#00C3B3] hover:bg-[#179990] text-white rounded-md text-sm font-medium transition-colors"
             onclick="toggleEdit('professionalForm')">
             {{ __('settings.btn_edit') }}
         </button>
@@ -567,7 +575,8 @@
         // Handle remove buttons for existing Experience entries
         experienceContainer.addEventListener('click', function(e) {
             if (e.target.classList.contains('remove-experience')) {
-                const totalExperience = experienceContainer.querySelectorAll('.experience-entry').length;
+                const totalExperience = experienceContainer.querySelectorAll('.experience-entry')
+                    .length;
                 if (totalExperience <= 1) {
                     alert(LANG_PROF.alertMinExp);
                     return;

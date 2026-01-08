@@ -59,21 +59,22 @@
         $subtitle = $tabs[$tab]['subtitle'];
     @endphp
 
-    <div class="flex flex-1 flex-col gap-6">
-        <div class="flex flex-col gap-6">
+    <div class="flex flex-1 flex-col gap-4 sm:gap-6 w-full">
+        <div class="flex flex-col gap-4 sm:gap-6">
             {{-- HEADER SECTION --}}
-            <div class="flex bg-white p-6 rounded-md border-grey-border border justify-between">
+            <div
+                class="flex flex-col sm:flex-row bg-white p-4 sm:p-6 rounded-md border-grey-border border justify-between items-start sm:items-center gap-4 sm:gap-0">
                 <div class="flex flex-col">
                     <h1 class="font-bold text-[#00C3B3] text-lg">{{ $title }}</h1>
-                    <h5 class="text-captiondark ">{{ $subtitle }}</h5>
+                    <h5 class="text-captiondark text-sm sm:text-base">{{ $subtitle }}</h5>
                 </div>
                 <a href="{{ route($user->role . '.dashboard') }}"
-                    class="px-4 py-2 bg-[#00C3B3] hover:bg-[#179990] text-white rounded-md flex items-center justify-center">
+                    class="w-full sm:w-auto px-4 py-2 bg-[#00C3B3] hover:bg-[#179990] text-white rounded-md flex items-center justify-center text-sm font-medium transition-colors">
                     {{ __('settings.back') }}
                 </a>
             </div>
 
-            <div class="flex flex-col bg-white p-6 rounded-md border-grey-border border justify-between gap-6">
+            <div class="flex flex-col bg-white p-4 sm:p-6 rounded-md border-grey-border border justify-between gap-6">
                 {{-- TAB NAVIGATION --}}
                 <nav class="tabs overflow-x-auto space-x-1">
                     @foreach ($availableTabs as $tabKey => $tabConfig)
