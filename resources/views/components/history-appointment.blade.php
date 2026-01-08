@@ -1,5 +1,5 @@
-<div class="bg-white p-4 sm:p-6 flex flex-col gap-4 sm:gap-6 rounded-md border-grey-border border">
-    <div class="flex flex-1 items-start">
+<div class="bg-white p-4 sm:p-6 flex flex-col gap-4 sm:gap-6 rounded-md border-grey-border border overflow-x-hidden">
+    <div class="flex items-start">
         <h3 class="font-bold text-base sm:text-lg">{{ __('messages.historyappt') }}</h3>
     </div>
 

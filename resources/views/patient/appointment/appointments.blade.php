@@ -2,7 +2,7 @@
 @section('title', 'Appointments')
 
 @section('content')
-    <div class="flex flex-col flex-1 gap-6 min-w-0 h-full overflow-y-auto pr-2 pb-20 scroll-smooth">
+    <div class="flex flex-col flex-1 gap-6 min-w-0 min-h-0 overflow-y-auto pr-2 pb-20 scroll-smooth">
 
         <div class="flex flex-col bg-white p-6 rounded-md border-grey-border border">
             <h1 class="text-[#00C3B3] font-bold text-lg">{{ __('messages.appointment') }}</h1>

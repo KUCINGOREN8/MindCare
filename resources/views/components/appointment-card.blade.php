@@ -21,23 +21,23 @@
         $rescheduleDataJson = json_encode($rescheduleData);
     @endphp
 
-    <div class="bg-white p-4 sm:p-6 flex flex-col gap-4 rounded-md border border-grey-border transition-all duration-200 {{ $isPendingPayment ? 'cursor-pointer hover:shadow-md transition-shadow' : '' }}"
+    <div class="bg-white p-4 sm:p-6 flex flex-col gap-4 rounded-md border border-grey-border transition-all duration-200 w-full min-w-0 overflow-hidden {{ $isPendingPayment ? 'cursor-pointer hover:shadow-md transition-shadow' : '' }}"
         @if ($isPendingPayment) onclick="window.location.href='{{ route('patient.appointments.payment', $appointment->id) }}'" @endif>
 
         {{-- Header --}}
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 min-w-0">
             <div class="flex flex-col gap-0.5 sm:gap-0 min-w-0">
-                <h4 class="font-bold text-gray-900 text-sm sm:text-base truncate">
+                <h4 class="font-bold text-gray-900 text-sm sm:text-base break-words leading-snug">
                     {{ $appointment->psychologist->user->full_name ?? 'Psychologist' }}
                 </h4>
-                <p class="text-xs sm:text-sm text-gray-600 truncate">
+                <p class="text-xs sm:text-sm text-gray-600 break-words leading-snug">
                     {{ $appointment->psychologist->specialization ?? ($appointment->psychologist->title ?? 'Specialization') }}
                 </p>
             </div>
 
             {{-- Status --}}
             <span
-                class="self-start sm:self-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide whitespace-nowrap
+                class="self-start sm:self-center px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wide whitespace-nowrap shrink-0 max-w-full
                 {{ $appointment->status === 'confirmed'
                     ? 'bg-blue-100 text-blue-700'
                     : ($appointment->status === 'completed'
@@ -50,7 +50,7 @@
         </div>
 
         {{-- Date & Time --}}
-        <div class="flex items-center gap-2">
+        <div class="flex items-start gap-2 min-w-0">
             @php
                 $icon = file_get_contents(public_path('assets/icons/calendar.svg'));
                 echo str_replace(
@@ -59,7 +59,7 @@
                     $icon,
                 );
             @endphp
-            <p class="text-xs sm:text-sm text-gray-600">
+            <p class="text-xs sm:text-sm text-gray-600 break-words leading-snug">
                 {{ \Carbon\Carbon::parse($appointment->date)->format('d M Y') }} •
                 {{ \Carbon\Carbon::parse($appointment->start_time)->format('H:i') }}
                 -
@@ -68,7 +68,7 @@
         </div>
 
         {{-- Action Buttons --}}
-        <div class="flex flex-col sm:flex-row gap-2 sm:gap-3 mt-1">
+        <div class="flex flex-col sm:flex-row gap-2 sm:gap-3 mt-1 w-full min-w-0">
             {{-- Join Session --}}
             @if ($appointment->is_session_available)
                 <x-appointment-button text="Join Session" :active="true"
@@ -79,7 +79,7 @@
             {{-- Reschedule Button --}}
             @if ($canReschedule)
                 <button type="button" onclick="window.openRescheduleModal({{ $rescheduleDataJson }})"
-                    class="w-full sm:w-auto px-4 py-2 text-xs sm:text-sm border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    class="w-full sm:w-auto px-4 py-2 text-xs sm:text-sm border border-gray-300 text-center whitespace-normal break-words text-gray-700 rounded-md hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     Reschedule
                 </button>
             @endif
