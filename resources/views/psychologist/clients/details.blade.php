@@ -6,7 +6,7 @@
 
 @section('content')
     <div class="flex flex-col flex-1 gap-6 min-w-0 h-full overflow-y-auto pr-2 pb-20 scroll-smooth">
-        <div class="flex items-center justify-between bg-white p-6 rounded-md border-grey-border border">
+        <div class="flex items-center justify-between bg-white p-6 sm:p-6 px-4 rounded-md border-grey-border border">
             <div class="flex items-center gap-4">
                 <a href="{{ route('psychologist.clients') }}" class="text-gray-500 hover:text-primary"
                     title="{{ __('client_details.back_to_clients') }}">
@@ -47,7 +47,7 @@
                         </div>
                     </div>
 
-                    <div class="p-6 space-y-6">
+                    <div class="p-6 sm:p-6 px-4 space-y-6">
                         <div>
                             <div class="flex items-center gap-2 mb-3">
                                 <div class="p-1.5 bg-blue-100 rounded-lg">
@@ -171,9 +171,10 @@
                 </div>
             </div>
 
+            {{-- Sini --}}
             <div class="lg:col-span-2">
                 <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-                    <div class="p-6 border-b border-gray-100 bg-gradient-to-r from-white to-gray-50">
+                    <div class="p-6 sm:p-6 px-4 border-b border-gray-100 bg-gradient-to-r from-white to-gray-50">
                         <div class="flex items-center justify-between">
                             <div>
                                 <h3 class="font-bold text-gray-800 text-lg flex items-center gap-2">
@@ -201,11 +202,11 @@
                         <div class="divide-y divide-gray-100">
                             @foreach ($appointments as $appointment)
                                 <div
-                                    class="p-6 hover:bg-gradient-to-r hover:from-gray-50 hover:to-blue-50/30 transition-all duration-200 group">
-                                    <div class="flex items-start gap-5">
-                                        <div class="flex-shrink-0">
+                                    class="p-6 sm:p-6 px-4 hover:bg-gradient-to-r hover:from-gray-50 hover:to-blue-50/30 transition-all duration-200 group">
+                                    <div class="flex flex-col sm:flex-row items-start gap-4 sm:gap-5">
+                                        <div class="flex-shrink-0 w-14 sm:w-[70px]">
                                             <div
-                                                class="text-center bg-gradient-to-br from-primary/10 to-blue-100/50 rounded-xl p-3 border border-primary/20 min-w-[70px] group-hover:shadow-md group-hover:scale-105 transition-all duration-200">
+                                                class="text-center bg-gradient-to-br from-primary/10 to-blue-100/50 rounded-xl p-3 border border-primary/20 w-14 sm:w-[70px] group-hover:shadow-md group-hover:scale-105 transition-all duration-200">
                                                 <div class="text-2xl font-bold text-primary">
                                                     {{ \Carbon\Carbon::parse($appointment->date)->format('d') }}
                                                 </div>
@@ -219,7 +220,7 @@
                                         </div>
 
                                         <div class="flex-1 min-w-0">
-                                            <div class="flex items-start justify-between gap-4 mb-3">
+                                            <div class="flex flex-col sm:flex-row sm:justify-between gap-2 sm:gap-4 mb-3">
                                                 <div class="flex-1">
                                                     <div class="flex items-center gap-2 mb-1">
                                                         <svg class="w-4 h-4 text-gray-400" fill="none"
@@ -252,13 +253,13 @@
                                                     </div>
                                                 </div>
                                                 <span
-                                                    class="px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap
-                                        {{ $appointment->status === 'confirmed'
-                                            ? 'bg-blue-100 text-blue-500 border border-blue-200'
-                                            : ($appointment->status === 'completed'
-                                                ? 'bg-green-100 text-green-500 border border-green-200'
-                                                : 'bg-gray-100 text-gray-500 border border-gray-200') }}">
-                                                    {{ __('client_details.status_' . $appointment->status) }}
+                                                    class="px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap sm:whitespace-normal
+                                                    {{ $appointment->status === 'confirmed'
+                                                    ? 'bg-blue-100 text-blue-500 border border-blue-200'
+                                                    : ($appointment->status === 'completed'
+                                                        ? 'bg-green-100 text-green-500 border border-green-200'
+                                                        : 'bg-gray-100 text-gray-500 border border-gray-200') }}">
+                                                            {{ __('client_details.status_' . $appointment->status) }}
                                                 </span>
                                             </div>
 
@@ -331,7 +332,7 @@
     <div id="notesModal"
         class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg transform transition-all">
-            <div class="p-6">
+            <div class="p-6 sm:p-6 px-4">
                 <div class="flex justify-between items-center mb-6">
                     <h3 class="text-xl font-bold text-gray-900 flex items-center gap-2" id="modalTitle">
                         <div class="p-2 bg-primary/10 rounded-lg">

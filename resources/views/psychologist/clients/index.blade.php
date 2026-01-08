@@ -13,7 +13,7 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="bg-white p-6 rounded-md border-grey-border border">
-                <div class="flex items-center justify-between">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                     <div>
                         <p class="text-captiondark text-sm">{{ __('psychologist_clients.total_clients') }}</p>
                         <p class="text-2xl font-bold text-gray-800">{{ $clients->count() }}</p>
@@ -28,7 +28,7 @@
             </div>
 
             <div class="bg-white p-6 rounded-md border-grey-border border">
-                <div class="flex items-center justify-between">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                     <div>
                         <p class="text-captiondark text-sm">{{ __('psychologist_clients.active_sessions') }}</p>
                         <p class="text-2xl font-bold text-gray-800">
@@ -63,7 +63,7 @@
                         @endphp
 
                         <div class="p-6 hover:bg-gray-50 transition-colors">
-                            <div class="flex items-center justify-between">
+                            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                                 <div class="flex items-center gap-4">
                                     <div class="relative">
                                         <img src="{{ $client->photo_url }}" alt="{{ $client->full_name }}"
@@ -71,7 +71,7 @@
                                     </div>
 
                                     <div>
-                                        <h4 class="font-bold text-gray-900">{{ $client->full_name }}</h4>
+                                        <h4 class="font-bold text-gray-900 truncate max-w-[180px] sm:max-w-none">{{ $client->full_name }}</h4>
                                         <div class="flex items-center gap-3 mt-1">
                                             <span class="text-sm text-gray-600">
                                                 {{ __('psychologist_clients.sessions_count', ['count' => $totalRelevantAppointments]) }}
@@ -80,7 +80,7 @@
                                     </div>
                                 </div>
 
-                                <div class="flex items-center gap-6">
+                                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-6">
                                     @php
                                         $nextAppointment = $client->appointments
                                             ->where('status', 'confirmed')
