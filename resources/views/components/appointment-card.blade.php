@@ -68,7 +68,7 @@
         </div>
 
         {{-- Action Buttons --}}
-        <div class="flex flex-col sm:flex-row gap-2 sm:gap-3 mt-1 w-full min-w-0">
+        <div class="flex flex-col-reverse sm:flex-row gap-2 sm:gap-3 mt-1 w-full min-w-0">
             {{-- Join Session --}}
             @if ($appointment->is_session_available)
                 <x-appointment-button text="Join Session" :active="true"
@@ -78,8 +78,8 @@
 
             {{-- Reschedule Button --}}
             @if ($canReschedule)
-                <button type="button" onclick="window.openRescheduleModal({{ $rescheduleDataJson }})"
-                    class="w-full sm:w-auto px-4 py-2 text-xs sm:text-sm border border-gray-300 text-center whitespace-normal break-words text-gray-700 rounded-md hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                <button type="button"
+                    class="w-full sm:w-auto px-4 py-2 text-xs sm:text-sm border border-gray-300 text-center whitespace-nowrap text-gray-700 rounded-md flex items-center justify-center">
                     Reschedule
                 </button>
             @endif
