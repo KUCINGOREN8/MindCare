@@ -171,7 +171,6 @@
                 </div>
             </div>
 
-            {{-- Sini --}}
             <div class="lg:col-span-2">
                 <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
                     <div class="p-6 sm:p-6 px-4 border-b border-gray-100 bg-gradient-to-r from-white to-gray-50">
