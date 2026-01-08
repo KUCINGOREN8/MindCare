@@ -2,29 +2,29 @@
 @section('title', 'Admin Dashboard')
 
 @section('content')
-    <div class="flex flex-1 gap-6" x-data="{ showDeleteModal: false, deleteUrl: '' }">
-        <div class="flex flex-col flex-1 gap-6 min-w-0">
-            <div class="flex flex-col bg-white p-6 gap-4 rounded-md border-grey-border border">
+    <div class="flex flex-col lg:flex-row flex-1 gap-4 lg:gap-6" x-data="{ showDeleteModal: false, deleteUrl: '' }">
+        <div class="flex flex-col flex-1 gap-4 lg:gap-6 min-w-0">
+            <div class="flex flex-col bg-white p-4 sm:p-6 gap-2 sm:gap-4 rounded-md border-grey-border border">
                 <div class="flex flex-col">
-                    <h1 class="text-primary font-bold text-lg">Good Day, {{ $user->full_name }}!</h1>
-                    <h5 class="text-captiondark text-sm">{{ __('messages.mood') }}</h5>
+                    <h1 class="text-primary font-bold text-base sm:text-lg">Good Day, {{ $user->full_name }}!</h1>
+                    <h5 class="text-captiondark text-xs sm:text-sm">{{ __('messages.mood') }}</h5>
                 </div>
             </div>
 
-            <div class="bg-white p-6 flex flex-col gap-6 rounded-md border-grey-border border">
-                <div class="flex justify-between items-center">
-                    <div class="flex flex-col gap-1 justify-between items-start">
-                        <h3 class="font-bold">{{ __('messages.admindashboardtitle') }}</h3>
+            <div class="bg-white p-4 sm:p-6 flex flex-col gap-4 sm:gap-6 rounded-md border-grey-border border">
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+                    <div class="flex flex-col gap-1">
+                        <h3 class="font-bold text-sm sm:text-base">{{ __('messages.admindashboardtitle') }}</h3>
                         <p class="text-xs text-caption-dark">{{ __('messages.admindashboarddesc') }}</p>
                     </div>
                     <a href="{{ route('admin.users.create') }}"
-                        class="bg-primary hover:bg-primary-dark text-white text-sm font-medium py-2 px-4 rounded-md transition-colors shadow-sm flex items-center gap-2">
+                        class="bg-primary hover:bg-primary-dark text-white text-sm font-medium py-2 px-4 rounded-md transition-colors shadow-sm flex items-center justify-center gap-2 w-full sm:w-auto">
                         <span>+ {{ __('messages.adminadd') }}</span>
                     </a>
                 </div>
 
                 @if (session('success'))
-                    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative">
+                    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative text-sm">
                         <span class="block sm:inline">{{ session('success') }}</span>
                     </div>
                 @endif
@@ -35,53 +35,48 @@
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         {{ __('messages.name') }}</th>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         {{ __('messages.role') }}</th>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         {{ __('messages.joindate') }}</th>
-                                    <th
-                                        class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th class="px-3 sm:px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         {{ __('messages.action') }}</th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 @forelse ($users as $u)
                                     <tr class="hover:bg-gray-50 transition-colors">
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="flex items-center">
-                                                <div class="flex-shrink-0 h-10 w-10">
-                                                    <img class="h-10 w-10 rounded-full object-cover"
+                                        <td class="px-3 sm:px-6 py-3 sm:py-4">
+                                            <div class="flex items-center gap-3">
+                                                <div class="flex-shrink-0 h-8 w-8 sm:h-10 sm:w-10">
+                                                    <img class="h-8 w-8 sm:h-10 sm:w-10 rounded-full object-cover"
                                                         src="{{ $u->photo_url }}">
                                                 </div>
-                                                <div class="ml-4">
-                                                    <div class="text-sm font-medium text-gray-900">{{ $u->full_name }}
-                                                    </div>
-                                                    <div class="text-sm text-gray-500">{{ $u->email }}</div>
+                                                <div class="min-w-0">
+                                                    <div class="text-sm font-medium text-gray-900 truncate">{{ $u->full_name }}</div>
+                                                    <div class="text-xs sm:text-sm text-gray-500 truncate">{{ $u->email }}</div>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
+                                        <td class="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                                             <span
                                                 class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $u->role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-green-100 text-green-800' }}">
                                                 {{ __('roles.' . $u->role) }}
                                             </span>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <td class="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500">
                                             {{ $u->created_at->format('d M Y') }}
                                         </td>
 
-                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                            <div class="flex justify-end gap-3">
+                                        <td class="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <div class="flex flex-col sm:flex-row justify-end gap-1 sm:gap-3">
                                                 <a href="{{ route('admin.users.edit', $u->id) }}"
-                                                    class="text-indigo-600 hover:text-indigo-900 font-medium">{{ __('messages.edit') }}</a>
+                                                    class="text-indigo-600 hover:text-indigo-900 font-medium text-sm">{{ __('messages.edit') }}</a>
                                                 <button
                                                     @click="deleteUrl = '{{ route('admin.users.destroy', $u->id) }}'; showDeleteModal = true"
-                                                    class="text-red-600 hover:text-red-900 font-medium">
+                                                    class="text-red-600 hover:text-red-900 font-medium text-sm">
                                                     {{ __('messages.delete') }}
                                                 </button>
                                             </div>
@@ -89,19 +84,21 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="4" class="px-6 py-10 text-center text-gray-500">
+                                        <td colspan="4" class="px-6 py-10 text-center text-gray-500 text-sm">
                                             {{ __('messages.nouserfound') }}.</td>
                                     </tr>
                                 @endforelse
                             </tbody>
                         </table>
                     </div>
-                    <div>{{ $users->links('vendor.pagination.custom') }}</div>
+                    <div class="p-2 sm:p-4">{{ $users->links('vendor.pagination.custom') }}</div>
                 </div>
             </div>
         </div>
 
-        <x-user-profile-card :user="$user" :notifications="$notifications" />
+        <div class="w-full lg:w-auto lg:shrink-0 self-start">
+            <x-user-profile-card :user="$user" :notifications="$notifications" />
+        </div>
 
         {{-- 3. MODAL POPUP (Letakkan di paling bawah, sebelum penutup div utama) --}}
 

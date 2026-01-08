@@ -4,7 +4,7 @@
 
 <div class="flex flex-col gap-4">
     <h3 class="font-semibold">{{ __('messages.notification') }}</h3>
-    <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-4 lg:max-h-[35vh] overflow-y-auto pr-1">
         @if (count($notifications) > 0)
             @foreach ($notifications as $notif)
                 <x-notification-item :icon="$notif['icon']" :title="$notif['title']" :message="$notif['message']" :time="$notif['time']"

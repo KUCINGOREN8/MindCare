@@ -3,7 +3,7 @@
 
 @section('content')
     {{-- 1. WRAPPER UTAMA: Flex Row (Kiri Konten, Kanan Sidebar) --}}
-    <div class="flex flex-1 gap-6" x-data="{
+    <div class="flex flex-col lg:flex-row flex-1 gap-4 lg:gap-6" x-data="{
         showModal: false,
         modalUrl: '',
         modalAction: 'POST',
@@ -14,10 +14,10 @@
     }">
 
         {{-- === BAGIAN KIRI: KONTEN UTAMA === --}}
-        <div class="flex flex-col flex-1 gap-6 min-w-0">
+        <div class="flex flex-col flex-1 gap-4 lg:gap-6 min-w-0">
 
             {{-- Header Greeting --}}
-            <div class="flex flex-col bg-white p-6 gap-4 rounded-md border-grey-border border">
+            <div class="flex flex-col bg-white p-4 sm:p-6 gap-4 rounded-md border-grey-border border">
                 <div class="flex flex-col">
                     <h1 class="text-primary font-bold text-lg">{{ __('messages.admincenter') }}</h1>
                     <h5 class="text-captiondark text-sm">{{ __('messages.admincenterdesc') }}.</h5>
@@ -25,7 +25,7 @@
             </div>
 
             {{-- Main Content --}}
-            <div class="bg-white p-6 flex flex-col gap-6 rounded-md border-grey-border border">
+            <div class="bg-white p-4 sm:p-6 flex flex-col gap-6 rounded-md border-grey-border border">
 
                 {{-- Judul Halaman --}}
                 <div class="flex justify-between items-center">
@@ -174,7 +174,9 @@
             </div>
         </div>
 
-        <x-user-profile-card :user="$user" :notifications="$notifications" />
+        <div class="w-full lg:w-auto lg:shrink-0 self-start">
+            <x-user-profile-card :user="$user" :notifications="$notifications" />
+        </div>
 
         <div x-show="showModal" style="display: none;"
             class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm transition-opacity"
@@ -191,7 +193,7 @@
                 x-transition:leave-start="opacity-100 scale-100 translate-y-0"
                 x-transition:leave-end="opacity-0 scale-95 translate-y-4">
 
-                <div class="p-6 text-center">
+                <div class="p-4 sm:p-6 text-center">
                     {{-- Icon Tanda Tanya (Neutral) --}}
                     <div
                         class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-blue-50 mb-6 ring-8 ring-blue-50/50">

@@ -29,19 +29,20 @@
 @endphp
 
 <div
-    class="flex flex-wrap gap-3 border-l-4 {{ $selected['border'] }} {{ $selected['bg'] }} p-4 rounded-md items-start hover:brightness-95 transition-all duration-200">
+    class="flex gap-3 border-l-4 {{ $selected['border'] }} {{ $selected['bg'] }} p-3 sm:p-4 rounded-md items-start hover:brightness-95 transition-all duration-200">
     {{-- ICON --}}
-    <div class="py-1">
+    <div class="py-1 flex-shrink-0">
         {!! str_replace('<svg ', '<svg class="' . $selected['text'] . '" ', file_get_contents(public_path($icon))) !!}
     </div>
 
     {{-- TEXT CONTENT --}}
     <div class="flex flex-col flex-1 min-w-0">
-        <h3 class="font-semibold">{{ $title }}</h3>
-        <p class="text-caption-dark text-sm wrap-break-word whitespace-normal leading-snug">
+       <h3 class="font-semibold text-sm sm:text-base leading-tight break-words">{{ $title }}</h3>
+
+       <p class="text-caption-dark text-xs sm:text-sm break-words whitespace-normal leading-snug">
             {{ $message }}
         </p>
-       <p class="text-caption text-xs mt-1">
+        <p class="text-caption text-[10px] sm:text-xs mt-1">
             {{ is_numeric($time) ? number_format($time, 1) : $time }}
         </p>
     </div>

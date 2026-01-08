@@ -2,7 +2,7 @@
 @section('title', 'Edit User')
 
 @section('content')
-    <div class="flex flex-1 gap-6">
+    <div class="flex flex-col lg:flex-row flex-1 gap-6">
         <div class="flex flex-col flex-1 gap-6 min-w-0">
             <div class="flex flex-col bg-white p-6 gap-4 rounded-md border-grey-border border">
                 <div class="flex flex-col">
@@ -140,5 +140,8 @@
             </div>
         </div>
 
-        <x-user-profile-card :user="$user" :notifications="$notifications" />
-    @endsection
+        <div class="w-full lg:w-auto lg:shrink-0 self-start">
+            <x-user-profile-card :user="$user" :notifications="$notifications" />
+        </div>
+    </div>
+@endsection
