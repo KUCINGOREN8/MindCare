@@ -13,7 +13,7 @@
             $canMakePayment = $isPendingPayment && $payment && $payment->status === 'pending';
         @endphp
 
-        <div class="bg-white p-4 rounded-xl border border-grey-border hover:shadow-md transition flex flex-col sm:flex-row sm:items-center justify-between gap-4 group {{ $isPendingPayment ? 'cursor-pointer' : '' }}"
+        <div class="bg-white p-4 rounded-xl border border-grey-border hover:shadow-md transition flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 group {{ $isPendingPayment ? 'cursor-pointer' : '' }}"
             @if ($isPendingPayment) onclick="window.location.href='{{ route('patient.appointments.payment', $item->id) }}'"
             @elseif($isPaymentExpired)
                 onclick="showExpiredMessage()" @endif>
@@ -81,7 +81,7 @@
                 </div>
             </div>
 
-            <div class="flex flex-col gap-3 w-full sm:w-auto sm:items-end mt-2 sm:mt-0 sm:pl-4">
+            <div class="flex flex-col gap-3 w-full sm:w-auto sm:items-end mt-2 sm:mt-0 sm:pl-4 max-w-full overflow-hidden">
                 <div class="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto">
                     <span
                         class="px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-bold {{ $badgeBgColor }} {{ $badgeTextColor }} uppercase tracking-wide whitespace-nowrap">
