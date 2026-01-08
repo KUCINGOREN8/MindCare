@@ -43,10 +43,10 @@
             }
         @endphp
 
-        <div class="bg-white p-4 rounded-xl border border-grey-border hover:shadow-md transition flex items-center justify-between group cursor-pointer"
+        <div class="bg-white p-4 rounded-xl border border-grey-border hover:shadow-md transition flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 group cursor-pointer"
             onclick="window.location.href='{{ route('psychologist.clients.details', $item->user_id) }}'">
 
-            <div class="flex items-center gap-4">
+            <div class="flex items-start gap-4 min-w-0">
                 <div class="relative">
                     <div
                         class="w-10 h-10 rounded-full {{ $statusConfig['icon'] }} flex items-center justify-center group-hover:bg-green-500 group-hover:text-white transition">
@@ -54,8 +54,8 @@
                     </div>
                 </div>
 
-                <div>
-                    <p class="font-bold text-gray-800 text-sm">
+                <div class="min-w-0">
+                    <p class="font-bold text-gray-800 text-sm break-words">
                         {{ $item->user->full_name ?? __('psychologist_dashboard.unknown_patient') }}
                     </p>
                     <p class="text-xs text-gray-500">
@@ -78,20 +78,20 @@
                     </p>
 
                     @if ($item->notes)
-                        <p class="text-xs text-gray-400 mt-1 italic max-w-md truncate">
+                        <p class="text-xs text-gray-400 mt-1 italic max-w-md break-words">
                             "{{ Str::limit($item->notes, 60) }}"
                         </p>
                     @endif
                 </div>
             </div>
 
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2 self-end sm:self-auto flex-shrink-0">
                 <span
-                    class="px-3 py-1 rounded-full text-[10px] font-bold {{ $statusConfig['badge'] }} uppercase tracking-wide">
+                    class="px-2 sm:px-3 py-1 rounded-full text-[10px] font-bold whitespace-nowrap {{ $statusConfig['badge'] }} uppercase tracking-wide">
                     {{ $statusText }}
                 </span>
 
-                <div class="text-gray-300 group-hover:text-primary transition">
+                <div class="text-gray-300 group-hover:text-primary transition flex-shrink-0">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                     </svg>
