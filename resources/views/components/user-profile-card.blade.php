@@ -1,4 +1,3 @@
-{{-- resources/views/components/user-profile-card.blade.php --}}
 @props([
     'user' => null,
     'notifications' => [],
@@ -11,8 +10,7 @@
 ])
 
 @if ($user)
-    <div {{ $attributes->merge(['class' => 'flex flex-col p-4 sm:p-6 gap-6 bg-white rounded-md border-grey-border border w-full h-fit max-h-none lg:max-h-[calc(100vh-120px)] shrink-0 lg:max-h-[calc(100vh-120px)]']) }}
-        style="max-width: {{ $maxWidth }}">
+    <div {{ $attributes->merge(['class' => 'flex flex-col p-4 sm:p-6 gap-6 bg-white rounded-md border-grey-border border w-full h-fit']) }}>
         <div class="flex flex-col gap-4 justify-start">
             {{-- User Information --}}
             <div class="flex flex-row gap-4 transition-all duration-300">
@@ -67,7 +65,7 @@
 
         {{-- Notifications --}}
         @if ($showNotifications)
-            <div class="border-t border-gray-100 pt-4 overflow-y-auto lg:max-h-[40vh]">
+            <div class="border-t border-gray-100 pt-4">
                 @include('components.notifications', ['notifications' => $notifications])
             </div>
         @endif
