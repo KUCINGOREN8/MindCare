@@ -2,7 +2,7 @@
     @csrf
     @method('PUT')
 
-    <div class="flex flex-col sm:grid sm:grid-cols-[20%_80%] gap-2 sm:gap-0 sm:items-center">
+    <div class="flex flex-col sm:grid sm:grid-cols-[minmax(120px,20%)_1fr] gap-2 sm:gap-0 sm:items-center">
         {{-- TRANSLATE LABEL --}}
         <label class="block text-[#4D4D4E] font-medium sm:font-normal">{{ __('settings.label_preferred_lang') }}</label>
 

@@ -26,11 +26,11 @@
                 $isAvailable = $schedule !== null;
             @endphp
 
-            <div class="flex flex-col sm:grid sm:grid-cols-[20%_80%] gap-3 sm:gap-4 schedule-day border-b border-gray-100 sm:border-0 pb-4 sm:pb-0"
+            <div class="flex flex-col sm:grid sm:grid-cols-[minmax(120px,20%)_1fr] gap-3 sm:gap-4 schedule-day border-b border-gray-100 sm:border-0 pb-4 sm:pb-0"
                 data-day="{{ $key }}">
-                <div class="flex items-center">
+                <div class="flex items-center min-w-0">
                     <label
-                        class="block text-[#4D4D4E] font-medium text-sm sm:text-base">{{ __('settings.day_' . $key) }}</label>
+                        class="block text-[#4D4D4E] font-medium text-sm sm:text-base break-words">{{ __('settings.day_' . $key) }}</label>
                 </div>
 
                 <div class="space-y-3 sm:space-y-2">
@@ -46,9 +46,9 @@
                                 {{ $isAvailable ? 'checked' : '' }} disabled data-disabled="true"
                                 data-original-value="{{ $isAvailable ? 'true' : 'false' }}">
                             <div
-                                class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer 
-                                        peer-checked:after:translate-x-full peer-checked:after:border-white 
-                                        after:content-[''] after:absolute after:top-[2px] after:left-[2px] 
+                                class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer
+                                        peer-checked:after:translate-x-full peer-checked:after:border-white
+                                        after:content-[''] after:absolute after:top-[2px] after:left-[2px]
                                         after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all
                                         peer-checked:bg-[#00C3B3] flex-shrink-0">
                             </div>
@@ -88,7 +88,7 @@
             </div>
 
             @if (!$loop->last)
-                <div class="border-b border-gray-100 my-4"></div>
+                <div class="hidden sm:block border-b border-gray-100 my-4"></div>
             @endif
         @endforeach
 

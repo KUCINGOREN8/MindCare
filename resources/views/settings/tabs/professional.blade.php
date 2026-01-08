@@ -8,7 +8,7 @@
     <h3 class="text-lg font-semibold mt-0">{{ __('settings.section_general') }}</h3>
 
     {{-- Professional Title --}}
-    <div class="flex flex-col sm:grid sm:grid-cols-[20%_80%] gap-2 sm:gap-0 sm:items-center">
+    <div class="flex flex-col sm:grid sm:grid-cols-[minmax(120px,20%)_1fr] gap-2 sm:gap-0 sm:items-center">
         <label class="block text-[#4D4D4E] font-medium sm:font-normal">{{ __('settings.label_title') }}</label>
         <div class="flex items-center rounded-lg px-4 py-3 shadow-sm border border-transparent focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/50 transition-all"
             style="background-color: #FAFAFA;">
@@ -23,7 +23,7 @@
     </div>
 
     {{-- Specialization --}}
-    <div class="flex flex-col sm:grid sm:grid-cols-[20%_80%] gap-2 sm:gap-0 sm:items-center">
+    <div class="flex flex-col sm:grid sm:grid-cols-[minmax(120px,20%)_1fr] gap-2 sm:gap-0 sm:items-center">
         <label class="block text-[#4D4D4E] font-medium sm:font-normal">{{ __('settings.label_spec') }}</label>
         <div class="flex items-center rounded-lg px-4 py-3 shadow-sm border border-transparent focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/50 transition-all"
             style="background-color: #FAFAFA;">
@@ -38,7 +38,7 @@
     </div>
 
     {{-- License Number --}}
-    <div class="flex flex-col sm:grid sm:grid-cols-[20%_80%] gap-2 sm:gap-0 sm:items-center">
+    <div class="flex flex-col sm:grid sm:grid-cols-[minmax(120px,20%)_1fr] gap-2 sm:gap-0 sm:items-center">
         <label class="block text-[#4D4D4E] font-medium sm:font-normal">{{ __('settings.label_license') }}</label>
         <div class="flex items-center rounded-lg px-4 py-3 shadow-sm border border-transparent focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/50 transition-all"
             style="background-color: #FAFAFA;">
@@ -53,7 +53,7 @@
     </div>
 
     {{-- Years of Experience --}}
-    <div class="flex flex-col sm:grid sm:grid-cols-[20%_80%] gap-2 sm:gap-0 sm:items-center">
+    <div class="flex flex-col sm:grid sm:grid-cols-[minmax(120px,20%)_1fr] gap-2 sm:gap-0 sm:items-center">
         <label class="block text-[#4D4D4E] font-medium sm:font-normal">{{ __('settings.label_exp_years') }}</label>
         <div class="flex items-center rounded-lg px-4 py-3 shadow-sm border border-transparent focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/50 transition-all"
             style="background-color: #FAFAFA;">
@@ -68,7 +68,7 @@
     </div>
 
     {{-- Consultation Fee --}}
-    <div class="flex flex-col sm:grid sm:grid-cols-[20%_80%] gap-2 sm:gap-0 sm:items-center">
+    <div class="flex flex-col sm:grid sm:grid-cols-[minmax(120px,20%)_1fr] gap-2 sm:gap-0 sm:items-center">
         <label class="block text-[#4D4D4E] font-medium sm:font-normal">{{ __('settings.label_fee') }}</label>
         <div class="flex items-center rounded-lg px-4 py-3 shadow-sm border border-transparent focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/50 transition-all"
             style="background-color: #FAFAFA;">
@@ -84,7 +84,7 @@
     </div>
 
     {{-- Languages --}}
-    <div class="flex flex-col sm:grid sm:grid-cols-[20%_80%] gap-2 sm:gap-0 sm:items-center">
+    <div class="flex flex-col sm:grid sm:grid-cols-[minmax(120px,20%)_1fr] gap-2 sm:gap-0 sm:items-center">
         <label class="block text-[#4D4D4E] font-medium sm:font-normal">{{ __('settings.label_languages') }}</label>
         <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
             <select name="languages[]" multiple
@@ -115,7 +115,7 @@
     </div>
 
     {{-- Short Bio --}}
-    <div class="flex flex-col sm:grid sm:grid-cols-[20%_80%] gap-2 sm:gap-0 sm:items-center">
+    <div class="flex flex-col sm:grid sm:grid-cols-[minmax(120px,20%)_1fr] gap-2 sm:gap-0 sm:items-center">
         <label class="block text-[#4D4D4E] font-medium sm:font-normal">{{ __('settings.label_short_bio') }}</label>
         <div class="flex items-center rounded-lg px-4 py-3 shadow-sm border border-transparent focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/50 transition-all"
             style="background-color: #FAFAFA;">
@@ -129,7 +129,7 @@
     </div>
 
     {{-- About Me --}}
-    <div class="flex flex-col sm:grid sm:grid-cols-[20%_80%] gap-2 sm:gap-0 sm:items-center">
+    <div class="flex flex-col sm:grid sm:grid-cols-[minmax(120px,20%)_1fr] gap-2 sm:gap-0 sm:items-center">
         <label class="block text-[#4D4D4E] font-medium sm:font-normal">{{ __('settings.label_about_me') }}</label>
         <div class="flex items-center rounded-lg px-4 py-3 shadow-sm border border-transparent focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/50 transition-all"
             style="background-color: #FAFAFA;">
@@ -174,7 +174,7 @@
                 <div class="education-entry space-y-4 p-4 border rounded-lg mb-4" data-index="{{ $index }}">
                     <input type="hidden" name="educations[{{ $index }}][id]" value="{{ $education->id }}">
 
-                    <div class="grid grid-cols-[20%_80%] gap-4">
+                    <div class="grid grid-cols-[minmax(120px,20%)_1fr] gap-4">
                         <label class="block text-[#4D4D4E]">{{ __('settings.label_degree') }}</label>
                         <div class="flex items-center rounded-lg px-4 py-3 shadow-sm"
                             style="background-color: #FAFAFA;">
@@ -185,7 +185,7 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-[20%_80%] gap-4">
+                    <div class="grid grid-cols-[minmax(120px,20%)_1fr] gap-4">
                         <label class="block text-[#4D4D4E]">{{ __('settings.label_institution') }}</label>
                         <div class="flex items-center rounded-lg px-4 py-3 shadow-sm"
                             style="background-color: #FAFAFA;">
@@ -197,7 +197,7 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-[20%_80%] gap-4">
+                    <div class="grid grid-cols-[minmax(120px,20%)_1fr] gap-4">
                         <label class="block text-[#4D4D4E]">{{ __('settings.label_year') }}</label>
                         <div class="flex items-center rounded-lg px-4 py-3 shadow-sm"
                             style="background-color: #FAFAFA;">
@@ -219,7 +219,7 @@
         @else
             {{-- Default Empty Education Form --}}
             <div class="education-entry space-y-4 p-4 border rounded-lg mb-4" data-index="0">
-                <div class="grid grid-cols-[20%_80%] gap-4">
+                <div class="grid grid-cols-[minmax(120px,20%)_1fr] gap-4">
                     <label class="block text-[#4D4D4E]">{{ __('settings.label_degree') }}</label>
                     <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
                         <input type="text" name="educations[0][degree]"
@@ -228,7 +228,7 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-[20%_80%] gap-4">
+                <div class="grid grid-cols-[minmax(120px,20%)_1fr] gap-4">
                     <label class="block text-[#4D4D4E]">{{ __('settings.label_institution') }}</label>
                     <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
                         <input type="text" name="educations[0][institution]"
@@ -237,7 +237,7 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-[20%_80%] gap-4">
+                <div class="grid grid-cols-[minmax(120px,20%)_1fr] gap-4">
                     <label class="block text-[#4D4D4E]">{{ __('settings.label_year') }}</label>
                     <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
                         <input type="text" name="educations[0][year]"
@@ -279,7 +279,7 @@
                     <input type="hidden" name="experiences[{{ $index }}][id]"
                         value="{{ $experience->id }}">
 
-                    <div class="grid grid-cols-[20%_80%] gap-4">
+                    <div class="grid grid-cols-[minmax(120px,20%)_1fr] gap-4">
                         <label class="block text-[#4D4D4E]">{{ __('settings.label_position') }}</label>
                         <div class="flex items-center rounded-lg px-4 py-3 shadow-sm"
                             style="background-color: #FAFAFA;">
@@ -291,7 +291,7 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-[20%_80%] gap-4">
+                    <div class="grid grid-cols-[minmax(120px,20%)_1fr] gap-4">
                         <label class="block text-[#4D4D4E]">{{ __('settings.label_org') }}</label>
                         <div class="flex items-center rounded-lg px-4 py-3 shadow-sm"
                             style="background-color: #FAFAFA;">
@@ -304,7 +304,7 @@
                     </div>
 
                     <div class="grid grid-cols-2 gap-4">
-                        <div class="grid grid-cols-[20%_80%] gap-4">
+                        <div class="grid grid-cols-[minmax(120px,20%)_1fr] gap-4">
                             <label class="block text-[#4D4D4E]">{{ __('settings.label_start_year') }}</label>
                             <div class="flex items-center rounded-lg px-4 py-3 shadow-sm"
                                 style="background-color: #FAFAFA;">
@@ -314,7 +314,7 @@
                                     value="{{ old('experiences.' . $index . '.start_year', $experience->start_year) }}">
                             </div>
                         </div>
-                        <div class="grid grid-cols-[20%_80%] gap-4">
+                        <div class="grid grid-cols-[minmax(120px,20%)_1fr] gap-4">
                             <label class="block text-[#4D4D4E]">{{ __('settings.label_end_year') }}</label>
                             <div class="flex items-center rounded-lg px-4 py-3 shadow-sm"
                                 style="background-color: #FAFAFA;">
@@ -337,7 +337,7 @@
         @else
             {{-- Default Empty Experience Form --}}
             <div class="experience-entry space-y-4 p-4 border rounded-lg mb-4" data-index="0">
-                <div class="grid grid-cols-[20%_80%] gap-4">
+                <div class="grid grid-cols-[minmax(120px,20%)_1fr] gap-4">
                     <label class="block text-[#4D4D4E]">{{ __('settings.label_position') }}</label>
                     <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
                         <input type="text" name="experiences[0][position]"
@@ -346,7 +346,7 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-[20%_80%] gap-4">
+                <div class="grid grid-cols-[minmax(120px,20%)_1fr] gap-4">
                     <label class="block text-[#4D4D4E]">{{ __('settings.label_org') }}</label>
                     <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
                         <input type="text" name="experiences[0][organization]"
@@ -356,7 +356,7 @@
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
-                    <div class="grid grid-cols-[20%_80%] gap-4">
+                    <div class="grid grid-cols-[minmax(120px,20%)_1fr] gap-4">
                         <label class="block text-[#4D4D4E]">{{ __('settings.label_start_year') }}</label>
                         <div class="flex items-center rounded-lg px-4 py-3 shadow-sm"
                             style="background-color: #FAFAFA;">
@@ -364,7 +364,7 @@
                                 class="w-full outline-none text-black placeholder-gray-400 bg-transparent">
                         </div>
                     </div>
-                    <div class="grid grid-cols-[20%_80%] gap-4">
+                    <div class="grid grid-cols-[minmax(120px,20%)_1fr] gap-4">
                         <label class="block text-[#4D4D4E]">{{ __('settings.label_end_year') }}</label>
                         <div class="flex items-center rounded-lg px-4 py-3 shadow-sm"
                             style="background-color: #FAFAFA;">
@@ -443,33 +443,33 @@
                 const template = `
                 <div class="education-entry space-y-4 p-4 border rounded-lg mb-4" data-index="${educationIndex}">
                     <hr class="my-4">
-                    <div class="grid grid-cols-[20%_80%] gap-4">
+                    <div class="grid grid-cols-[minmax(120px,20%)_1fr] gap-4">
                         <label class="block text-[#4D4D4E]">${LANG_PROF.labelDegree}</label>
                         <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
-                            <input type="text" name="educations[${educationIndex}][degree]" 
-                                   placeholder="${LANG_PROF.phDegree}" 
+                            <input type="text" name="educations[${educationIndex}][degree]"
+                                   placeholder="${LANG_PROF.phDegree}"
                                    class="w-full outline-none text-black placeholder-gray-400 bg-transparent" required>
                         </div>
                     </div>
-                    
-                    <div class="grid grid-cols-[20%_80%] gap-4">
+
+                    <div class="grid grid-cols-[minmax(120px,20%)_1fr] gap-4">
                         <label class="block text-[#4D4D4E]">${LANG_PROF.labelInst}</label>
                         <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
-                            <input type="text" name="educations[${educationIndex}][institution]" 
-                                   placeholder="${LANG_PROF.phInst}" 
+                            <input type="text" name="educations[${educationIndex}][institution]"
+                                   placeholder="${LANG_PROF.phInst}"
                                    class="w-full outline-none text-black placeholder-gray-400 bg-transparent" required>
                         </div>
                     </div>
-                    
-                    <div class="grid grid-cols-[20%_80%] gap-4">
+
+                    <div class="grid grid-cols-[minmax(120px,20%)_1fr] gap-4">
                         <label class="block text-[#4D4D4E]">${LANG_PROF.labelYear}</label>
                         <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
-                            <input type="text" name="educations[${educationIndex}][year]" 
-                                   placeholder="${LANG_PROF.phYear}" 
+                            <input type="text" name="educations[${educationIndex}][year]"
+                                   placeholder="${LANG_PROF.phYear}"
                                    class="w-full outline-none text-black placeholder-gray-400 bg-transparent">
                         </div>
                     </div>
-                    
+
                     <div class="flex justify-end">
                         <button type="button" class="text-red-500 hover:text-red-700 remove-education" onclick="this.closest('.education-entry').remove()">
                             ${LANG_PROF.btnRemoveEdu}
@@ -526,39 +526,39 @@
                 const template = `
                 <div class="experience-entry space-y-4 p-4 border rounded-lg mb-4" data-index="${experienceIndex}">
                     <hr class="my-4">
-                    <div class="grid grid-cols-[20%_80%] gap-4">
+                    <div class="grid grid-cols-[minmax(120px,20%)_1fr] gap-4">
                         <label class="block text-[#4D4D4E]">${LANG_PROF.labelPos}</label>
                         <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
-                            <input type="text" name="experiences[${experienceIndex}][position]" 
-                                   placeholder="${LANG_PROF.phPos}" 
+                            <input type="text" name="experiences[${experienceIndex}][position]"
+                                   placeholder="${LANG_PROF.phPos}"
                                    class="w-full outline-none text-black placeholder-gray-400 bg-transparent" required>
                         </div>
                     </div>
-                    
-                    <div class="grid grid-cols-[20%_80%] gap-4">
+
+                    <div class="grid grid-cols-[minmax(120px,20%)_1fr] gap-4">
                         <label class="block text-[#4D4D4E]">${LANG_PROF.labelOrg}</label>
                         <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
-                            <input type="text" name="experiences[${experienceIndex}][organization]" 
-                                   placeholder="${LANG_PROF.phOrg}" 
+                            <input type="text" name="experiences[${experienceIndex}][organization]"
+                                   placeholder="${LANG_PROF.phOrg}"
                                    class="w-full outline-none text-black placeholder-gray-400 bg-transparent" required>
                         </div>
                     </div>
-                    
+
                     <div class="grid grid-cols-2 gap-4">
-                        <div class="grid grid-cols-[20%_80%] gap-4">
+                        <div class="grid grid-cols-[minmax(120px,20%)_1fr] gap-4">
                             <label class="block text-[#4D4D4E]">${LANG_PROF.labelStart}</label>
                             <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
                                 <input type="text" name="experiences[${experienceIndex}][start_year]" placeholder="2018" class="w-full outline-none text-black placeholder-gray-400 bg-transparent">
                             </div>
                         </div>
-                        <div class="grid grid-cols-[20%_80%] gap-4">
+                        <div class="grid grid-cols-[minmax(120px,20%)_1fr] gap-4">
                             <label class="block text-[#4D4D4E]">${LANG_PROF.labelEnd}</label>
                             <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
                                 <input type="text" name="experiences[${experienceIndex}][end_year]" placeholder="${LANG_PROF.phEnd}" class="w-full outline-none text-black placeholder-gray-400 bg-transparent">
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="flex justify-end">
                         <button type="button" class="text-red-500 hover:text-red-700 remove-experience" onclick="this.closest('.experience-entry').remove()">
                             ${LANG_PROF.btnRemoveExp}

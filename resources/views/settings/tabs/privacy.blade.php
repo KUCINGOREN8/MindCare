@@ -3,7 +3,7 @@
     @method('PUT')
 
     {{-- OLD PASSWORD --}}
-    <div class="flex flex-col sm:grid sm:grid-cols-[20%_80%] gap-2 sm:gap-0 sm:items-center">
+    <div class="flex flex-col sm:grid sm:grid-cols-[minmax(120px,20%)_1fr] gap-2 sm:gap-0 sm:items-center">
         <label class="block text-[#4D4D4E] font-medium sm:font-normal">{{ __('settings.label_old_pass') }}</label>
         <div class="flex items-center rounded-lg px-4 py-3 shadow-sm border border-transparent focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/50 transition-all"
             style="background-color: #FAFAFA;">
@@ -22,7 +22,7 @@
     </div>
 
     {{-- NEW PASSWORD --}}
-    <div class="flex flex-col sm:grid sm:grid-cols-[20%_80%] gap-2 sm:gap-0 sm:items-center">
+    <div class="flex flex-col sm:grid sm:grid-cols-[minmax(120px,20%)_1fr] gap-2 sm:gap-0 sm:items-center">
         <label class="block text-[#4D4D4E] font-medium sm:font-normal">{{ __('settings.label_new_pass') }}</label>
         <div class="flex items-center rounded-lg px-4 py-3 shadow-sm border border-transparent focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/50 transition-all"
             style="background-color: #FAFAFA;">
@@ -41,7 +41,7 @@
     </div>
 
     {{-- CONFIRM PASSWORD --}}
-    <div class="flex flex-col sm:grid sm:grid-cols-[20%_80%] gap-2 sm:gap-0 sm:items-center">
+    <div class="flex flex-col sm:grid sm:grid-cols-[minmax(120px,20%)_1fr] gap-2 sm:gap-0 sm:items-center">
         <label class="block text-[#4D4D4E] font-medium sm:font-normal">{{ __('settings.label_confirm_pass') }}</label>
         <div class="flex items-center rounded-lg px-4 py-3 shadow-sm border border-transparent focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/50 transition-all"
             style="background-color: #FAFAFA;">

@@ -2,7 +2,7 @@
     dd($user->hasCustomPhoto());
 @endphp --}}
 
-<div class="flex flex-col sm:grid sm:grid-cols-[20%_80%] gap-4 sm:gap-0">
+<div class="flex flex-col sm:grid sm:grid-cols-[minmax(120px,20%)_1fr] gap-4 sm:gap-0">
     <p class="text-[#4D4D4E] font-medium sm:font-normal mb-2 sm:mb-0">{{ __('settings.label_photo') }}</p>
     <div class="flex items-center justify-between sm:gap-6">
         <img id="profileImage" src="{{ $user->photo_url }}"
@@ -34,7 +34,7 @@
     @method('PUT')
 
     {{-- FULL NAME --}}
-    <div class="flex flex-col sm:grid sm:grid-cols-[20%_80%] gap-2 sm:gap-0 sm:items-center">
+    <div class="flex flex-col sm:grid sm:grid-cols-[minmax(120px,20%)_1fr] gap-2 sm:gap-0 sm:items-center">
         <label class="text-[#4D4D4E] font-medium sm:font-normal">{{ __('settings.label_fullname') }}</label>
         <div class="flex items-center rounded-lg px-4 py-3 shadow-sm border border-transparent focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/50 transition-all"
             style="background-color: #FAFAFA;">
@@ -49,7 +49,7 @@
     </div>
 
     {{-- EMAIL --}}
-    <div class="flex flex-col sm:grid sm:grid-cols-[20%_80%] gap-2 sm:gap-0 sm:items-center">
+    <div class="flex flex-col sm:grid sm:grid-cols-[minmax(120px,20%)_1fr] gap-2 sm:gap-0 sm:items-center">
         <label class="text-[#4D4D4E] font-medium sm:font-normal">{{ __('settings.label_email') }}</label>
         <div class="flex items-center rounded-lg px-4 py-3 shadow-sm border border-transparent focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/50 transition-all"
             style="background-color: #FAFAFA;">
@@ -64,7 +64,7 @@
     </div>
 
     {{-- DATE OF BIRTH --}}
-    <div class="flex flex-col sm:grid sm:grid-cols-[20%_80%] gap-2 sm:gap-0 sm:items-center">
+    <div class="flex flex-col sm:grid sm:grid-cols-[minmax(120px,20%)_1fr] gap-2 sm:gap-0 sm:items-center">
         <label class="text-[#4D4D4E] font-medium sm:font-normal">{{ __('settings.label_dob') }}</label>
         <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
             <input type="date" name="date_of_birth" placeholder="{{ __('settings.placeholder_dob') }}"
@@ -80,7 +80,7 @@
     </div>
 
     {{-- GENDER --}}
-    <div class="flex flex-col sm:grid sm:grid-cols-[20%_80%] gap-2 sm:gap-0 sm:items-center">
+    <div class="flex flex-col sm:grid sm:grid-cols-[minmax(120px,20%)_1fr] gap-2 sm:gap-0 sm:items-center">
         <label class="text-[#4D4D4E] font-medium sm:font-normal">{{ __('settings.label_gender') }}</label>
         <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
             <select name="gender"
