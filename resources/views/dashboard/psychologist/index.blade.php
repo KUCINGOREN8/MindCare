@@ -6,9 +6,9 @@
 
 @section('content')
     <div class="flex flex-col lg:flex-row flex-1 gap-6">
-        <div class="flex flex-col flex-1 gap-6 min-w-0">
+        <div class="flex flex-col flex-1 gap-4 lg:gap-6 min-w-0">
             {{-- Header --}}
-            <div class="flex flex-col bg-white p-6 gap-4 rounded-md border-grey-border border">
+            <div class="flex flex-col bg-white p-4 sm:p-6 gap-4 rounded-md border-grey-border border">
                 <div class="flex flex-col">
                     {{-- Translate Greeting dengan Parameter Nama --}}
                     <h1 class="text-primary font-bold text-lg">
