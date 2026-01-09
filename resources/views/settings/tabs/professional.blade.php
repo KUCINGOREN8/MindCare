@@ -174,42 +174,46 @@
                 <div class="education-entry space-y-4 p-4 border rounded-lg mb-4" data-index="{{ $index }}">
                     <input type="hidden" name="educations[{{ $index }}][id]" value="{{ $education->id }}">
 
-                    <div class="grid grid-cols-[minmax(120px,20%)_1fr] gap-4">
-                        <label class="block text-[#4D4D4E]">{{ __('settings.label_degree') }}</label>
-                        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm"
+                    <div class="grid grid-cols-1 sm:grid-cols-[minmax(120px,20%)_1fr] gap-2 sm:gap-4 items-center">
+                        <label
+                            class="block text-[#4D4D4E] font-medium sm:font-normal">{{ __('settings.label_degree') }}</label>
+                        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm border border-gray-100 sm:border-transparent"
                             style="background-color: #FAFAFA;">
                             <input type="text" name="educations[{{ $index }}][degree]"
                                 placeholder="{{ __('settings.placeholder_degree') }}"
-                                class="w-full outline-none text-black placeholder-gray-400 bg-transparent"
+                                class="w-full outline-none text-black placeholder-gray-400 bg-transparent text-sm sm:text-base"
                                 value="{{ old('educations.' . $index . '.degree', $education->degree) }}" required>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-[minmax(120px,20%)_1fr] gap-4">
-                        <label class="block text-[#4D4D4E]">{{ __('settings.label_institution') }}</label>
-                        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm"
+                    <div class="grid grid-cols-1 sm:grid-cols-[minmax(120px,20%)_1fr] gap-2 sm:gap-4 items-center">
+                        <label
+                            class="block text-[#4D4D4E] font-medium sm:font-normal">{{ __('settings.label_institution') }}</label>
+                        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm border border-gray-100 sm:border-transparent"
                             style="background-color: #FAFAFA;">
                             <input type="text" name="educations[{{ $index }}][institution]"
                                 placeholder="{{ __('settings.placeholder_institution') }}"
-                                class="w-full outline-none text-black placeholder-gray-400 bg-transparent"
+                                class="w-full outline-none text-black placeholder-gray-400 bg-transparent text-sm sm:text-base"
                                 value="{{ old('educations.' . $index . '.institution', $education->institution) }}"
                                 required>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-[minmax(120px,20%)_1fr] gap-4">
-                        <label class="block text-[#4D4D4E]">{{ __('settings.label_year') }}</label>
-                        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm"
+                    <div class="grid grid-cols-1 sm:grid-cols-[minmax(120px,20%)_1fr] gap-2 sm:gap-4 items-center">
+                        <label
+                            class="block text-[#4D4D4E] font-medium sm:font-normal">{{ __('settings.label_year') }}</label>
+                        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm border border-gray-100 sm:border-transparent"
                             style="background-color: #FAFAFA;">
                             <input type="text" name="educations[{{ $index }}][year]"
                                 placeholder="{{ __('settings.placeholder_year') }}"
-                                class="w-full outline-none text-black placeholder-gray-400 bg-transparent"
+                                class="w-full outline-none text-black placeholder-gray-400 bg-transparent text-sm sm:text-base"
                                 value="{{ old('educations.' . $index . '.year', $education->year) }}">
                         </div>
                     </div>
 
                     <div class="flex justify-end">
-                        <button type="button" class="text-red-500 hover:text-red-700 remove-education"
+                        <button type="button"
+                            class="text-red-500 hover:text-red-700 remove-education text-sm font-medium"
                             data-id="{{ $education->id }}">
                             {{ __('settings.btn_remove_education') }}
                         </button>
@@ -219,49 +223,58 @@
         @else
             {{-- Default Empty Education Form --}}
             <div class="education-entry space-y-4 p-4 border rounded-lg mb-4" data-index="0">
-                <div class="grid grid-cols-[minmax(120px,20%)_1fr] gap-4">
-                    <label class="block text-[#4D4D4E]">{{ __('settings.label_degree') }}</label>
-                    <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
+                <div class="grid grid-cols-1 sm:grid-cols-[minmax(120px,20%)_1fr] gap-2 sm:gap-4 items-center">
+                    <label
+                        class="block text-[#4D4D4E] font-medium sm:font-normal">{{ __('settings.label_degree') }}</label>
+                    <div
+                        class="flex items-center rounded-lg px-4 py-3 shadow-sm bg-[#FAFAFA] border border-gray-100 sm:border-transparent">
                         <input type="text" name="educations[0][degree]"
                             placeholder="{{ __('settings.placeholder_degree') }}"
-                            class="w-full outline-none text-black placeholder-gray-400 bg-transparent" required>
+                            class="w-full outline-none text-black placeholder-gray-400 bg-transparent text-sm sm:text-base"
+                            required>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-[minmax(120px,20%)_1fr] gap-4">
-                    <label class="block text-[#4D4D4E]">{{ __('settings.label_institution') }}</label>
-                    <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
+                <div class="grid grid-cols-1 sm:grid-cols-[minmax(120px,20%)_1fr] gap-2 sm:gap-4 items-center">
+                    <label
+                        class="block text-[#4D4D4E] font-medium sm:font-normal">{{ __('settings.label_institution') }}</label>
+                    <div
+                        class="flex items-center rounded-lg px-4 py-3 shadow-sm bg-[#FAFAFA] border border-gray-100 sm:border-transparent">
                         <input type="text" name="educations[0][institution]"
                             placeholder="{{ __('settings.placeholder_institution') }}"
-                            class="w-full outline-none text-black placeholder-gray-400 bg-transparent" required>
+                            class="w-full outline-none text-black placeholder-gray-400 bg-transparent text-sm sm:text-base"
+                            required>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-[minmax(120px,20%)_1fr] gap-4">
-                    <label class="block text-[#4D4D4E]">{{ __('settings.label_year') }}</label>
-                    <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
+                <div class="grid grid-cols-1 sm:grid-cols-[minmax(120px,20%)_1fr] gap-2 sm:gap-4 items-center">
+                    <label
+                        class="block text-[#4D4D4E] font-medium sm:font-normal">{{ __('settings.label_year') }}</label>
+                    <div
+                        class="flex items-center rounded-lg px-4 py-3 shadow-sm bg-[#FAFAFA] border border-gray-100 sm:border-transparent">
                         <input type="text" name="educations[0][year]"
                             placeholder="{{ __('settings.placeholder_year') }}"
-                            class="w-full outline-none text-black placeholder-gray-400 bg-transparent">
+                            class="w-full outline-none text-black placeholder-gray-400 bg-transparent text-sm sm:text-base">
                     </div>
                 </div>
             </div>
         @endif
     </div>
 
-    <div class="flex justify-between">
+    <div class="flex flex-col-reverse sm:flex-row justify-between gap-3 sm:gap-0">
         <button type="button" id="addEducation"
-            class="px-4 py-2 hover:bg-gray-300 bg-[#FAFAFA] text-[#4D4D4E] border border-grey-border rounded-md">
+            class="w-full sm:w-auto px-4 py-2.5 hover:bg-gray-300 bg-[#FAFAFA] text-[#4D4D4E] border border-grey-border rounded-md text-sm font-medium transition-colors">
             {{ __('settings.btn_add_education') }}
         </button>
 
-        <button type="submit" class="px-4 py-2 bg-[#00C3B3] hover:bg-[#179990] text-white rounded-md">
+        <button type="submit"
+            class="w-full sm:w-auto px-4 py-2.5 bg-[#00C3B3] hover:bg-[#179990] text-white rounded-md text-sm font-medium transition-colors shadow-sm">
             {{ __('settings.btn_save_education') }}
         </button>
     </div>
 </form>
 
-<hr class="my-4">
+<hr class="my-6 border-gray-100">
 
 {{-- === 3. FORM PENGALAMAN (EXPERIENCE) === --}}
 <form id="experienceForm" method="POST" action="{{ route('profile.experience.store') }}" class="space-y-6 mt-8">
@@ -279,55 +292,60 @@
                     <input type="hidden" name="experiences[{{ $index }}][id]"
                         value="{{ $experience->id }}">
 
-                    <div class="grid grid-cols-[minmax(120px,20%)_1fr] gap-4">
-                        <label class="block text-[#4D4D4E]">{{ __('settings.label_position') }}</label>
-                        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm"
+                    <div class="grid grid-cols-1 sm:grid-cols-[minmax(120px,20%)_1fr] gap-2 sm:gap-4 items-center">
+                        <label
+                            class="block text-[#4D4D4E] font-medium sm:font-normal">{{ __('settings.label_position') }}</label>
+                        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm border border-gray-100 sm:border-transparent"
                             style="background-color: #FAFAFA;">
                             <input type="text" name="experiences[{{ $index }}][position]"
                                 placeholder="{{ __('settings.placeholder_position') }}"
-                                class="w-full outline-none text-black placeholder-gray-400 bg-transparent"
+                                class="w-full outline-none text-black placeholder-gray-400 bg-transparent text-sm sm:text-base"
                                 value="{{ old('experiences.' . $index . '.position', $experience->position) }}"
                                 required>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-[minmax(120px,20%)_1fr] gap-4">
-                        <label class="block text-[#4D4D4E]">{{ __('settings.label_org') }}</label>
-                        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm"
+                    <div class="grid grid-cols-1 sm:grid-cols-[minmax(120px,20%)_1fr] gap-2 sm:gap-4 items-center">
+                        <label
+                            class="block text-[#4D4D4E] font-medium sm:font-normal">{{ __('settings.label_org') }}</label>
+                        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm border border-gray-100 sm:border-transparent"
                             style="background-color: #FAFAFA;">
                             <input type="text" name="experiences[{{ $index }}][organization]"
                                 placeholder="{{ __('settings.placeholder_org') }}"
-                                class="w-full outline-none text-black placeholder-gray-400 bg-transparent"
+                                class="w-full outline-none text-black placeholder-gray-400 bg-transparent text-sm sm:text-base"
                                 value="{{ old('experiences.' . $index . '.organization', $experience->organization) }}"
                                 required>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="grid grid-cols-[minmax(120px,20%)_1fr] gap-4">
-                            <label class="block text-[#4D4D4E]">{{ __('settings.label_start_year') }}</label>
-                            <div class="flex items-center rounded-lg px-4 py-3 shadow-sm"
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-[minmax(120px,45%)_1fr] gap-2 sm:gap-4 items-center">
+                            <label
+                                class="block text-[#4D4D4E] font-medium sm:font-normal">{{ __('settings.label_start_year') }}</label>
+                            <div class="flex items-center rounded-lg px-4 py-3 shadow-sm border border-gray-100 sm:border-transparent"
                                 style="background-color: #FAFAFA;">
                                 <input type="text" name="experiences[{{ $index }}][start_year]"
                                     placeholder="2018"
-                                    class="w-full outline-none text-black placeholder-gray-400 bg-transparent"
+                                    class="w-full outline-none text-black placeholder-gray-400 bg-transparent text-sm sm:text-base"
                                     value="{{ old('experiences.' . $index . '.start_year', $experience->start_year) }}">
                             </div>
                         </div>
-                        <div class="grid grid-cols-[minmax(120px,20%)_1fr] gap-4">
-                            <label class="block text-[#4D4D4E]">{{ __('settings.label_end_year') }}</label>
-                            <div class="flex items-center rounded-lg px-4 py-3 shadow-sm"
+                        <div class="grid grid-cols-1 sm:grid-cols-[minmax(120px,45%)_1fr] gap-2 sm:gap-4 items-center">
+                            <label
+                                class="block text-[#4D4D4E] font-medium sm:font-normal">{{ __('settings.label_end_year') }}</label>
+                            <div class="flex items-center rounded-lg px-4 py-3 shadow-sm border border-gray-100 sm:border-transparent"
                                 style="background-color: #FAFAFA;">
                                 <input type="text" name="experiences[{{ $index }}][end_year]"
                                     placeholder="{{ __('settings.placeholder_end_year') }}"
-                                    class="w-full outline-none text-black placeholder-gray-400 bg-transparent"
+                                    class="w-full outline-none text-black placeholder-gray-400 bg-transparent text-sm sm:text-base"
                                     value="{{ old('experiences.' . $index . '.end_year', $experience->end_year) }}">
                             </div>
                         </div>
                     </div>
 
                     <div class="flex justify-end">
-                        <button type="button" class="text-red-500 hover:text-red-700 remove-experience"
+                        <button type="button"
+                            class="text-red-500 hover:text-red-700 remove-experience text-sm font-medium"
                             data-id="{{ $experience->id }}">
                             {{ __('settings.btn_remove_experience') }}
                         </button>
@@ -337,40 +355,48 @@
         @else
             {{-- Default Empty Experience Form --}}
             <div class="experience-entry space-y-4 p-4 border rounded-lg mb-4" data-index="0">
-                <div class="grid grid-cols-[minmax(120px,20%)_1fr] gap-4">
-                    <label class="block text-[#4D4D4E]">{{ __('settings.label_position') }}</label>
-                    <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
+                <div class="grid grid-cols-1 sm:grid-cols-[minmax(120px,20%)_1fr] gap-2 sm:gap-4 items-center">
+                    <label
+                        class="block text-[#4D4D4E] font-medium sm:font-normal">{{ __('settings.label_position') }}</label>
+                    <div class="flex items-center rounded-lg px-4 py-3 shadow-sm border border-gray-100 sm:border-transparent"
+                        style="background-color: #FAFAFA;">
                         <input type="text" name="experiences[0][position]"
                             placeholder="{{ __('settings.placeholder_position') }}"
-                            class="w-full outline-none text-black placeholder-gray-400 bg-transparent" required>
+                            class="w-full outline-none text-black placeholder-gray-400 bg-transparent text-sm sm:text-base"
+                            required>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-[minmax(120px,20%)_1fr] gap-4">
-                    <label class="block text-[#4D4D4E]">{{ __('settings.label_org') }}</label>
-                    <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
+                <div class="grid grid-cols-1 sm:grid-cols-[minmax(120px,20%)_1fr] gap-2 sm:gap-4 items-center">
+                    <label
+                        class="block text-[#4D4D4E] font-medium sm:font-normal">{{ __('settings.label_org') }}</label>
+                    <div class="flex items-center rounded-lg px-4 py-3 shadow-sm border border-gray-100 sm:border-transparent"
+                        style="background-color: #FAFAFA;">
                         <input type="text" name="experiences[0][organization]"
                             placeholder="{{ __('settings.placeholder_org') }}"
-                            class="w-full outline-none text-black placeholder-gray-400 bg-transparent" required>
+                            class="w-full outline-none text-black placeholder-gray-400 bg-transparent text-sm sm:text-base"
+                            required>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div class="grid grid-cols-[minmax(120px,20%)_1fr] gap-4">
-                        <label class="block text-[#4D4D4E]">{{ __('settings.label_start_year') }}</label>
-                        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm"
+                        <label
+                            class="block text-[#4D4D4E] font-medium sm:font-normal">{{ __('settings.label_start_year') }}</label>
+                        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm border border-gray-100 sm:border-transparent"
                             style="background-color: #FAFAFA;">
                             <input type="text" name="experiences[0][start_year]" placeholder="2018"
-                                class="w-full outline-none text-black placeholder-gray-400 bg-transparent">
+                                class="w-full outline-none text-black placeholder-gray-400 bg-transparent text-sm sm:text-base">
                         </div>
                     </div>
                     <div class="grid grid-cols-[minmax(120px,20%)_1fr] gap-4">
-                        <label class="block text-[#4D4D4E]">{{ __('settings.label_end_year') }}</label>
-                        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm"
+                        <label
+                            class="block text-[#4D4D4E] font-medium sm:font-normal">{{ __('settings.label_end_year') }}</label>
+                        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm border border-gray-100 sm:border-transparent"
                             style="background-color: #FAFAFA;">
                             <input type="text" name="experiences[0][end_year]"
                                 placeholder="{{ __('settings.placeholder_end_year') }}"
-                                class="w-full outline-none text-black placeholder-gray-400 bg-transparent">
+                                class="w-full outline-none text-black placeholder-gray-400 bg-transparent text-sm sm:text-base">
                         </div>
                     </div>
                 </div>
@@ -378,13 +404,14 @@
         @endif
     </div>
 
-    <div class="flex justify-between">
+    <div class="flex flex-col-reverse sm:flex-row justify-between gap-3 sm:gap-0">
         <button type="button" id="addExperience"
-            class="px-4 py-2 hover:bg-gray-300 bg-[#FAFAFA] text-[#4D4D4E] border border-grey-border rounded-md">
+            class="w-full sm:w-auto px-4 py-2.5 hover:bg-gray-300 bg-[#FAFAFA] text-[#4D4D4E] border border-grey-border rounded-md text-sm font-medium transition-colors">
             {{ __('settings.btn_add_experience') }}
         </button>
 
-        <button type="submit" class="px-4 py-2 bg-[#00C3B3] hover:bg-[#179990] text-white rounded-md">
+        <button type="submit"
+            class="w-full sm:w-auto px-4 py-2.5 bg-[#00C3B3] hover:bg-[#179990] text-white rounded-md text-sm font-medium transition-colors shadow-sm">
             {{ __('settings.btn_save_experience') }}
         </button>
     </div>
@@ -442,36 +469,35 @@
                 // Template string menggunakan variable LANG_PROF
                 const template = `
                 <div class="education-entry space-y-4 p-4 border rounded-lg mb-4" data-index="${educationIndex}">
-                    <hr class="my-4">
-                    <div class="grid grid-cols-[minmax(120px,20%)_1fr] gap-4">
-                        <label class="block text-[#4D4D4E]">${LANG_PROF.labelDegree}</label>
-                        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
+                    <div class="grid grid-cols-1 sm:grid-cols-[minmax(120px,20%)_1fr] gap-2 sm:gap-4 items-center">
+                        <label class="block text-[#4D4D4E] font-medium sm:font-normal">${LANG_PROF.labelDegree}</label>
+                        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm border border-gray-100 sm:border-transparent" style="background-color: #FAFAFA;">
                             <input type="text" name="educations[${educationIndex}][degree]"
                                    placeholder="${LANG_PROF.phDegree}"
-                                   class="w-full outline-none text-black placeholder-gray-400 bg-transparent" required>
+                                   class="w-full outline-none text-black placeholder-gray-400 bg-transparent text-sm sm:text-base" required>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-[minmax(120px,20%)_1fr] gap-4">
-                        <label class="block text-[#4D4D4E]">${LANG_PROF.labelInst}</label>
-                        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
+                    <div class="grid grid-cols-1 sm:grid-cols-[minmax(120px,20%)_1fr] gap-2 sm:gap-4 items-center">
+                        <label class="block text-[#4D4D4E] font-medium sm:font-normal">${LANG_PROF.labelInst}</label>
+                        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm border border-gray-100 sm:border-transparent" style="background-color: #FAFAFA;">
                             <input type="text" name="educations[${educationIndex}][institution]"
                                    placeholder="${LANG_PROF.phInst}"
-                                   class="w-full outline-none text-black placeholder-gray-400 bg-transparent" required>
+                                   class="w-full outline-none text-black placeholder-gray-400 bg-transparent text-sm sm:text-base" required>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-[minmax(120px,20%)_1fr] gap-4">
-                        <label class="block text-[#4D4D4E]">${LANG_PROF.labelYear}</label>
-                        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
+                    <div class="grid grid-cols-1 sm:grid-cols-[minmax(120px,20%)_1fr] gap-2 sm:gap-4 items-center">
+                        <label class="block text-[#4D4D4E] font-medium sm:font-normal">${LANG_PROF.labelYear}</label>
+                        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm border border-gray-100 sm:border-transparent" style="background-color: #FAFAFA;">
                             <input type="text" name="educations[${educationIndex}][year]"
                                    placeholder="${LANG_PROF.phYear}"
-                                   class="w-full outline-none text-black placeholder-gray-400 bg-transparent">
+                                   class="w-full outline-none text-black placeholder-gray-400 bg-transparent text-sm sm:text-base">
                         </div>
                     </div>
 
                     <div class="flex justify-end">
-                        <button type="button" class="text-red-500 hover:text-red-700 remove-education" onclick="this.closest('.education-entry').remove()">
+                        <button type="button" class="text-red-500 hover:text-red-700 remove-education text-sm font-medium" onclick="this.closest('.education-entry').remove()">
                             ${LANG_PROF.btnRemoveEdu}
                         </button>
                     </div>
@@ -525,42 +551,41 @@
             addExperienceBtn.addEventListener('click', function() {
                 const template = `
                 <div class="experience-entry space-y-4 p-4 border rounded-lg mb-4" data-index="${experienceIndex}">
-                    <hr class="my-4">
-                    <div class="grid grid-cols-[minmax(120px,20%)_1fr] gap-4">
-                        <label class="block text-[#4D4D4E]">${LANG_PROF.labelPos}</label>
-                        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
+                    <div class="grid grid-cols-1 sm:grid-cols-[minmax(120px,20%)_1fr] gap-2 sm:gap-4 items-center">
+                        <label class="block text-[#4D4D4E] font-medium sm:font-normal">${LANG_PROF.labelPos}</label>
+                        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm border border-gray-100 sm:border-transparent" style="background-color: #FAFAFA;">
                             <input type="text" name="experiences[${experienceIndex}][position]"
                                    placeholder="${LANG_PROF.phPos}"
-                                   class="w-full outline-none text-black placeholder-gray-400 bg-transparent" required>
+                                   class="w-full outline-none text-black placeholder-gray-400 bg-transparent text-sm sm:text-base" required>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-[minmax(120px,20%)_1fr] gap-4">
-                        <label class="block text-[#4D4D4E]">${LANG_PROF.labelOrg}</label>
-                        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
+                    <div class="grid grid-cols-1 sm:grid-cols-[minmax(120px,20%)_1fr] gap-2 sm:gap-4 items-center">
+                        <label class="block text-[#4D4D4E] font-medium sm:font-normal">${LANG_PROF.labelOrg}</label>
+                        <div class="flex items-center rounded-lg px-4 py-3 shadow-sm border border-gray-100 sm:border-transparent" style="background-color: #FAFAFA;">
                             <input type="text" name="experiences[${experienceIndex}][organization]"
                                    placeholder="${LANG_PROF.phOrg}"
-                                   class="w-full outline-none text-black placeholder-gray-400 bg-transparent" required>
+                                   class="w-full outline-none text-black placeholder-gray-400 bg-transparent text-sm sm:text-base" required>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="grid grid-cols-[minmax(120px,20%)_1fr] gap-4">
-                            <label class="block text-[#4D4D4E]">${LANG_PROF.labelStart}</label>
-                            <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
-                                <input type="text" name="experiences[${experienceIndex}][start_year]" placeholder="2018" class="w-full outline-none text-black placeholder-gray-400 bg-transparent">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-[minmax(120px,20%)_1fr] gap-2 sm:gap-4 items-center">
+                            <label class="block text-[#4D4D4E] font-medium sm:font-normal">${LANG_PROF.labelStart}</label>
+                            <div class="flex items-center rounded-lg px-4 py-3 shadow-sm border border-gray-100 sm:border-transparent" style="background-color: #FAFAFA;">
+                                <input type="text" name="experiences[${experienceIndex}][start_year]" placeholder="2018" class="w-full outline-none text-black placeholder-gray-400 bg-transparent text-sm sm:text-base">
                             </div>
                         </div>
-                        <div class="grid grid-cols-[minmax(120px,20%)_1fr] gap-4">
-                            <label class="block text-[#4D4D4E]">${LANG_PROF.labelEnd}</label>
-                            <div class="flex items-center rounded-lg px-4 py-3 shadow-sm" style="background-color: #FAFAFA;">
-                                <input type="text" name="experiences[${experienceIndex}][end_year]" placeholder="${LANG_PROF.phEnd}" class="w-full outline-none text-black placeholder-gray-400 bg-transparent">
+                        <div class="grid grid-cols-1 sm:grid-cols-[minmax(120px,20%)_1fr] gap-2 sm:gap-4 items-center">
+                            <label class="block text-[#4D4D4E] font-medium sm:font-normal">${LANG_PROF.labelEnd}</label>
+                            <div class="flex items-center rounded-lg px-4 py-3 shadow-sm border border-gray-100 sm:border-transparent" style="background-color: #FAFAFA;">
+                                <input type="text" name="experiences[${experienceIndex}][end_year]" placeholder="${LANG_PROF.phEnd}" class="w-full outline-none text-black placeholder-gray-400 bg-transparent text-sm sm:text-base">
                             </div>
                         </div>
                     </div>
 
                     <div class="flex justify-end">
-                        <button type="button" class="text-red-500 hover:text-red-700 remove-experience" onclick="this.closest('.experience-entry').remove()">
+                        <button type="button" class="text-red-500 hover:text-red-700 remove-experience text-sm font-medium" onclick="this.closest('.experience-entry').remove()">
                             ${LANG_PROF.btnRemoveExp}
                         </button>
                     </div>
